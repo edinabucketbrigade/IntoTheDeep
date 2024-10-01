@@ -75,8 +75,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
 
-    private Servo servo0;
-
+    private DcMotor linearSlide = null;
 
     @Override
     public void runOpMode() {
@@ -87,6 +86,8 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
+
+        linearSlide = hardwareMap.get(DcMotor.class, "linearSlide");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
