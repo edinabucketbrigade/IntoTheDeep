@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 /*
  * This OpMode illustrates the concept of driving a path based on encoder counts.
@@ -60,13 +61,29 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Robot: Auto Drive By Encoder", group="Robot")
+@Autonomous(name="Auto-Encoder", group="Robot")
 //@Disabled
 public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
+    //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
+    //  applied to the drive motors to correct the error.
+    //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
+    final double SPEED_GAIN  =  0.02  ;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
+    final double STRAFE_GAIN =  0.015 ;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
+    final double TURN_GAIN   =  0.01  ;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
+
+    final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
+    final double MAX_AUTO_STRAFE= 0.5;   //  Clip the strafing speed to this max value (adjust for your robot)
+    final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
+
+    double  drive           = 0;        // Desired forward power/speed (-1 to +1)
+    double  strafe          = 0;        // Desired strafe power/speed (-1 to +1)
+    double  turn            = 0;        // Desired turning power/speed (-1 to +1)
 
     /* Declare OpMode members. */
     private DcMotor leftBackDrive   = null;
     private DcMotor rightBackDrive = null;
+    private DcMotor leftFrontDrive   = null;
+    private DcMotor rightFrontDrive = null;
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -90,18 +107,26 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Initialize the drive system variables.
         leftBackDrive  = hardwareMap.get(DcMotor.class, "leftBackDrive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
+        leftFrontDrive  = hardwareMap.get(DcMotor.class, "leftFrontDrive");
+        rightFrontDrive = hardwareMap.get(DcMotor.class, "rightFrontDrive");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
 
         leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at",  "%7d :%7d",
@@ -114,9 +139,19 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
-        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+//        encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+//        encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+//        encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+
+        double  positionX      = (24);
+        double  positionY    = 0;
+        double  heading        = 0;
+
+        // Use the speed and turn "gains" to calculate how we want the robot to move.
+//        drive  = Range.clip(positionX * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
+//        turn   = Range.clip(positionY * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
+//        strafe = Range.clip(-heading * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
+          moveRobot(positionX, positionY, heading);
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -183,4 +218,30 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
             sleep(125);   // optional pause after each move.
         }
     }
+    public void moveRobot(double x, double y, double yaw) {
+        // Calculate wheel powers.
+        double leftFrontPower    =  x -y -yaw;
+        double rightFrontPower   =  x +y +yaw;
+        double leftBackPower     =  x +y -yaw;
+        double rightBackPower    =  x -y +yaw;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
+
+        // Send powers to the wheels.
+        leftFrontDrive.setPower(leftFrontPower);
+        rightFrontDrive.setPower(rightFrontPower);
+        leftBackDrive.setPower(leftBackPower);
+        rightBackDrive.setPower(rightBackPower);
+    }
+
 }
