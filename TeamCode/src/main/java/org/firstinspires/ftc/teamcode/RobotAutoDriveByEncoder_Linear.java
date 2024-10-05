@@ -105,9 +105,9 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at", "%7d :%7d :%7d :%7d",
                 leftBackDrive.getCurrentPosition(),
-                rightBackDrive.getCurrentPosition());
-        leftFrontDrive.getCurrentPosition();
-        rightFrontDrive.getCurrentPosition();
+                rightBackDrive.getCurrentPosition(),
+                leftFrontDrive.getCurrentPosition(),
+                rightFrontDrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses START)
@@ -119,9 +119,6 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         double heading = 0;
 
         // Use the speed and turn "gains" to calculate how we want the robot to move.
-//        drive  = Range.clip(positionX * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-//        turn   = Range.clip(positionY * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-//        strafe = Range.clip(-heading * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
         moveRobot(positionX, positionY, heading);
 
         telemetry.addData("Path", "Complete");
