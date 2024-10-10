@@ -33,26 +33,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
+
+import java.util.List;
 
 @Autonomous(name = "Auto-Encoder", group = "Robot")
 //@Disabled
 public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
-    //  Set the GAIN constants to control the relationship between the measured position error, and how much power is
-    //  applied to the drive motors to correct the error.
-    //  Drive = Error * Gain    Make these values smaller for smoother control, or larger for a more aggressive response.
-    final double SPEED_GAIN = 0.02;   //  Forward Speed Control "Gain". e.g. Ramp up to 50% power at a 25 inch error.   (0.50 / 25.0)
-    final double STRAFE_GAIN = 0.015;   //  Strafe Speed Control "Gain".  e.g. Ramp up to 37% power at a 25 degree Yaw error.   (0.375 / 25.0)
-    final double TURN_GAIN = 0.01;   //  Turn Control "Gain".  e.g. Ramp up to 25% power at a 25 degree error. (0.25 / 25.0)
-
-    final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value (adjust for your robot)
-    final double MAX_AUTO_STRAFE = 0.5;   //  Clip the strafing speed to this max value (adjust for your robot)
-    final double MAX_AUTO_TURN = 0.3;   //  Clip the turn speed to this max value (adjust for your robot)
-
-    double drive = 0;        // Desired forward power/speed (-1 to +1)
-    double strafe = 0;        // Desired strafe power/speed (-1 to +1)
-    double turn = 0;        // Desired turning power/speed (-1 to +1)
-
     /* Declare OpMode members. */
     private DcMotor leftBackDrive = null;
     private DcMotor rightBackDrive = null;
@@ -61,19 +47,26 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Calculate the COUNTS_PER_INCH for your specific drive train.
-    // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
-    // For external drive gearing, set DRIVE_GEAR_REDUCTION as needed.
-    // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
-    // This is gearing DOWN for less speed and more torque.
-    // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double COUNTS_PER_MOTOR_REV = 537.7;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
-    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
+    // Destination coordinates.
+    public static class Path {
+        private final double positionX;
+        private final double positionY;
+        private final double heading;
+
+        public Path(double positionX, double positionY, double heading) {
+            this.positionX = positionX;
+            this.positionY = positionY;
+            this.heading = heading;
+        }
+    }
+
+    // List of paths.
+    public List<Path> paths;
+
+    double positionX;
+    double positionY;
+    double heading;
+
 
     @Override
     public void runOpMode() {
@@ -105,24 +98,23 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Starting at", "%7d :%7d :%7d :%7d",
                 leftBackDrive.getCurrentPosition(),
-                rightBackDrive.getCurrentPosition());
-        leftFrontDrive.getCurrentPosition();
-        rightFrontDrive.getCurrentPosition();
+                rightBackDrive.getCurrentPosition(),
+                leftFrontDrive.getCurrentPosition(),
+                rightFrontDrive.getCurrentPosition());
         telemetry.update();
+
+        initPaths();
 
         // Wait for the game to start (driver presses START)
         waitForStart();
 
         // Step through each leg of the path,
-        double positionX = 24;
-        double positionY = 0;
-        double heading = 0;
-
-        // Use the speed and turn "gains" to calculate how we want the robot to move.
-//        drive  = Range.clip(positionX * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
-//        turn   = Range.clip(positionY * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
-//        strafe = Range.clip(-heading * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-        moveRobot(positionX, positionY, heading);
+        for (Path path : paths) {
+            positionX = path.positionX;
+            positionY = path.positionY;
+            heading = path.heading;
+            moveRobot(positionX, positionY, heading);
+        }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -153,5 +145,9 @@ public class RobotAutoDriveByEncoder_Linear extends LinearOpMode {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+    }
+
+    public void initPaths() {
+        paths.add(new Path(12, 48, 0));
     }
 }
