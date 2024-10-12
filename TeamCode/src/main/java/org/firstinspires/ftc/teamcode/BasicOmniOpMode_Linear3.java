@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -87,9 +89,13 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         HighBasket
     }
 
+    private LiftPosition liftState = LiftPosition.Down;
+
+    private GamepadEx gamepadOne = new GamepadEx(gamepad1);
+
     @Override
     public void runOpMode() {
-        
+
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         leftFrontDrive = hardwareMap.get(DcMotor.class, "leftFrontDrive");
@@ -98,6 +104,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         rightBackDrive = hardwareMap.get(DcMotor.class, "rightBackDrive");
 
         liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
+
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -127,6 +134,8 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            gamepadOne.readButtons();
+
             double max;
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
@@ -155,29 +164,21 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
                 rightBackPower /= max;
             }
 
-
-            // This is test code:
-            //
-            // Uncomment the following code to test your motor directions.
-            // Each button should make the corresponding motor run FORWARD.
-            //   1) First get all the motors to take to correct positions on the robot
-            //      by adjusting your Robot Configuration if necessary.
-            //   2) Then make sure they run in the correct direction by modifying the
-            //      the setDirection() calls above.
-            // Once the correct motors move in the correct direction re-comment this code.
-
-            /*
-            leftFrontPower  = gamepad1.x ? 1.0 : 0.0;  // X gamepad
-            leftBackPower   = gamepad1.a ? 1.0 : 0.0;  // A gamepad
-            rightFrontPower = gamepad1.y ? 1.0 : 0.0;  // Y gamepad
-            rightBackPower  = gamepad1.b ? 1.0 : 0.0;  // B gamepad
-            */
-
             // Send calculated power to wheels
             leftFrontDrive.setPower(leftFrontPower);
             rightFrontDrive.setPower(rightFrontPower);
             leftBackDrive.setPower(leftBackPower);
             rightBackDrive.setPower(rightBackPower);
+
+            if (gamepadOne.wasJustPressed(GamepadKeys.Button.Y)) {
+                MoveLift(LiftPosition.HighBasket);
+            }
+            if (gamepadOne.wasJustPressed(GamepadKeys.Button.X)) {
+                MoveLift(LiftPosition.LowBasket);
+            }
+            if (gamepadOne.wasJustPressed(GamepadKeys.Button.A)) {
+                MoveLift(LiftPosition.Down);
+            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -191,17 +192,24 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         switch (liftPosition) {
             case Down:
                 liftMotor.setTargetPosition(LIFT_DOWN);
+                liftState = LiftPosition.Down;
                 break;
             case LowBasket:
                 liftMotor.setTargetPosition(LIFT_LOW);
+                liftState = LiftPosition.LowBasket;
                 break;
             case HighBasket:
                 liftMotor.setTargetPosition(LIFT_HIGH);
+                liftState = LiftPosition.HighBasket;
                 break;
             default:
                 break;
         }
+        
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotor.setPower(LIFT_MAX_POWER);
+        while(liftMotor.isBusy() && opModeIsActive()) {
+
+        }
     }
 }
