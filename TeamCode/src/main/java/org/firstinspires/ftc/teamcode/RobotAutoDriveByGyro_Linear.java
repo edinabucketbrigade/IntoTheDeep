@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -93,7 +94,7 @@ public class RobotAutoDriveByGyro_Linear extends LinearOpMode {
         }
     }
 
-    public List<Pose> poses;
+     public List<Pose> poses= new ArrayList<Pose>();
 
 
     @Override
