@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.enums.LiftPosition;
+
 /*
  * This file contains an example of a Linear "OpMode".
  * An OpMode is a 'program' that runs in either the autonomous or the teleop period of an FTC match.
@@ -65,7 +67,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Basic: Omni Linear OpMode", group = "Linear OpMode")
+@TeleOp(name = "Driver Control", group = "Robot")
 //@Disabled
 public class BasicOmniOpMode_Linear3 extends LinearOpMode {
 
@@ -83,11 +85,6 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
     private final int LIFT_HIGH = 20;
 
     private final double LIFT_MAX_POWER = .7;
-    public enum LiftPosition {
-        Down,
-        LowBasket,
-        HighBasket
-    }
 
     private LiftPosition liftState = LiftPosition.Down;
 
@@ -188,7 +185,7 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         }
     }
 
-    public void MoveLift(LiftPosition liftPosition){
+    public void MoveLift(LiftPosition liftPosition) {
         switch (liftPosition) {
             case Down:
                 liftMotor.setTargetPosition(LIFT_DOWN);
@@ -205,10 +202,10 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
             default:
                 break;
         }
-        
+
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotor.setPower(LIFT_MAX_POWER);
-        while(liftMotor.isBusy() && opModeIsActive()) {
+        while (liftMotor.isBusy() && opModeIsActive()) {
 
         }
     }
