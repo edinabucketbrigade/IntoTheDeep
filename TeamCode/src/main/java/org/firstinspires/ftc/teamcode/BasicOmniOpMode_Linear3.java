@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.enums.LiftPosition;
+import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -76,20 +77,14 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
     // Create a RobotHardware object to be used to access robot hardware.
     // Prefix any hardware functions with "robot." to access this class.
     public RobotHardware robot = new RobotHardware(this);
-
-    private final int LIFT_DOWN = 0;
-    private final int LIFT_LOW = 10;
-    private final int LIFT_HIGH = 20;
-
-    private final double LIFT_MAX_POWER = .7;
-
-    private LiftPosition liftState = LiftPosition.Down;
+    private Lift lift = null;
 
     private GamepadEx gamepadOne = new GamepadEx(gamepad1);
 
     @Override
     public void runOpMode() {
         robot.init();
+        lift.init();
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -101,8 +96,9 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             gamepadOne.readButtons();
-
-            double max;
+            lift.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.A),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.X),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.Y));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
@@ -110,44 +106,10 @@ public class BasicOmniOpMode_Linear3 extends LinearOpMode {
             double yaw = gamepad1.right_stick_x;
             robot.moveRobot(axial, lateral, yaw);
 
-            if (gamepadOne.wasJustPressed(GamepadKeys.Button.Y)) {
-                MoveLift(LiftPosition.HighBasket);
-            }
-            if (gamepadOne.wasJustPressed(GamepadKeys.Button.X)) {
-                MoveLift(LiftPosition.LowBasket);
-            }
-            if (gamepadOne.wasJustPressed(GamepadKeys.Button.A)) {
-                MoveLift(LiftPosition.Down);
-            }
-
+            lift.update();
             // Show the elapsed game time.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.update();
-        }
-    }
-
-    public void MoveLift(LiftPosition liftPosition) {
-        switch (liftPosition) {
-            case Down:
-                liftMotor.setTargetPosition(LIFT_DOWN);
-                liftState = LiftPosition.Down;
-                break;
-            case LowBasket:
-                liftMotor.setTargetPosition(LIFT_LOW);
-                liftState = LiftPosition.LowBasket;
-                break;
-            case HighBasket:
-                liftMotor.setTargetPosition(LIFT_HIGH);
-                liftState = LiftPosition.HighBasket;
-                break;
-            default:
-                break;
-        }
-
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(LIFT_MAX_POWER);
-        while (liftMotor.isBusy() && opModeIsActive()) {
-
         }
     }
 }
