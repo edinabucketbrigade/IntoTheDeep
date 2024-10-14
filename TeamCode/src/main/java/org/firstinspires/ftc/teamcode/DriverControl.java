@@ -67,7 +67,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 @TeleOp(name = "Driver Control", group = "Robot")
 //@Disabled
-public class BasicOmniOpMode_Linear3 extends LinearOpMode {
+public class DriverControl extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
