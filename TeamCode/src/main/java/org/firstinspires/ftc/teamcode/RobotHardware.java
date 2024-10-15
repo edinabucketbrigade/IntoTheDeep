@@ -14,8 +14,8 @@ public class RobotHardware {
     public DcMotor liftMotor = null;
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
-    public RobotHardware(LinearOpMode opmode) {
-        myOpMode = opmode;
+    public RobotHardware(LinearOpMode opMode) {
+        myOpMode = opMode;
     }
 
     public void init() {
@@ -70,5 +70,4 @@ public class RobotHardware {
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
     }
-
 }

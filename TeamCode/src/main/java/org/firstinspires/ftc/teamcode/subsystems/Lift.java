@@ -8,12 +8,13 @@ import org.firstinspires.ftc.teamcode.enums.LiftPosition;
 public class Lift extends SubSystem {
     LiftPosition liftPosition;
     RobotHardware robot;
+    // Encoder positions for the lift.
+    //TODO Test to find the proper values.
     private final int LIFT_DOWN = 0;
     private final int LIFT_LOW = 10;
     private final int LIFT_HIGH = 20;
 
     private final double LIFT_MAX_POWER = .7;
-
 
     public Lift(RobotHardware robot) {
         this.robot = robot;
@@ -26,11 +27,11 @@ public class Lift extends SubSystem {
 
     @Override
     public void start() {
-
     }
 
     @Override
     public void update() {
+        // Only try to move if we are finished with any moves.
         if (!robot.liftMotor.isBusy()) {
             switch (liftPosition) {
                 case Down:
@@ -46,6 +47,7 @@ public class Lift extends SubSystem {
         }
     }
 
+    // Respond to gamepad inputs.
     public void setProperties(boolean buttonA, boolean buttonX, boolean buttonY) {
         if (buttonA) {
             liftPosition = LiftPosition.Down;

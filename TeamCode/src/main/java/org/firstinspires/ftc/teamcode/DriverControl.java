@@ -45,14 +45,13 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 @TeleOp(name = "Driver Control", group = "Robot")
 //@Disabled
 public class DriverControl extends LinearOpMode {
-
-    // Declare OpMode members for each of the 4 motors.
     private final ElapsedTime runtime = new ElapsedTime();
     // Create a RobotHardware object to be used to access robot hardware.
     // Prefix any hardware functions with "robot." to access this class.
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
 
+    // Use the FtcLib gamepad extension.
     private final GamepadEx gamepadOne = new GamepadEx(gamepad1);
 
     @Override
@@ -70,14 +69,15 @@ public class DriverControl extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             gamepadOne.readButtons();
+
             lift.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.A),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.X),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.Y));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial = -gamepad1.left_stick_y;  // Note: pushing stick forward gives negative value
-            double lateral = gamepad1.left_stick_x;
-            double yaw = gamepad1.right_stick_x;
+            double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value
+            double lateral = gamepadOne.getLeftX();
+            double yaw = gamepadOne.getRightX();
             robot.moveRobot(axial, lateral, yaw);
 
             lift.update();
