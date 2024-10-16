@@ -70,7 +70,7 @@ import java.util.List;
  */
 
 @Autonomous(name = "Drive By Gyro", group = "Robot")
-//@Disabled
+@Disabled
 public class RobotAutoDriveByGyro_Linear extends LinearOpMode {
 
     private DcMotor leftBackDrive = null;
