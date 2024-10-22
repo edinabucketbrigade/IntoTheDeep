@@ -34,7 +34,7 @@ public class RobotHardware {
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
         rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE;
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
     }
 
     /**
