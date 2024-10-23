@@ -81,14 +81,14 @@ public class DriverControl extends LinearOpMode {
             robot.moveRobot(axial, lateral, yaw);
 
             lift.update();
-            // Show the elapsed game time.
+
             telemetry.addData("Status", "Run Time: " + runtime);
-            telemetry.addData("Target", "%d", robot.liftMotor.getTargetPosition());
-            telemetry.addData("Position", "%d", robot.liftMotor.getCurrentPosition());
-            telemetry.addData("Power", "%6.2f", robot.liftMotor.getPower());
-            telemetry.addData("Busy", robot.liftMotor.isBusy());
-            telemetry.addData("Mode", robot.liftMotor.getMode());
-            telemetry.addData("PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
+            telemetry.addData("Lift Target", "%d", robot.liftMotor.getTargetPosition());
+            telemetry.addData("Lift Position", "%d", robot.liftMotor.getCurrentPosition());
+            telemetry.addData("Lift Power", "%6.2f", robot.liftMotor.getPower());
+            telemetry.addData("Lift Busy", robot.liftMotor.isBusy());
+            telemetry.addData("Lift Mode", robot.liftMotor.getMode());
+            telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
         }
     }
