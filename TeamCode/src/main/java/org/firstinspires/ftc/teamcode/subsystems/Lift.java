@@ -7,6 +7,7 @@ import org.firstinspires.ftc.teamcode.enums.LiftPosition;
 
 public class Lift extends SubSystem {
     LiftPosition liftPosition;
+    LiftPosition liftState;
     RobotHardware robot;
     // Encoder positions for the lift.
     //TODO Test to find the proper values.
@@ -23,6 +24,7 @@ public class Lift extends SubSystem {
     @Override
     public void init() {
         liftPosition = LiftPosition.Down;
+        liftState = liftPosition;
     }
 
     @Override
@@ -31,6 +33,12 @@ public class Lift extends SubSystem {
 
     @Override
     public void update() {
+        if (robot.liftMotor.isBusy() && (liftState != liftPosition)) {
+            return;
+        } else {
+            liftState = liftPosition;
+        }
+
         // Only try to move if we are finished with any moves.
         if (!robot.liftMotor.isBusy()) {
             switch (liftPosition) {
@@ -42,8 +50,10 @@ public class Lift extends SubSystem {
                     robot.liftMotor.setTargetPosition(LIFT_HIGH);
             }
 
-            robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.liftMotor.setPower(LIFT_MAX_POWER);
+            if (liftState != liftPosition) {
+                robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.liftMotor.setPower(LIFT_MAX_POWER);
+            }
         }
     }
 
