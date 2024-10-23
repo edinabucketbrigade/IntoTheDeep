@@ -51,6 +51,7 @@ public class DriverControl extends LinearOpMode {
     // Prefix any hardware functions with "robot." to access this class.
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
+    //TODO Add class and code for Servo control of tilt mechanism.
 
     @Override
     public void runOpMode() {
