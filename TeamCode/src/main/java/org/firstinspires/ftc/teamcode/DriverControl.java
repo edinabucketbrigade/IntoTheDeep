@@ -52,12 +52,10 @@ public class DriverControl extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
 
-    // Use the FtcLib gamepad extension.
-    private GamepadEx gamepadOne = null;
-
     @Override
     public void runOpMode() {
-        gamepadOne = new GamepadEx(gamepad1);
+        // Use the FtcLib gamepad extension.
+        GamepadEx gamepadOne = new GamepadEx(gamepad1);
         robot.init();
         lift.init();
 
