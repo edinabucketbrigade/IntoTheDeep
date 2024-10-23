@@ -33,6 +33,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
@@ -84,6 +85,12 @@ public class DriverControl extends LinearOpMode {
             lift.update();
             // Show the elapsed game time.
             telemetry.addData("Status", "Run Time: " + runtime);
+            telemetry.addData("Target", "%d", robot.liftMotor.getTargetPosition());
+            telemetry.addData("Position", "%d", robot.liftMotor.getCurrentPosition());
+            telemetry.addData("Power", "%6.2f", robot.liftMotor.getPower());
+            telemetry.addData("Busy", robot.liftMotor.isBusy());
+            telemetry.addData("Mode", robot.liftMotor.getMode());
+            telemetry.addData("PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
         }
     }
