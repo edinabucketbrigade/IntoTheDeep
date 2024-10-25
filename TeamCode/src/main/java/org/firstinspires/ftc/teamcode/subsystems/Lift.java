@@ -29,7 +29,7 @@ public class Lift extends SubSystem {
     public void init() {
         liftPosition = LiftPosition.Down;
         liftState = liftPosition;
-        // Make sure encoder is 0 at start.
+        // Make sure encoder is 0 at start
         robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -74,9 +74,9 @@ public class Lift extends SubSystem {
                         liftState = LiftPosition.Down;
                     }
                 }
-                break;
+                    break;
             default:
-                // If we get here we have problem, stop the lift.
+                // if get here, there is a problem
                 robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.liftMotor.setPower(0);
                 liftState = LiftPosition.Down;

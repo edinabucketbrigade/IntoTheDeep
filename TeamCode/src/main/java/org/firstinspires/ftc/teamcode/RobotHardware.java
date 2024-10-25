@@ -13,7 +13,8 @@ public class RobotHardware {
     public DcMotor rightFrontDrive = null;
     public DcMotor rightBackDrive = null;
 
-    public DcMotorEx liftMotor = null;
+    public DcMotorEx liftMotor = null;  //5203 series, 384.5 ppr - encoder resolution
+    //5204-08139 series, 3895.9 resolution, for other arm thing motor
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
     public RobotHardware(LinearOpMode opMode) {
