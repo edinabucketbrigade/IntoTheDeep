@@ -33,6 +33,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
@@ -51,12 +52,12 @@ public class DriverControl extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
 
-    // Use the FtcLib gamepad extension.
-    private GamepadEx gamepadOne = null;
+    // Use the new FtcLib gamepad extension.
+    GamepadEx gamepadOne = new GamepadEx(gamepad1);
 
     @Override
     public void runOpMode() {
-        gamepadOne = new GamepadEx(gamepad1);
+        GamepadEx gamepadOne = new GamepadEx(gamepad1);
         robot.init();
         lift.init();
 
@@ -84,6 +85,12 @@ public class DriverControl extends LinearOpMode {
             lift.update();
             // Show the elapsed game time.
             telemetry.addData("Status", "Run Time: " + runtime);
+            telemetry.addData("Lift Target", "%d", robot.liftMotor.getTargetPosition());
+            telemetry.addData("Lift Position", "%d", robot.liftMotor.getCurrentPosition());
+            telemetry.addData("Lift Power", "%6.2f", robot.liftMotor.getPower());
+            telemetry.addData("Lift Busy", robot.liftMotor.isBusy());
+            telemetry.addData("Lift Mode", robot.liftMotor.getMode());
+            telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
         }
     }

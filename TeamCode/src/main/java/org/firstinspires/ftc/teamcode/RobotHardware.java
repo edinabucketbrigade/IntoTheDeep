@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class RobotHardware {
@@ -12,7 +13,8 @@ public class RobotHardware {
     public DcMotor rightFrontDrive = null;
     public DcMotor rightBackDrive = null;
 
-    public DcMotor liftMotor = null;
+    public DcMotorEx liftMotor = null;  //5203 series, 384.5 ppr - encoder resolution
+    //5204-08139 series, 3895.9 resolution, for other arm thing motor
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
     public RobotHardware(LinearOpMode opMode) {
@@ -27,7 +29,7 @@ public class RobotHardware {
         rightFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "rightFrontDrive");
         rightBackDrive = myOpMode.hardwareMap.get(DcMotor.class, "rightBackDrive");
 
-        liftMotor = myOpMode.hardwareMap.get(DcMotor.class, "liftMotor");
+        liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
         liftMotor.setDirection(DcMotor.Direction.REVERSE);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
