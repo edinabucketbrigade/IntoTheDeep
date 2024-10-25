@@ -20,6 +20,7 @@ public class Lift extends SubSystem {
     private final int LIFT_HIGH = 20;
 
     private final double LIFT_MAX_POWER = .7;
+    private final int LIFT_POSITION_TOLERANCE = 10;
 
     public Lift(RobotHardware robot) {
         this.robot = robot;
@@ -32,6 +33,7 @@ public class Lift extends SubSystem {
         // Make sure encoder is 0 at start
         robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.liftMotor.setTargetPositionTolerance(LIFT_POSITION_TOLERANCE);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class Lift extends SubSystem {
     public void update() {
         switch (liftState) {
             case Down:
-                if (robot.liftMotor.getCurrentPosition() < 5) {
+                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
                     if (xPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         liftState = LiftPosition.LowBasket;
@@ -55,7 +57,7 @@ public class Lift extends SubSystem {
                 }
                 break;
             case LowBasket:
-                if (robot.liftMotor.getCurrentPosition() < 5) {
+                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         liftState = LiftPosition.Down;
@@ -68,18 +70,19 @@ public class Lift extends SubSystem {
                 }
                 break;
             case HighBasket:
-                if (robot.liftMotor.getCurrentPosition() < 5) {
+                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         liftState = LiftPosition.Down;
                     }
                 }
-                    break;
+                break;
             default:
                 // if get here, there is a problem
                 robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.liftMotor.setPower(0);
                 liftState = LiftPosition.Down;
+                return;
         }
 
         robot.liftMotor.setPower(LIFT_MAX_POWER);
