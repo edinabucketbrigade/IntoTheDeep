@@ -20,6 +20,7 @@ public class Lift extends SubSystem {
     private final int LIFT_HIGH = 20;
 
     private final double LIFT_MAX_POWER = .7;
+    private final int LIFT_POSITION_TOLERANCE = 10;
 
     public Lift(RobotHardware robot) {
         this.robot = robot;
@@ -40,9 +41,9 @@ public class Lift extends SubSystem {
 
     @Override
     public void update() {
-        switch (liftPosition) {
+        switch (liftState) {
             case Down:
-                if (robot.liftMotor.getCurrentPosition() < 5) {
+                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
                     if (xPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         liftState = LiftPosition.LowBasket;
@@ -55,7 +56,7 @@ public class Lift extends SubSystem {
                 }
                 break;
             case LowBasket:
-                if (robot.liftMotor.getCurrentPosition() < 5) {
+                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         liftState = LiftPosition.Down;
@@ -68,7 +69,7 @@ public class Lift extends SubSystem {
                 }
                 break;
             case HighBasket:
-                if (robot.liftMotor.getCurrentPosition() < 5) {
+                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         liftState = LiftPosition.Down;
