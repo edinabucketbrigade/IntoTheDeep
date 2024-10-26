@@ -30,7 +30,7 @@ public class RobotHardware {
         rightBackDrive = myOpMode.hardwareMap.get(DcMotor.class, "rightBackDrive");
 
         liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
-        liftMotor.setDirection(DcMotor.Direction.REVERSE);
+        liftMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
