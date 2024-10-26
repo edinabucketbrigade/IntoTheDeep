@@ -6,18 +6,18 @@ import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.enums.LiftPosition;
 
 public class Lift extends SubSystem {
-    private LiftPosition liftPosition;
-    private LiftPosition liftState;
+    public LiftPosition liftState;
     private RobotHardware robot;
-    private boolean aPressed = false;
-    private boolean xPressed = false;
-    private boolean yPressed = false;
+    public boolean aPressed = false;
+    public boolean xPressed = false;
+    public boolean yPressed = false;
 
     // Encoder positions for the lift.
     //TODO Test to find the proper values.
     private final int LIFT_DOWN = 0;
-    private final int LIFT_LOW = 10;
-    private final int LIFT_HIGH = 20;
+    private final int LIFT_LOW = 384;
+
+    private final int LIFT_HIGH = 768;
 
     private final double LIFT_MAX_POWER = .7;
     private final int LIFT_POSITION_TOLERANCE = 10;
@@ -28,12 +28,10 @@ public class Lift extends SubSystem {
 
     @Override
     public void init() {
-        liftPosition = LiftPosition.Down;
-        liftState = liftPosition;
+        liftState = LiftPosition.Down;
         // Make sure encoder is 0 at start
         robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.liftMotor.setTargetPositionTolerance(LIFT_POSITION_TOLERANCE);
     }
 
     @Override
@@ -47,11 +45,16 @@ public class Lift extends SubSystem {
                 if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
                     if (xPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
+                        robot.liftMotor.setTargetPosition(LIFT_LOW);
+                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.LowBasket;
                     }
 
                     if (yPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_HIGH);
+                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.HighBasket;
                     }
                 }
@@ -60,11 +63,15 @@ public class Lift extends SubSystem {
                 if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
+                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.Down;
                     }
 
                     if (yPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_HIGH);
+                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.HighBasket;
                     }
                 }
@@ -73,6 +80,8 @@ public class Lift extends SubSystem {
                 if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
+                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.Down;
                     }
                 }
@@ -82,20 +91,14 @@ public class Lift extends SubSystem {
                 robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.liftMotor.setPower(0);
                 liftState = LiftPosition.Down;
-                return;
         }
 
-        robot.liftMotor.setPower(LIFT_MAX_POWER);
     }
 
     // Respond to gamepad inputs.
     public void setProperties(boolean buttonA, boolean buttonX, boolean buttonY) {
-        if (buttonA) {
-            liftPosition = LiftPosition.Down;
-        } else if (buttonX) {
-            liftPosition = LiftPosition.LowBasket;
-        } else if (buttonY) {
-            liftPosition = LiftPosition.HighBasket;
-        }
+        aPressed = buttonA;
+        xPressed = buttonX;
+        yPressed = buttonY;
     }
 }

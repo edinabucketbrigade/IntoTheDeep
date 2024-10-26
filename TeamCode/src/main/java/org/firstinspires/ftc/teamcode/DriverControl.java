@@ -51,11 +51,12 @@ public class DriverControl extends LinearOpMode {
     // Prefix any hardware functions with "robot." to access this class.
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
-    //TODO Add class and code for Servo control of tilt mechanism.
+
+    // Use the new FtcLib gamepad extension.
+    GamepadEx gamepadOne = null;
 
     @Override
     public void runOpMode() {
-        // Use the FtcLib gamepad extension.
         GamepadEx gamepadOne = new GamepadEx(gamepad1);
         robot.init();
         lift.init();
@@ -84,6 +85,7 @@ public class DriverControl extends LinearOpMode {
             lift.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
+            telemetry.addData("Lift State", lift.liftState);
             telemetry.addData("Lift Target", "%d", robot.liftMotor.getTargetPosition());
             telemetry.addData("Lift Position", "%d", robot.liftMotor.getCurrentPosition());
             telemetry.addData("Lift Power", "%6.2f", robot.liftMotor.getPower());
