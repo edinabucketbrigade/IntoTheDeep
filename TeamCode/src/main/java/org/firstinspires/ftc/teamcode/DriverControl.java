@@ -83,7 +83,7 @@ public class DriverControl extends LinearOpMode {
             robot.moveRobot(axial, lateral, yaw);
 
             lift.update();
-            // Show the elapsed game time.
+
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Lift State", lift.liftState);
             telemetry.addData("Lift Target", "%d", robot.liftMotor.getTargetPosition());
