@@ -44,7 +44,6 @@ public class Lift extends SubSystem {
             case Down:
                 if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
                     if (xPressed) {
-                        robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         robot.liftMotor.setTargetPosition(LIFT_LOW);
                         robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.liftMotor.setPower(LIFT_MAX_POWER);
