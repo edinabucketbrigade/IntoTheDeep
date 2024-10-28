@@ -58,7 +58,6 @@ public class DetectMotorType extends LinearOpMode {
 
     private static final double INCREMENT = 0.01; // amount to ramp motor each CYCLE_MS cycle
     private static final int CYCLE_MS = 25; // period of each cycle
-    private static final int PAUSE_MS = 1000; // pause between direction switches
     private ElapsedTime timer;
 
     // Define class members

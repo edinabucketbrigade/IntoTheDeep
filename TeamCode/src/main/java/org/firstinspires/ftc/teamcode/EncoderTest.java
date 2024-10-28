@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 /*
- * Demonstrates an empty iterative OpMode
+ * Perform encoder tests on a motor. Implemented as an iterative OpMode.
  */
 @TeleOp(name = "Encoder Test", group = "Test")
 //@Disabled
@@ -72,6 +72,7 @@ public class EncoderTest extends OpMode {
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pidfVelocityCoefficients = motor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
         pidfPositionCoefficients = motor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
+        // These values are recommended as a starting point if you are tuning a PID.
         pidfVelocityCoefficients.p = 1.063f;
         pidfVelocityCoefficients.i = 1.063f;
         pidfVelocityCoefficients.f = 10.63f;

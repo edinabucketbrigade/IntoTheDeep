@@ -7,6 +7,10 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+/*
+    Iterative opMode to test CR servos. It uses the FTCLib CRServo class.
+ */
+
 @TeleOp(name = "Test CR Servo", group = "Test")
 //@Disabled
 public class TestCRServo extends OpMode {

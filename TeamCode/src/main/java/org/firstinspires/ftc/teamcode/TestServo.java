@@ -7,6 +7,11 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
+/*
+    An iterative opMode used to test servos. It uses the SimpleServo class from FTCLib.
+    The behavior you see depends on the specific servo you are using. Read the specs for
+    your servo and modify the test code to fit.
+ */
 @TeleOp(name = "Test Servo", group = "Test")
 //@Disabled
 public class TestServo extends OpMode {
@@ -21,7 +26,6 @@ public class TestServo extends OpMode {
     @Override
     public void init() {
         // Make the name match your config file and robot.
-//        servo = hardwareMap.get(ServoImplEx.class, "servo1");
         servo = new SimpleServo(hardwareMap, "servo1", 0, 90);
         gamepad = new GamepadEx(gamepad1);
         showTelemetry();
