@@ -15,7 +15,7 @@ public class RobotHardware {
 
     public DcMotorEx liftMotor = null;  //5203 series, 384.5 ppr - encoder resolution
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
-
+    public DcMotorEx armMotor = null;
     // Define a constructor that allows the OpMode to pass a reference to itself.
     public RobotHardware(LinearOpMode opMode) {
         myOpMode = opMode;
@@ -32,6 +32,10 @@ public class RobotHardware {
         liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "armMotor");
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
