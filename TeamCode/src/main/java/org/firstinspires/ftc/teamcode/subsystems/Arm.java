@@ -57,6 +57,18 @@ public class Arm extends SubSystem {
                         armState = Armposition.Back;
                     }
                 }
+                break;
+            default:
+                // if get here, there is a problem
+                robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.armMotor.setPower(0);
+                armState = Armposition.Front;
         }
+
+    }
+
+    public void setProperties(boolean leftBumper, boolean rightBumper) {
+        leftBumperPressed = leftBumper;
+        rightBumperPressed = rightBumper;
     }
 }
