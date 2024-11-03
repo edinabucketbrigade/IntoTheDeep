@@ -52,7 +52,7 @@ public class DriverControl extends LinearOpMode {
     // Prefix any hardware functions with "robot." to access this class.
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
-    private final org.firstinspires.ftc.teamcode.subsystems.Arm arm = new Arm(robot);
+    private final Arm arm = new Arm(robot);
 
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
@@ -100,8 +100,6 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Lift Mode", robot.liftMotor.getMode());
             telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
-
-
         }
     }
 }
