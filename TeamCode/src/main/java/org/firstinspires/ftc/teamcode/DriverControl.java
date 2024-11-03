@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 /*
@@ -51,6 +52,7 @@ public class DriverControl extends LinearOpMode {
     // Prefix any hardware functions with "robot." to access this class.
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
+    private final org.firstinspires.ftc.teamcode.subsystems.Arm arm = new Arm(robot);
 
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
@@ -60,6 +62,7 @@ public class DriverControl extends LinearOpMode {
         GamepadEx gamepadOne = new GamepadEx(gamepad1);
         robot.init();
         lift.init();
+        arm.init();
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -76,6 +79,9 @@ public class DriverControl extends LinearOpMode {
                     gamepadOne.wasJustPressed(GamepadKeys.Button.X),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.Y));
 
+            arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value
             double lateral = gamepadOne.getLeftX();
@@ -83,6 +89,7 @@ public class DriverControl extends LinearOpMode {
             robot.moveRobot(axial, lateral, yaw);
 
             lift.update();
+            arm.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Lift State", lift.liftState);
@@ -93,6 +100,8 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Lift Mode", robot.liftMotor.getMode());
             telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
+
+
         }
     }
 }
