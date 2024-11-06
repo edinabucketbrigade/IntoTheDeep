@@ -46,7 +46,7 @@ import java.util.ArrayList;
  *  This OpMode illustrates the concept of driving an autonomous path based on Gyro (IMU) heading and encoder counts.
  *  The code is structured as a LinearOpMode
  *
- *  The path to be followed by the robot is built from a series of poses.
+ *  The path to be followed by the robot is built from a series of segments.
  *
  *  The code REQUIRES that you have encoders on the drive motors, otherwise you should use: RobotAutoDriveByTime;
  *
@@ -108,6 +108,8 @@ public class AutoGyro extends LinearOpMode {
     static final double P_TURN_GAIN = 0.02;     // Larger is more responsive, but also less stable.
     static final double P_DRIVE_GAIN = 0.03;     // Larger is more responsive, but also less stable.
 
+    // The following classes define parameters to the driving methods. They are used to construct
+    // paths for the autonomous strategy.
     public static class DriveStraight {
         double distance;
         double heading;
@@ -136,6 +138,7 @@ public class AutoGyro extends LinearOpMode {
         }
     }
 
+    // A list of lists. Each item in paths defines a state in the autonomous process.
     public ArrayList<ArrayList> paths = new ArrayList<>();
 
     @Override
@@ -149,8 +152,6 @@ public class AutoGyro extends LinearOpMode {
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         /* The next two lines define Hub orientation.
-         * The Default Orientation (shown) is when a hub is mounted horizontally with the printed logo pointing UP and the USB port pointing FORWARD.
-         *
          * To Do:  EDIT these two lines to match YOUR mounting configuration.
          */
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
