@@ -37,6 +37,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
+import org.firstinspires.ftc.teamcode.subsystems.Bucket;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 /*
@@ -52,11 +54,15 @@ public class DriverControl extends LinearOpMode {
     // Prefix any hardware functions with "robot." to access this class.
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
-    private final org.firstinspires.ftc.teamcode.subsystems.Arm arm = new Arm(robot);
+    private final Arm arm = new Arm(robot);
+    private final Claw claw = new Claw(robot);
+    private final Bucket bucket = new Bucket(robot);
+
 
 
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
+    GamepadEx gamepadTwo = null;
 
     @Override
     public void runOpMode() {
@@ -64,6 +70,9 @@ public class DriverControl extends LinearOpMode {
         robot.init();
         lift.init();
         arm.init();
+        claw.init();
+        bucket.init();
+
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -75,12 +84,15 @@ public class DriverControl extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             gamepadOne.readButtons();
+            gamepadTwo.readButtons();
 
             lift.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.A),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.X),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.Y));
 
-            arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+            arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP));
+            claw.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.

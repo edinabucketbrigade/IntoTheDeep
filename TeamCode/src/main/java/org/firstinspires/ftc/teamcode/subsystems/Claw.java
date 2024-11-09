@@ -48,4 +48,9 @@ public class Claw extends SubSystem {
                 }
         }
     }
+
+    public void setProperties(boolean leftBumper, boolean rightBumper) {
+        leftBumperPressed = leftBumper;
+        rightBumperPressed = rightBumper;
+    }
 }

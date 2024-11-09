@@ -50,6 +50,9 @@ public class RobotHardware {
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
+        clawServo = myOpMode.hardwareMap.get(Servo.class,"clawServo");
+        bucketServo = myOpMode.hardwareMap.get(Servo.class,"bucketServo");
+
     }
 
     /**
