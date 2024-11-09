@@ -35,6 +35,17 @@ public class Claw extends SubSystem {
 
     @Override
     public void update() {
-
+        switch (clawState) {
+            case Close:
+                if (leftBumperPressed) {
+                    robot.clawServo.setPosition(CLAW_CLOSED);
+                    clawState = ClawPosition.Open;
+                }
+            case Open:
+                if (rightBumperPressed) {
+                    robot.clawServo.setPosition(CLAW_OPEN);
+                    clawState = ClawPosition.Close;
+                }
+        }
     }
 }
