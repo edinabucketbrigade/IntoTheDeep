@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotHardware {
     /* Declare OpMode members. */
@@ -14,7 +15,11 @@ public class RobotHardware {
     public DcMotor rightFrontDrive = null;
     public DcMotor rightBackDrive = null;
 
-    public DcMotorEx liftMotor = null;  //5203 series, 384.5 ppr - encoder resolution
+    public Servo clawServo = null;
+    public Servo bucketServo = null;
+
+    public DcMotorEx liftMotor = null;
+    //5203 series, 384.5 ppr - encoder resolution
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
     public DcMotorEx armMotor = null;
     public IMU imu = null;
@@ -46,6 +51,9 @@ public class RobotHardware {
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
+        clawServo = myOpMode.hardwareMap.get(Servo.class,"clawServo");
+        bucketServo = myOpMode.hardwareMap.get(Servo.class,"bucketServo");
+
     }
 
     /**

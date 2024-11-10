@@ -3,13 +3,10 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.enums.Armposition;
-import org.firstinspires.ftc.teamcode.enums.LiftPosition;
-
-import java.security.PublicKey;
+import org.firstinspires.ftc.teamcode.enums.ArmPosition;
 
 public class Arm extends SubSystem {
-    public Armposition armState;
+    public ArmPosition armState;
     private RobotHardware robot;
     public boolean rightBumperPressed = false;
     public boolean leftBumperPressed = false;
@@ -25,7 +22,7 @@ public class Arm extends SubSystem {
 
     @Override
     public void init() {
-        armState = Armposition.Back;
+        armState = ArmPosition.Back;
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
@@ -44,7 +41,7 @@ public class Arm extends SubSystem {
                         robot.armMotor.setTargetPosition(ARM_BACK);
                         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.armMotor.setPower(ARM_MAX_POWER);
-                        armState = Armposition.Front;
+                        armState = ArmPosition.Front;
                     }
                 }
 
@@ -54,7 +51,7 @@ public class Arm extends SubSystem {
                         robot.armMotor.setTargetPosition(ARM_FRONT);
                         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.armMotor.setPower(ARM_MAX_POWER);
-                        armState = Armposition.Back;
+                        armState = ArmPosition.Back;
                     }
                 }
                 break;
@@ -62,7 +59,7 @@ public class Arm extends SubSystem {
                 // if get here, there is a problem
                 robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 robot.armMotor.setPower(0);
-                armState = Armposition.Front;
+                armState = ArmPosition.Front;
         }
 
     }
