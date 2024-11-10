@@ -13,8 +13,6 @@ public class Claw extends SubSystem {
     private final int CLAW_CLOSED = 0;
     private final int CLAW_OPEN = 90;
 
-    private final double CLAW_MAX_POWER = .7;
-
     public Claw(RobotHardware robot) {
         this.robot = robot;
     }
@@ -24,13 +22,10 @@ public class Claw extends SubSystem {
     public void init() {
         clawState = ClawPosition.Open;
         robot.clawServo.setPosition(0);
-
-
     }
 
     @Override
     public void start() {
-
     }
 
     @Override

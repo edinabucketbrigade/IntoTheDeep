@@ -59,14 +59,14 @@ public class DriverControl extends LinearOpMode {
     private final Bucket bucket = new Bucket(robot);
 
 
-
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
     GamepadEx gamepadTwo = null;
 
     @Override
     public void runOpMode() {
-        GamepadEx gamepadOne = new GamepadEx(gamepad1);
+        gamepadOne = new GamepadEx(gamepad1);
+        gamepadTwo = new GamepadEx(gamepad2);
         robot.init();
         lift.init();
         arm.init();
@@ -86,14 +86,20 @@ public class DriverControl extends LinearOpMode {
             gamepadOne.readButtons();
             gamepadTwo.readButtons();
 
-            lift.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.A),
+            // Driver gamepad (A on the driver hub)
+            arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP));
+
+            claw.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+
+            // Arm driver gamepad (B on the driver hub)
+            lift.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.A),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.X),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.Y));
 
-            arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP));
-            claw.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+            bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value
@@ -103,6 +109,8 @@ public class DriverControl extends LinearOpMode {
 
             lift.update();
             arm.update();
+            claw.update();
+            bucket.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Lift State", lift.liftState);
