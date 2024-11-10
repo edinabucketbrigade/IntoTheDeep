@@ -18,7 +18,8 @@ public class RobotHardware {
     public Servo clawServo = null;
     public Servo bucketServo = null;
 
-    public DcMotorEx liftMotor = null;  //5203 series, 384.5 ppr - encoder resolution
+    public DcMotorEx liftMotor = null;
+    //5203 series, 384.5 ppr - encoder resolution
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
     public DcMotorEx armMotor = null;
     public IMU imu = null;
