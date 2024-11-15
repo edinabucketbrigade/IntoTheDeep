@@ -186,7 +186,7 @@ public class AutoGyro extends LinearOpMode {
         // Step through each segment of each path.
         for (ArrayList path : paths) {
             for (Object segment : path) {
-                switch (segment.getClass().getName()) {
+                switch (segment.getClass().getSimpleName()) {
                     case "DriveStraight":
                         driveStraight(DRIVE_SPEED, ((DriveStraight) segment).distance, ((DriveStraight) segment).heading);
                         break;
