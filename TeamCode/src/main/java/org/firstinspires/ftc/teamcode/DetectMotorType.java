@@ -80,7 +80,7 @@ public class DetectMotorType extends LinearOpMode {
     public void runOpMode() {
         timer = new ElapsedTime();
         // Change the text in quotes to match any motor name on your robot.
-        motor = hardwareMap.get(DcMotorEx.class, "leftBackDrive");
+        motor = hardwareMap.get(DcMotorEx.class, "motor");
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         type = motor.getMotorType();
         maxRPM = type.getMaxRPM();
