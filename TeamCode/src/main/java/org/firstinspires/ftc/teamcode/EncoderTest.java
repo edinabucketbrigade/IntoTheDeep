@@ -50,7 +50,6 @@ public class EncoderTest extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private GamepadEx gamePad;
     private DcMotorEx motor;
-    private DcMotor.RunMode mode;
     private final float ENCODER_INCREMENT = 145.1f * 50f; // 10 revolutions
     private final double MAX_VELOCITY = 2900;
     private double RUN_VELOCITY = MAX_VELOCITY * .7f;
@@ -67,8 +66,10 @@ public class EncoderTest extends OpMode {
         telemetry.update();
         gamePad = new GamepadEx(gamepad1);
         motor = hardwareMap.get(DcMotorEx.class, "motor");
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor.setDirection(DcMotorSimple.Direction.FORWARD);
+        // Make sure the motor is stopped and encoder is set to 0;
+        stopAndResetEncoder(motor);
+        // Use encoders to enable manual movement of the motor to deternmine position values.
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pidfVelocityCoefficients = motor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
         pidfPositionCoefficients = motor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
@@ -91,6 +92,7 @@ public class EncoderTest extends OpMode {
     public void init_loop() {
         telemetry.addLine("Dpad Up and Dpad Down");
         telemetry.addLine("Y - Stop and Reset");
+        telemetry.addLine("Position is monitored real-time.");
         telemetry.addData("Position", motor.getCurrentPosition());
         telemetry.update();
     }
@@ -128,14 +130,13 @@ public class EncoderTest extends OpMode {
             stopAndResetEncoder(motor);
         }
 
-        mode = motor.getMode();
         telemetry.addData("Target", "%d", motor.getTargetPosition());
         telemetry.addData("Position", "%d", motor.getCurrentPosition());
         telemetry.addData("Velocity", "%6.2f", motor.getVelocity());
         telemetry.addData("Power", "%6.2f", motor.getPower());
         telemetry.addData("Busy", motor.isBusy());
         telemetry.addData("Current (milli amps)", "%6.2f", motor.getCurrent(CurrentUnit.MILLIAMPS));
-        telemetry.addData("Mode", mode);
+        telemetry.addData("Mode", motor.getMode());
         telemetry.addData("PIDF Run Using", motor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER));
         telemetry.addData("PIDF Run To Position", motor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION));
         telemetry.update();
