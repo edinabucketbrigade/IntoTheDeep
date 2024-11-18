@@ -33,6 +33,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -89,7 +90,7 @@ public class AutoGyro extends LinearOpMode {
     // For example, use a value of 2.0 for a 12-tooth spur gear driving a 24-tooth spur gear.
     // This is gearing DOWN for less speed and more torque.
     // For gearing UP, use a gear ratio less than 1.0. Note this will affect the direction of wheel rotation.
-    static final double COUNTS_PER_MOTOR_REV = 384.5;   // eg: GoBILDA 312 RPM Yellow Jacket
+    static final double COUNTS_PER_MOTOR_REV = 2386;   // eg: GoBILDA 312 RPM Yellow Jacket
     static final double DRIVE_GEAR_REDUCTION = 1.0;     // No External Gearing.
     static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
@@ -151,11 +152,15 @@ public class AutoGyro extends LinearOpMode {
         robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        robot.leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        robot.rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+
+
         /* The next two lines define Hub orientation.
          * To Do:  EDIT these two lines to match YOUR mounting configuration.
          */
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
         RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
 
         // Now initialize the IMU with this mounting orientation
@@ -186,7 +191,7 @@ public class AutoGyro extends LinearOpMode {
         // Step through each segment of each path.
         for (ArrayList path : paths) {
             for (Object segment : path) {
-                switch (segment.getClass().getName()) {
+                switch (segment.getClass().getSimpleName()) {
                     case "DriveStraight":
                         driveStraight(DRIVE_SPEED, ((DriveStraight) segment).distance, ((DriveStraight) segment).heading);
                         break;
@@ -197,6 +202,9 @@ public class AutoGyro extends LinearOpMode {
                         holdHeading(TURN_SPEED, ((HoldHeading) segment).heading, ((HoldHeading) segment).holdTime);
                         break;
                     default:
+                        telemetry.addData("class", segment.getClass().getName());
+                        telemetry.update();
+                        sleep(3000);
                 }
             }
         }
@@ -413,6 +421,7 @@ public class AutoGyro extends LinearOpMode {
         telemetry.addData("Error  : Steer Pwr", "%5.1f : %5.1f", headingError, turnSpeed);
         telemetry.addData("Wheel Speeds L : R", "%5.2f : %5.2f", leftSpeed, rightSpeed);
         telemetry.update();
+        sleep(3000);
     }
 
     /**

@@ -95,8 +95,11 @@ public class DriverControl extends LinearOpMode {
 
             // Arm driver gamepad (B on the driver hub)
             lift.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.A),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.X),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.Y));
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.X),
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.Y));
+
+            bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
