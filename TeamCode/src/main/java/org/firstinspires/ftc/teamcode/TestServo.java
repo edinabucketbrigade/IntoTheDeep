@@ -41,7 +41,7 @@ public class TestServo extends OpMode {
     public void loop() {
         gamepad.readButtons();
         if (gamepad.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
-            position = -1;
+            position = 0;
         }
 
         if (gamepad.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -58,11 +58,11 @@ public class TestServo extends OpMode {
             servo.setRange(minScale, maxScale);
         }
 
-        if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_UP) && position < .8) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_UP) && position < 1) {
             position += INCREMENT;
         }
 
-        if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_DOWN) && position > -.8) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_DOWN) && position > 0) {
             position -= INCREMENT;
         }
 
