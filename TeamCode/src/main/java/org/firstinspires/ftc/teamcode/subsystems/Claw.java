@@ -10,8 +10,8 @@ public class Claw extends SubSystem {
     private RobotHardware robot;
     public boolean rightBumperPressed = false;
     public boolean leftBumperPressed = false;
-    private final int CLAW_CLOSED = 0;
-    private final int CLAW_OPEN = 90;
+    private final double CLAW_CLOSED = 0;
+    private final double CLAW_OPEN = .5;
 
     public Claw(RobotHardware robot) {
         this.robot = robot;

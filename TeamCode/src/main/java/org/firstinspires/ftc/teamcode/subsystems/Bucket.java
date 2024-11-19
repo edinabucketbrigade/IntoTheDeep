@@ -10,8 +10,8 @@ public class Bucket extends SubSystem {
     private RobotHardware robot;
     public boolean rightBumperPressed = false;
     public boolean leftBumperPressed = false;
-    private final int BUCKET_DOWN = 0;
-    private final int BUCKET_UP = 90;
+    private final double BUCKET_DOWN = 0;
+    private final double BUCKET_UP = .5;
 
     public Bucket(RobotHardware robot) {
         this.robot = robot;
