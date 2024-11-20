@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.enums.LiftPosition;
 public class Lift extends SubSystem {
     public LiftPosition liftState;
     private RobotHardware robot;
+    private Arm arm;
     public boolean aPressed = false;
     public boolean xPressed = false;
     public boolean yPressed = false;
@@ -99,5 +100,9 @@ public class Lift extends SubSystem {
         aPressed = buttonA;
         xPressed = buttonX;
         yPressed = buttonY;
+    }
+
+    public void setArm(Arm newArn) {
+        this.arm = newArn;
     }
 }

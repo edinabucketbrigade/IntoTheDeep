@@ -70,9 +70,11 @@ public class DriverControl extends LinearOpMode {
         robot.init();
         lift.init();
         arm.init();
+        // Give arm and lift a reference to each other.
+        arm.setLift(lift);
+        lift.setArm(arm);
         claw.init();
         bucket.init();
-
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -128,7 +130,6 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Arm Mode", robot.armMotor.getMode());
             telemetry.addData("Arm PIDF Run To Position", robot.armMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
-
 
         }
     }

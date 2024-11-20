@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.enums.ArmPosition;
 public class Arm extends SubSystem {
     public ArmPosition armState;
     private RobotHardware robot;
+    private Lift lift;
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     private final int ARM_FRONT = 1680;
@@ -67,5 +68,9 @@ public class Arm extends SubSystem {
     public void setProperties(boolean dpadDown, boolean dpadUp) {
         DPAD_DOWN = dpadDown;
         DPAD_UP = dpadUp;
+    }
+
+    public void setLift(Lift theLift) {
+        this.lift = theLift;
     }
 }
