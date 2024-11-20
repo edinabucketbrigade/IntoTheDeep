@@ -120,6 +120,13 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Lift Busy", robot.liftMotor.isBusy());
             telemetry.addData("Lift Mode", robot.liftMotor.getMode());
             telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
+            telemetry.addData("Arm State", arm.armState);
+            telemetry.addData("Arm Target", "%d", robot.armMotor.getTargetPosition());
+            telemetry.addData("Arm position", "%d", robot.armMotor.getCurrentPosition());
+            telemetry.addData("Arm Power", "%6.2f", robot.armMotor.getPower());
+            telemetry.addData("Arm Busy", robot.armMotor.isBusy());
+            telemetry.addData("Arm Mode", robot.armMotor.getMode());
+            telemetry.addData("Arm PIDF Run To Position", robot.armMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
 
 

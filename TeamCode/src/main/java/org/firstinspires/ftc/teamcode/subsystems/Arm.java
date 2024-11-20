@@ -8,10 +8,10 @@ import org.firstinspires.ftc.teamcode.enums.ArmPosition;
 public class Arm extends SubSystem {
     public ArmPosition armState;
     private RobotHardware robot;
-    public boolean rightBumperPressed = false;
-    public boolean leftBumperPressed = false;
-    private final int ARM_FRONT = 0;
-    private final int ARM_BACK = 384;
+    public boolean DPAD_UP = false;
+    public boolean DPAD_DOWN = false;
+    private final int ARM_FRONT = 1680;
+    private final int ARM_BACK = 0;
 
     private final double ARM_MAX_POWER = .7;
     private final int ARM_POSITION_TOLERANCE = 10;
@@ -37,8 +37,8 @@ public class Arm extends SubSystem {
         switch (armState) {
             case Back:
                 if (Math.abs(robot.armMotor.getCurrentPosition() - ARM_BACK) < ARM_POSITION_TOLERANCE) {
-                    if (leftBumperPressed) {
-                        robot.armMotor.setTargetPosition(ARM_BACK);
+                    if (DPAD_UP) {
+                        robot.armMotor.setTargetPosition(ARM_FRONT);
                         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.armMotor.setPower(ARM_MAX_POWER);
                         armState = ArmPosition.Front;
@@ -47,8 +47,8 @@ public class Arm extends SubSystem {
 
             case Front:
                 if (Math.abs(robot.armMotor.getCurrentPosition() - ARM_FRONT) < ARM_POSITION_TOLERANCE) {
-                    if (rightBumperPressed) {
-                        robot.armMotor.setTargetPosition(ARM_FRONT);
+                    if (DPAD_DOWN) {
+                        robot.armMotor.setTargetPosition(ARM_BACK);
                         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.armMotor.setPower(ARM_MAX_POWER);
                         armState = ArmPosition.Back;
@@ -64,8 +64,8 @@ public class Arm extends SubSystem {
 
     }
 
-    public void setProperties(boolean leftBumper, boolean rightBumper) {
-        leftBumperPressed = leftBumper;
-        rightBumperPressed = rightBumper;
+    public void setProperties(boolean dpadDown, boolean dpadUp) {
+        DPAD_DOWN = dpadDown;
+        DPAD_UP = dpadUp;
     }
 }
