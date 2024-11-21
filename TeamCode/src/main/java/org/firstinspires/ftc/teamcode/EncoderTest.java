@@ -109,7 +109,7 @@ public class EncoderTest extends OpMode {
         gamePad.readButtons();
         telemetry.addData("Status", "Run Time: " + runtime);
         // The actual increment and speed will depend on the motor you are testing.
-        float ENCODER_INCREMENT = 5000f;
+        float ENCODER_INCREMENT = 769f;
         double MAX_VELOCITY = 2900;
         double RUN_VELOCITY = MAX_VELOCITY * .7f;
         if (gamePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
@@ -157,8 +157,8 @@ public class EncoderTest extends OpMode {
      * @param motor  Motor to stop.
      */
     private void stopAndResetEncoder(DcMotorEx motor) {
-        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }
