@@ -16,9 +16,9 @@ public class Lift extends SubSystem {
     // Encoder positions for the lift.
     //TODO Test to find the proper values.
     private final int LIFT_DOWN = 0;
-    private final int LIFT_LOW = 384;
+    private final int LIFT_LOW = -797;
 
-    private final int LIFT_HIGH = 768;
+    private final int LIFT_HIGH = -1866;
 
     private final double LIFT_MAX_POWER = .7;
     private final int LIFT_POSITION_TOLERANCE = 10;
