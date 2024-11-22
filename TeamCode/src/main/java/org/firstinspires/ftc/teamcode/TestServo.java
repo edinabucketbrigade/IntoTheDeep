@@ -2,13 +2,18 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.hardware.ServoEx;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.Range;
 
 /*
-    An iterative opMode used to test servos. It uses the SimpleServo class from FTCLib.
+    An iterative opMode used to test servos.
+    The ServoImplEx class is used to try to extend the range of some servos.
     The behavior you see depends on the specific servo you are using. Read the specs for
     your servo and modify the test code to fit.
  */
@@ -16,17 +21,15 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 //@Disabled
 public class TestServo extends OpMode {
     static final double INCREMENT = 0.1;     // amount to slew servo each button press.
-    private double minScale = 0;
-    private double maxScale = 1;
-//    private ServoImplEx servo;
-    private SimpleServo servo;
+    private Servo servo;
     private double position = 0;
     private GamepadEx gamepad;
 
     @Override
     public void init() {
         // Make the name match your config file and robot.
-        servo = new SimpleServo(hardwareMap, "servo1", 0, 90);
+        servo = hardwareMap.get(ServoImplEx.class, "servo1");
+        ((ServoImplEx) servo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         gamepad = new GamepadEx(gamepad1);
         showTelemetry();
         telemetry.update();
@@ -52,12 +55,6 @@ public class TestServo extends OpMode {
             position = .5;
         }
 
-        if (gamepad.wasJustPressed(GamepadKeys.Button.A)) {
-            minScale = 0;
-            maxScale = 1;
-            servo.setRange(minScale, maxScale);
-        }
-
         if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_UP) && position < 1) {
             position += INCREMENT;
         }
@@ -66,34 +63,17 @@ public class TestServo extends OpMode {
             position -= INCREMENT;
         }
 
-        if (gamepad.wasJustReleased(GamepadKeys.Button.X)) {
-            minScale = position;
-            servo.setRange(minScale, maxScale);
-        }
-
-        if (gamepad.wasJustReleased(GamepadKeys.Button.B)) {
-            maxScale = position;
-            servo.setRange(minScale, maxScale);
-        }
-        if (gamepad.wasJustReleased((GamepadKeys.Button.BACK))) {
-            ((PwmControl) servo).setPwmDisable();
-        }
-
         servo.setPosition(position);
         showTelemetry();
     }
 
     private void showTelemetry() {
-        telemetry.addLine("Disable Servo = back");
         telemetry.addLine("Left bumper = 0");
         telemetry.addLine("Right bumper = 1");
         telemetry.addLine("Y = .5 (middle)");
-        telemetry.addLine("X = Set current position as Min. scale");
-        telemetry.addLine("B = Set current position as Max. scale");
-        telemetry.addLine("A = Reset scale to 0-1");
         telemetry.addLine("Dpad up: Increase position");
         telemetry.addLine("Dpad down: Decrease position");
-        telemetry.addData("Scale", "%5.2f - %5.2f", minScale, maxScale);
-        telemetry.addData("Position", position);
+        telemetry.addData("Position (not from servo)", position);
+        telemetry.update();
     }
 }
