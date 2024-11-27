@@ -10,8 +10,8 @@ public class Bucket extends SubSystem {
     private RobotHardware robot;
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
-    private final double BUCKET_DOWN = 0;
-    private final double BUCKET_UP = 1;
+    private final double BUCKET_DOWN = 1;
+    private final double BUCKET_UP = 0.3;
 
     public Bucket(RobotHardware robot) {
         this.robot = robot;
@@ -20,8 +20,8 @@ public class Bucket extends SubSystem {
 
     @Override
     public void init() {
-        bucketState = BucketPosition.Up;
-        robot.bucketServo.setPosition(BUCKET_UP);
+        bucketState = BucketPosition.Down;
+        robot.bucketServo.setPosition(BUCKET_DOWN);
     }
 
     @Override
