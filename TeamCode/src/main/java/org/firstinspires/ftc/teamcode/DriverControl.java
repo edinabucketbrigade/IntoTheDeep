@@ -99,8 +99,8 @@ public class DriverControl extends LinearOpMode {
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.X),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.Y));
 
-            bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+            bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_UP));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value

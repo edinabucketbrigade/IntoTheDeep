@@ -8,8 +8,8 @@ public class Bucket extends SubSystem {
 
     public BucketPosition bucketState;
     private RobotHardware robot;
-    public boolean rightBumperPressed = false;
-    public boolean leftBumperPressed = false;
+    public boolean DPAD_UP = false;
+    public boolean DPAD_DOWN = false;
     private final double BUCKET_DOWN = 0;
     private final double BUCKET_UP = 1;
 
@@ -20,8 +20,8 @@ public class Bucket extends SubSystem {
 
     @Override
     public void init() {
-        bucketState = BucketPosition.Down;
-        robot.bucketServo.setPosition(BUCKET_DOWN);
+        bucketState = BucketPosition.Up;
+        robot.bucketServo.setPosition(BUCKET_UP);
     }
 
     @Override
@@ -32,12 +32,12 @@ public class Bucket extends SubSystem {
     public void update() {
         switch (bucketState) {
             case Up:
-                if (leftBumperPressed) {
+                if (DPAD_DOWN) {
                     robot.bucketServo.setPosition(BUCKET_DOWN);
                     bucketState = BucketPosition.Down;
                 }
             case Down:
-                if (rightBumperPressed) {
+                if (DPAD_UP) {
                     robot.bucketServo.setPosition(BUCKET_UP);
                     bucketState = BucketPosition.Up;
                 }
@@ -45,7 +45,7 @@ public class Bucket extends SubSystem {
     }
 
     public void setProperties(boolean leftBumper, boolean rightBumper) {
-        leftBumperPressed = leftBumper;
-        rightBumperPressed = rightBumper;
+        DPAD_DOWN = leftBumper;
+        DPAD_UP = rightBumper;
     }
 }
