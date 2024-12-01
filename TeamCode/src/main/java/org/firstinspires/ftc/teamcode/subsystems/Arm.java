@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static com.arcrobotics.ftclib.gamepad.GamepadKeys.Button.DPAD_RIGHT;
+
+import static org.firstinspires.ftc.teamcode.enums.ArmPosition.Neutral;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -11,7 +15,9 @@ public class Arm extends SubSystem {
     private Lift lift;
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
-    private final int ARM_FRONT = 1680;
+    public boolean DPAD_RIGHT = false;
+    private final int ARM_FRONT = -1650;
+    private final int ARM_NEUTRAL = -844;
     private final int ARM_BACK = 0;
 
     private final double ARM_MAX_POWER = .7;
@@ -44,6 +50,12 @@ public class Arm extends SubSystem {
                         robot.armMotor.setPower(ARM_MAX_POWER);
                         armState = ArmPosition.Front;
                     }
+                    if (DPAD_RIGHT) {
+                        robot.armMotor.setTargetPosition(ARM_NEUTRAL);
+                        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.armMotor.setPower(ARM_MAX_POWER);
+                        armState = Neutral;
+                    }
                 }
 
             case Front:
@@ -54,7 +66,30 @@ public class Arm extends SubSystem {
                         robot.armMotor.setPower(ARM_MAX_POWER);
                         armState = ArmPosition.Back;
                     }
+                    if (DPAD_RIGHT) {
+                        robot.armMotor.setTargetPosition(ARM_NEUTRAL);
+                        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.armMotor.setPower(ARM_MAX_POWER);
+                        armState = Neutral;
+                    }
                 }
+
+            case Neutral:
+                if (Math.abs(robot.armMotor.getCurrentPosition() - ARM_NEUTRAL) < ARM_POSITION_TOLERANCE) {
+                    if (DPAD_DOWN) {
+                        robot.armMotor.setTargetPosition(ARM_BACK);
+                        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.armMotor.setPower(ARM_MAX_POWER);
+                        armState = ArmPosition.Back;
+                    }
+                    if (DPAD_UP) {
+                        robot.armMotor.setTargetPosition(ARM_FRONT);
+                        robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.armMotor.setPower(ARM_MAX_POWER);
+                        armState = ArmPosition.Front;
+                    }
+                }
+
                 break;
             default:
                 // if get here, there is a problem
@@ -65,12 +100,9 @@ public class Arm extends SubSystem {
 
     }
 
-    public void setProperties(boolean dpadDown, boolean dpadUp) {
+    public void setProperties(boolean dpadDown, boolean dpadUp, boolean dpadNeutral) {
         DPAD_DOWN = dpadDown;
         DPAD_UP = dpadUp;
-    }
-
-    public void setLift(Lift theLift) {
-        this.lift = theLift;
+        DPAD_RIGHT = dpadNeutral;
     }
 }

@@ -90,7 +90,8 @@ public class DriverControl extends LinearOpMode {
 
             // Driver gamepad (A on the driver hub)
             arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP));
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
             claw.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
