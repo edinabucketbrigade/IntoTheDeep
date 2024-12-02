@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -137,33 +138,7 @@ public class AutoRR extends LinearOpMode {
     public void runOpMode() {
         robot.init();
 
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        robot.rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
-
-        /* The next two lines define Hub orientation.
-         * To Do:  EDIT these two lines to match YOUR mounting configuration.
-         */
-        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
-        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
-        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
-
-        // Now initialize the IMU with this mounting orientation
-        // This sample expects the IMU to be in a REV Hub and named "imu".
-        robot.imu.initialize(new IMU.Parameters(orientationOnRobot));
-
-        // Ensure the robot is stationary.  Reset the encoders and set the motors to BRAKE mode
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-24, -60, Math.toRadians(0)));
 
         // Setup the paths.
         initializePaths();
