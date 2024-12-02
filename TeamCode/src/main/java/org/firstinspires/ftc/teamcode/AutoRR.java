@@ -33,7 +33,6 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -44,20 +43,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import java.util.ArrayList;
 
 /*
- *  This OpMode illustrates the concept of driving an autonomous path based on Gyro (IMU) heading and encoder counts.
+ *  Converted to use RR.
  *  The code is structured as a LinearOpMode
  *
- *  The path to be followed by the robot is built from a series of segments.
- *
- *  The code REQUIRES that you have encoders on the drive motors, otherwise you should use: RobotAutoDriveByTime;
+ *  The code REQUIRES that you have encoders on the drive motors.
  *
  *  This code uses the Universal IMU interface so it will work with either the BNO055, or BHI260 IMU.
- *
- *  It also requires that a positive power command moves both motors forward, and causes the encoders to count UP.
- *  So please verify that both of your motors move the robot forward on the first move.  If not, make the required correction.
- *  See the beginning of runOpMode() to set the FORWARD/REVERSE option for each motor.
- *
- *  Note: This code implements the requirement of calling setTargetPosition() at least once before switching to RUN_TO_POSITION mode.
  *
  *  Notes:
  *
@@ -68,9 +59,9 @@ import java.util.ArrayList;
  *
  */
 
-@Autonomous(name = "Drive By Gyro", group = "Robot")
+@Autonomous(name = "RR", group = "Robot")
 //@Disabled
-public class AutoGyro extends LinearOpMode {
+public class AutoRR extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
 
     private double headingError = 0;
