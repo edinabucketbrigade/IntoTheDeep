@@ -105,4 +105,8 @@ public class Arm extends SubSystem {
         DPAD_UP = dpadUp;
         DPAD_RIGHT = dpadNeutral;
     }
+
+    public void setLift(Lift theLift) {
+        this.lift = theLift;
+    }
 }
