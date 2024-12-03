@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.enums.ArmPosition;
 import org.firstinspires.ftc.teamcode.enums.ClawPosition;
@@ -7,6 +13,7 @@ import org.firstinspires.ftc.teamcode.enums.ClawPosition;
 public class Claw extends SubSystem {
 
     public ClawPosition clawState;
+    public Servo claw;
     private RobotHardware robot;
     public boolean rightBumperPressed = false;
     public boolean leftBumperPressed = false;
@@ -21,7 +28,8 @@ public class Claw extends SubSystem {
     @Override
     public void init() {
         clawState = ClawPosition.Close;
-        robot.clawServo.setPosition(CLAW_CLOSED);
+        claw = robot.clawServo;
+        claw.setPosition(CLAW_CLOSED);
     }
 
     @Override
@@ -33,14 +41,32 @@ public class Claw extends SubSystem {
         switch (clawState) {
             case Close:
                 if (leftBumperPressed) {
-                    robot.clawServo.setPosition(CLAW_CLOSED);
+                    claw.setPosition(CLAW_CLOSED);
                     clawState = ClawPosition.Open;
                 }
             case Open:
                 if (rightBumperPressed) {
-                    robot.clawServo.setPosition(CLAW_OPEN);
+                    claw.setPosition(CLAW_OPEN);
                     clawState = ClawPosition.Close;
                 }
+        }
+    }
+
+    public class ClawClose implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            claw.setPosition(CLAW_CLOSED);
+            clawState = ClawPosition.Close;
+            return false;
+        }
+    }
+
+    public class ClawOpen implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            claw.setPosition(CLAW_OPEN);
+            clawState = ClawPosition.Open;
+            return false;
         }
     }
 
