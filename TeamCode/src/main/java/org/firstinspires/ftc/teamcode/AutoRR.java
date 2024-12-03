@@ -101,44 +101,14 @@ public class AutoRR extends LinearOpMode {
     static final double P_TURN_GAIN = 0.02;     // Larger is more responsive, but also less stable.
     static final double P_DRIVE_GAIN = 0.03;     // Larger is more responsive, but also less stable.
 
-    // The following classes define parameters to the driving methods. They are used to construct
-    // paths for the autonomous strategy.
-    public static class DriveStraight {
-        double distance;
-        double heading;
-
-        public DriveStraight(double distance, double heading) {
-            this.distance = distance;
-            this.heading = heading;
-        }
-    }
-
-    public static class Turn {
-        double heading;
-
-        public Turn(double heading) {
-            this.heading = heading;
-        }
-    }
-
-    public static class HoldHeading {
-        double heading;
-        double holdTime;
-
-        public HoldHeading(double heading, double holdTime) {
-            this.heading = heading;
-            this.holdTime = holdTime;
-        }
-    }
-
     // A list of lists. Each item in paths defines a state in the autonomous process.
     public ArrayList<ArrayList> paths = new ArrayList<>();
 
     @Override
     public void runOpMode() {
         robot.init();
-
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-24, -60, Math.toRadians(0)));
+        Pose2d initialPose = new Pose2d(-24, -60, Math.tan(0));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, initialPose);
 
         // Setup the paths.
         initializePaths();
@@ -149,245 +119,17 @@ public class AutoRR extends LinearOpMode {
             telemetry.update();
         }
 
-        // Set the encoders for closed loop speed control, and reset the heading.
-        robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.imu.resetYaw();
 
         // Step through each segment of each path.
         for (ArrayList path : paths) {
             for (Object segment : path) {
-                switch (segment.getClass().getSimpleName()) {
-                    case "DriveStraight":
-                        driveStraight(DRIVE_SPEED, ((DriveStraight) segment).distance, ((DriveStraight) segment).heading);
-                        break;
-                    case "Turn":
-                        turnToHeading(TURN_SPEED, ((Turn) segment).heading);
-                        break;
-                    case "HoldHeading":
-                        holdHeading(TURN_SPEED, ((HoldHeading) segment).heading, ((HoldHeading) segment).holdTime);
-                        break;
-                    default:
-                        telemetry.addData("class", segment.getClass().getName());
-                        telemetry.update();
-                        sleep(3000);
-                }
             }
         }
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
         sleep(1000);  // Pause to display last telemetry message.
-    }
-
-    /**
-     * Take separate drive (fwd/rev) and turn (right/left) requests,
-     * combines them, and applies the appropriate speed commands to the left and right wheel motors.
-     *
-     * @param drive forward motor speed
-     * @param turn  clockwise turning motor speed.
-     */
-    public void moveRobot(double drive, double turn) {
-        driveSpeed = drive;     // save this value as a class member so it can be used by telemetry.
-        turnSpeed = turn;      // save this value as a class member so it can be used by telemetry.
-
-        leftSpeed = drive - turn;
-        rightSpeed = drive + turn;
-
-        // Scale speeds down if either one exceeds +/- 1.0;
-        double max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
-        if (max > 1.0) {
-            leftSpeed /= max;
-            rightSpeed /= max;
-        }
-
-        robot.leftBackDrive.setPower(leftSpeed);
-        robot.rightBackDrive.setPower(rightSpeed);
-    }
-
-    // **********  HIGH Level driving functions.  ********************
-
-    /**
-     * Drive in a straight line, on a fixed compass heading (angle), based on encoder counts.
-     * Move will stop if either of these conditions occur:
-     * 1) Move gets to the desired position
-     * 2) Driver stops the OpMode running.
-     *
-     * @param maxDriveSpeed MAX Speed for forward/rev motion (range 0 to +1.0) .
-     * @param distance      Distance (in inches) to move from current position.  Negative distance means move backward.
-     * @param heading       Absolute Heading Angle (in Degrees) relative to last gyro reset.
-     *                      0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                      If a relative angle is required, add/subtract from the current robotHeading.
-     */
-    public void driveStraight(double maxDriveSpeed,
-                              double distance,
-                              double heading) {
-
-        // Ensure that the OpMode is still active
-        if (opModeIsActive()) {
-
-            // Determine new target position, and pass to motor controller
-            int moveCounts = (int) (distance * COUNTS_PER_INCH);
-            leftTarget = robot.leftBackDrive.getCurrentPosition() + moveCounts;
-            rightTarget = robot.rightBackDrive.getCurrentPosition() + moveCounts;
-
-            // Set Target FIRST, then turn on RUN_TO_POSITION
-            robot.leftBackDrive.setTargetPosition(leftTarget);
-            robot.rightBackDrive.setTargetPosition(rightTarget);
-
-            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            // Set the required driving speed  (must be positive for RUN_TO_POSITION)
-            // Start driving straight, and then enter the control loop
-            maxDriveSpeed = Math.abs(maxDriveSpeed);
-            moveRobot(maxDriveSpeed, 0);
-
-            // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() &&
-                    (robot.leftBackDrive.isBusy() && robot.rightBackDrive.isBusy())) {
-
-                // Determine required steering to keep on heading
-                turnSpeed = getSteeringCorrection(heading, P_DRIVE_GAIN);
-
-                // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0)
-                    turnSpeed *= -1.0;
-
-                // Apply the turning correction to the current driving speed.
-                moveRobot(driveSpeed, turnSpeed);
-
-                // Display drive status for the driver.
-                sendTelemetry(true);
-            }
-
-            // Stop all motion & Turn off RUN_TO_POSITION
-            moveRobot(0, 0);
-            robot.leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-    }
-
-    /**
-     * Spin on the central axis to point in a new direction.
-     * <p>
-     * Move will stop if either of these conditions occur:
-     * <p>
-     * 1) Move gets to the heading (angle)
-     * <p>
-     * 2) Driver stops the OpMode running.
-     *
-     * @param maxTurnSpeed Desired MAX speed of turn. (range 0 to +1.0)
-     * @param heading      Absolute Heading Angle (in Degrees) relative to last gyro reset.
-     *                     0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                     If a relative angle is required, add/subtract from current heading.
-     */
-    public void turnToHeading(double maxTurnSpeed, double heading) {
-
-        // Run getSteeringCorrection() once to pre-calculate the current error
-        getSteeringCorrection(heading, P_DRIVE_GAIN);
-
-        // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && (Math.abs(headingError) > HEADING_THRESHOLD)) {
-
-            // Determine required steering to keep on heading
-            turnSpeed = getSteeringCorrection(heading, P_TURN_GAIN);
-
-            // Clip the speed to the maximum permitted value.
-            turnSpeed = Range.clip(turnSpeed, -maxTurnSpeed, maxTurnSpeed);
-
-            // Pivot in place by applying the turning correction
-            moveRobot(0, turnSpeed);
-
-            // Display drive status for the driver.
-            sendTelemetry(false);
-        }
-
-        // Stop all motion;
-        moveRobot(0, 0);
-    }
-
-    /**
-     * Obtain & hold a heading for a finite amount of time
-     * <p>
-     * Move will stop once the requested time has elapsed
-     * <p>
-     * This function is useful for giving the robot a moment to stabilize its heading between movements.
-     *
-     * @param maxTurnSpeed Maximum differential turn speed (range 0 to +1.0)
-     * @param heading      Absolute Heading Angle (in Degrees) relative to last gyro reset.
-     *                     0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                     If a relative angle is required, add/subtract from current heading.
-     * @param holdTime     Length of time (in seconds) to hold the specified heading.
-     */
-    public void holdHeading(double maxTurnSpeed, double heading, double holdTime) {
-
-        ElapsedTime holdTimer = new ElapsedTime();
-        holdTimer.reset();
-
-        // keep looping while we have time remaining.
-        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
-            // Determine required steering to keep on heading
-            turnSpeed = getSteeringCorrection(heading, P_TURN_GAIN);
-
-            // Clip the speed to the maximum permitted value.
-            turnSpeed = Range.clip(turnSpeed, -maxTurnSpeed, maxTurnSpeed);
-
-            // Pivot in place by applying the turning correction
-            moveRobot(0, turnSpeed);
-
-            // Display drive status for the driver.
-            sendTelemetry(false);
-        }
-
-        // Stop all motion;
-        moveRobot(0, 0);
-    }
-
-    // **********  LOW Level driving functions.  ********************
-
-    /**
-     * Use a Proportional Controller to determine how much steering correction is required.
-     *
-     * @param desiredHeading   The desired absolute heading (relative to last heading reset)
-     * @param proportionalGain Gain factor applied to heading error to obtain turning power.
-     * @return Turning power needed to get to required heading.
-     */
-    public double getSteeringCorrection(double desiredHeading, double proportionalGain) {
-        targetHeading = desiredHeading;  // Save for telemetry
-
-        // Determine the heading current error
-        headingError = targetHeading - getHeading();
-
-        // Normalize the error to be within +/- 180 degrees
-        while (headingError > 180) headingError -= 360;
-        while (headingError <= -180) headingError += 360;
-
-        // Multiply the error by the gain to determine the required steering correction/  Limit the result to +/- 1.0
-        return Range.clip(headingError * proportionalGain, -1, 1);
-    }
-
-    /**
-     * Display the various control parameters while driving
-     *
-     * @param straight Set to true if we are driving straight, and the encoder positions should be included in the telemetry.
-     */
-    private void sendTelemetry(boolean straight) {
-
-        if (straight) {
-            telemetry.addData("Motion", "Drive Straight");
-            telemetry.addData("Target Pos L:R", "%7d:%7d", leftTarget, rightTarget);
-            telemetry.addData("Actual Pos L:R", "%7d:%7d", robot.leftBackDrive.getCurrentPosition(),
-                    robot.rightBackDrive.getCurrentPosition());
-        } else {
-            telemetry.addData("Motion", "Turning");
-        }
-
-        telemetry.addData("Heading- Target : Current", "%5.2f : %5.0f", targetHeading, getHeading());
-        telemetry.addData("Error  : Steer Pwr", "%5.1f : %5.1f", headingError, turnSpeed);
-        telemetry.addData("Wheel Speeds L : R", "%5.2f : %5.2f", leftSpeed, rightSpeed);
-        telemetry.update();
-        sleep(3000);
     }
 
     /**
@@ -407,26 +149,5 @@ public class AutoRR extends LinearOpMode {
         //          Add a sleep(2000) after any step to keep the telemetry data visible for review
 
         // Segments are the parts of a path (one part of your autonomous strategy,)
-        ArrayList<Object> segments = new ArrayList<>();
-        segments.add(new DriveStraight(24, 0));
-        segments.add(new Turn(-45));
-        segments.add(new HoldHeading(0, .5));
-        paths.add(segments);
-
-        segments = new ArrayList<>();
-        segments.add(new DriveStraight(17, -45));
-        segments.add(new Turn(45));
-        segments.add(new HoldHeading(45, .5));
-        paths.add(segments);
-
-        segments = new ArrayList<>();
-        segments.add(new DriveStraight(17, 45));
-        segments.add(new Turn(0));
-        segments.add(new HoldHeading(0, 1));
-        paths.add(segments);
-
-        segments = new ArrayList<>();
-        segments.add(new DriveStraight(-45, 0));
-        paths.add(segments);
     }
 }
