@@ -61,6 +61,10 @@ public class Claw extends SubSystem {
         }
     }
 
+    public Action clawClose() {
+        return new ClawClose();
+    }
+
     public class ClawOpen implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
@@ -68,6 +72,10 @@ public class Claw extends SubSystem {
             clawState = ClawPosition.Open;
             return false;
         }
+    }
+
+    public Action clawOpen() {
+        return new ClawOpen();
     }
 
     public void setProperties(boolean leftBumper, boolean rightBumper) {

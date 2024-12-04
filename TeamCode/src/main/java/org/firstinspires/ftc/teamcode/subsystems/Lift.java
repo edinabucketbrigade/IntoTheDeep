@@ -125,6 +125,10 @@ public class Lift extends SubSystem {
         }
     }
 
+    public Action liftDown() {
+        return new LiftDown();
+    }
+
     public class LiftLow implements Action {
         private boolean initialized = false;
 
@@ -147,6 +151,10 @@ public class Lift extends SubSystem {
         }
     }
 
+    public Action lifLow() {
+        return new LiftLow();
+    }
+
     public class LiftHigh implements Action {
         private boolean initialized = false;
 
@@ -167,6 +175,10 @@ public class Lift extends SubSystem {
                 return true;
             }
         }
+    }
+
+    public Action lifHigh() {
+        return new LiftHigh();
     }
 
     // Respond to gamepad inputs.

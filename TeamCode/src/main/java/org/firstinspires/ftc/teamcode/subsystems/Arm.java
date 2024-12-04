@@ -132,6 +132,10 @@ public class Arm extends SubSystem {
         }
     }
 
+    public Action armNeutral() {
+        return new ArmNeutral();
+    }
+
     public class ArmBack implements Action {
         private boolean initialized = false;
 
@@ -154,6 +158,10 @@ public class Arm extends SubSystem {
         }
     }
 
+    public Action armBack() {
+        return new ArmBack();
+    }
+
     public class ArmFront implements Action {
         private boolean initialized = false;
 
@@ -174,6 +182,10 @@ public class Arm extends SubSystem {
                 return true;
             }
         }
+    }
+
+    public Action armFront() {
+        return new ArmFront();
     }
 
     public void setProperties(boolean dpadDown, boolean dpadUp, boolean dpadNeutral) {

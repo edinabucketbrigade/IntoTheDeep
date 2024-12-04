@@ -61,6 +61,10 @@ public class Bucket extends SubSystem {
         }
     }
 
+    public Action bucketDown() {
+        return new BucketDown();
+    }
+
     public class BucketUp implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
@@ -68,6 +72,10 @@ public class Bucket extends SubSystem {
             bucketState = BucketPosition.Up;
             return false;
         }
+    }
+
+    public Action bucketUp() {
+        return new BucketUp();
     }
 
     public void setProperties(boolean leftBumper, boolean rightBumper) {
