@@ -67,7 +67,7 @@ import java.util.List;
  *
  */
 
-@Autonomous(name = "RR", group = "Robot")
+@Autonomous(name = "RR", group = "Robot", preselectTeleOp = "DriverControl")
 //@Disabled
 public class AutoRR extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
