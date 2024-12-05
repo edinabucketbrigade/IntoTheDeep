@@ -41,6 +41,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.enums.StartPosition;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
@@ -76,14 +77,23 @@ public class AutoRR extends LinearOpMode {
     private final Claw claw = new Claw(robot);
     private final Arm arm = new Arm(robot);
     private Pose2d initialPose;
-    private List<TrajectoryActionBuilder> paths;
+    // Trajectories and Actions for RR to follow.
+    private StartPosition startPosition = StartPosition.None;
     private TrajectoryActionBuilder moveToBuckets;
     private Action moveFromBucketsToObservatory;
 
     @Override
     public void runOpMode() {
         robot.init();
-        initialPose = new Pose2d(-24, -60, Math.tan(0));
+        //TODO: Add menu code here to get start position
+        if (startPosition == StartPosition.Left) {
+            initialPose = new Pose2d(-24, -60, Math.tan(0));
+        }
+
+        if (startPosition == StartPosition.Right) {
+            initialPose = new Pose2d(12, -60, Math.tan(0));
+        }
+
         drive = new MecanumDrive(hardwareMap, initialPose);
         // Setup the paths.
         initializePath();
@@ -94,15 +104,18 @@ public class AutoRR extends LinearOpMode {
             telemetry.update();
         }
 
+        // Make sure the imu is correct.
         robot.imu.resetYaw();
 
-        Action trajectoryAction = ((TrajectoryActionBuilder) paths.get(0)).build();
         Actions.runBlocking(
-                new SequentialAction(trajectoryAction,
+                new SequentialAction(
+                        moveToBuckets.build(),
                         lift.lifHigh(),
                         new SleepAction(.5),
                         bucket.bucketUp(),
-                        bucket.bucketDown()
+                        bucket.bucketDown(),
+                        lift.liftDown(),
+                        moveFromBucketsToObservatory
                 ));
 
         telemetry.addData("Path", "Complete");
@@ -119,7 +132,7 @@ public class AutoRR extends LinearOpMode {
     }
 
     /**
-     * Create segments and paths for the robot to follow.
+     * Create RR Trajectories and Actions.
      */
     public void initializePath() {
         moveToBuckets = drive.actionBuilder(initialPose)
