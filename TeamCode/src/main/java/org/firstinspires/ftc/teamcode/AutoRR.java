@@ -41,14 +41,10 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.enums.StartPosition;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  *  Converted to use RR.
@@ -78,19 +74,24 @@ public class AutoRR extends LinearOpMode {
     private final Arm arm = new Arm(robot);
     private Pose2d initialPose;
     // Trajectories and Actions for RR to follow.
-    private StartPosition startPosition = StartPosition.None;
     private TrajectoryActionBuilder moveToBuckets;
     private Action moveFromBucketsToObservatory;
 
     @Override
     public void runOpMode() {
         robot.init();
-        //TODO: Add menu code here to get start position
-        if (startPosition == StartPosition.Left) {
+        AutonomousConfiguration autonomousConfiguration = new AutonomousConfiguration();
+        autonomousConfiguration.init(this.gamepad1, this.telemetry, hardwareMap.appContext);
+
+        while (!opModeIsActive()) {
+            autonomousConfiguration.init_loop();
+        }
+
+        if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
             initialPose = new Pose2d(-24, -60, Math.tan(0));
         }
 
-        if (startPosition == StartPosition.Right) {
+        if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Right) {
             initialPose = new Pose2d(12, -60, Math.tan(0));
         }
 
@@ -106,6 +107,9 @@ public class AutoRR extends LinearOpMode {
 
         // Make sure the imu is correct.
         robot.imu.resetYaw();
+
+        // Delay if requested.
+        sleep(autonomousConfiguration.getDelayStartSeconds());
 
         Actions.runBlocking(
                 new SequentialAction(
@@ -137,7 +141,7 @@ public class AutoRR extends LinearOpMode {
     public void initializePath() {
         moveToBuckets = drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45));
-        //
+        // After bucket drop drive back to observatory.
         moveFromBucketsToObservatory = moveToBuckets.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(50, -60), Math.toRadians(0))
                 .build();
