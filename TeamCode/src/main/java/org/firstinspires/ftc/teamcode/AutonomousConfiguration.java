@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -101,35 +102,35 @@ public class AutonomousConfiguration {
     public void init_loop() {
         gamepadEx.readButtons();
         //Set default options (ignore what was saved to the file.)
-        if (gamepadEx.wasJustReleased(gamepadExKeys.Button.BACK)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.BACK)) {
             resetOptions();
         }
         //Alliance Color
-        if (gamepadEx.wasJustReleased(gamepadExKeys.Button.X)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.X)) {
             autonomousOptions.setAllianceColor(AutonomousOptions.AllianceColor.Blue);
             telemetry.speak("blue");
         }
 
-        if (gamepadEx.wasJustReleased(gamepadExKeys.Button.B)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)) {
             autonomousOptions.setAllianceColor(AutonomousOptions.AllianceColor.Red);
             telemetry.speak("red");
         }
         teleAlliance.setValue(autonomousOptions.getAllianceColor());
 
         //Start Position
-        if (gamepadEx.wasJustReleased(gamepadExKeys.Button.DPAD_RIGHT)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)) {
             autonomousOptions.setStartPosition(AutonomousOptions.StartPosition.Right);
             telemetry.speak("start right");
         }
 
-        if (gamepadEx.wasJustReleased(gamepadExKeys.Button.DPAD_LEFT)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
             autonomousOptions.setStartPosition(AutonomousOptions.StartPosition.Left);
             telemetry.speak("start left");
         }
         teleStartPosition.setValue(autonomousOptions.getStartPosition());
 
         //Park Location
-        if (gamepadEx.wasJustReleased(gamepadExKeys.Button.DPAD_UP)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_UP)) {
             AutonomousOptions.ParkLocation parkLocation = autonomousOptions.getParkLocation().getNext();
             switch (parkLocation) {
                 case None:
@@ -144,12 +145,12 @@ public class AutonomousConfiguration {
         }
 
         // Keep range within 0-15 seconds. Wrap at either end.
-        if (gamepadEx.wasJustReleased(gamepadExKeys.Button.LEFT_BUMPER)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
             autonomousOptions.setDelayStartSeconds(autonomousOptions.getDelayStartSeconds() - 1);
             autonomousOptions.setDelayStartSeconds((autonomousOptions.getDelayStartSeconds() < 0) ? 15 : autonomousOptions.getDelayStartSeconds());
             telemetry.speak("delay start " + autonomousOptions.getDelayStartSeconds() + " seconds");
         }
-        if (gamepadEx.wasJustReleased(gamepadExKeys.Button.RIGHT_BUMPER)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) {
             autonomousOptions.setDelayStartSeconds(autonomousOptions.getDelayStartSeconds() + 1);
             autonomousOptions.setDelayStartSeconds((autonomousOptions.getDelayStartSeconds() > 15) ? 0 : autonomousOptions.getDelayStartSeconds());
             telemetry.speak("delay start " + autonomousOptions.getDelayStartSeconds() + " seconds");
