@@ -33,10 +33,8 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -74,8 +72,13 @@ public class AutoRR extends LinearOpMode {
     private final Claw claw = new Claw(robot);
     private final Arm arm = new Arm(robot);
     private Pose2d initialPose;
+    // Poses for key locations on the field.
+    private Vector2d bucketDropPosition = new Vector2d(-50, -50);
+    private Pose2d bucketDropPose = new Pose2d(bucketDropPosition, Math.toRadians(45));
+    private Vector2d observatoryPosition = new Vector2d(50, -60);
+    private Pose2d observatoryPose = new Pose2d(observatoryPosition, Math.toRadians(0));
     // Trajectories and Actions for RR to follow.
-    private TrajectoryActionBuilder moveToBuckets;
+    private Action moveToBuckets;
     private Action moveFromBucketsToObservatory;
 
     @Override
@@ -114,7 +117,7 @@ public class AutoRR extends LinearOpMode {
 
         Actions.runBlocking(
                 new SequentialAction(
-                        moveToBuckets.build(),
+                        moveToBuckets,
                         lift.lifHigh(),
                         new SleepAction(.5),
                         bucket.bucketUp(),
@@ -141,10 +144,11 @@ public class AutoRR extends LinearOpMode {
      */
     public void initializePath() {
         moveToBuckets = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45));
+                .strafeToLinearHeading(bucketDropPosition, bucketDropPose.heading)
+                .build();
         // After bucket drop drive back to observatory.
-        moveFromBucketsToObservatory = moveToBuckets.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(50, -60), Math.toRadians(0))
+        moveFromBucketsToObservatory = drive.actionBuilder(bucketDropPose)
+                .strafeToLinearHeading(observatoryPosition, observatoryPose.heading)
                 .build();
     }
 }
