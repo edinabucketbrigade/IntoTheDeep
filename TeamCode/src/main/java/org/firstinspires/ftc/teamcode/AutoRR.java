@@ -69,7 +69,6 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 public class AutoRR extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
     private MecanumDrive drive;
-    GamepadEx gamepad = new GamepadEx(this.gamepad1);
     private final Lift lift = new Lift(robot);
     private final Bucket bucket = new Bucket(robot);
     private final Claw claw = new Claw(robot);
@@ -83,7 +82,7 @@ public class AutoRR extends LinearOpMode {
     public void runOpMode() {
         robot.init();
         AutonomousConfiguration autonomousConfiguration = new AutonomousConfiguration();
-        autonomousConfiguration.init(gamepad, this.telemetry, hardwareMap.appContext);
+        autonomousConfiguration.init(this.gamepad1, this.telemetry, hardwareMap.appContext);
 
         while (!opModeIsActive()) {
             autonomousConfiguration.init_loop();
