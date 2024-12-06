@@ -33,7 +33,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class AutonomousConfiguration {
     private AutonomousOptions autonomousOptions;
-    private GamepadEx gamepadEx;
+    private GamepadEx gamepad;
     private Context context;
     private boolean readyToStart;
     private boolean savedToFile;
@@ -48,10 +48,10 @@ public class AutonomousConfiguration {
     /*
      * Pass in the gamepad and telemetry from your opMode.
      */
-    public void init(Gamepad gamepad, Telemetry telemetry1, Context context) {
+    public void init(GamepadEx gamepad, Telemetry telemetry1, Context context) {
         this.context = context;
+        this.gamepad = gamepad;
         ReadWriteAutoOptions readWriteAutoOptions = new ReadWriteAutoOptions(context);
-        gamepadEx = new GamepadEx(gamepad);
         this.telemetry = telemetry1;
         // See if we saved the options yet. If not, save the defaults.
         autonomousOptions = new AutonomousOptions();
@@ -99,37 +99,37 @@ public class AutonomousConfiguration {
     // Call this in the init_loop from your opMode. It will returns true if you press the
     // game pad Start.
     public void init_loop() {
-        gamepadEx.readButtons();
+        gamepad.readButtons();
         //Set default options (ignore what was saved to the file.)
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.BACK)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.BACK)) {
             resetOptions();
         }
         //Alliance Color
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.X)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.X)) {
             autonomousOptions.setAllianceColor(AutonomousOptions.AllianceColor.Blue);
             telemetry.speak("blue");
         }
 
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.B)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.B)) {
             autonomousOptions.setAllianceColor(AutonomousOptions.AllianceColor.Red);
             telemetry.speak("red");
         }
         teleAlliance.setValue(autonomousOptions.getAllianceColor());
 
         //Start Position
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)) {
             autonomousOptions.setStartPosition(AutonomousOptions.StartPosition.Right);
             telemetry.speak("start right");
         }
 
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
             autonomousOptions.setStartPosition(AutonomousOptions.StartPosition.Left);
             telemetry.speak("start left");
         }
         teleStartPosition.setValue(autonomousOptions.getStartPosition());
 
         //Park Location
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.DPAD_UP)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_UP)) {
             AutonomousOptions.ParkLocation parkLocation = autonomousOptions.getParkLocation().getNext();
             switch (parkLocation) {
                 case None:
@@ -144,12 +144,12 @@ public class AutonomousConfiguration {
         }
 
         // Keep range within 0-15 seconds. Wrap at either end.
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
             autonomousOptions.setDelayStartSeconds(autonomousOptions.getDelayStartSeconds() - 1);
             autonomousOptions.setDelayStartSeconds((autonomousOptions.getDelayStartSeconds() < 0) ? 15 : autonomousOptions.getDelayStartSeconds());
             telemetry.speak("delay start " + autonomousOptions.getDelayStartSeconds() + " seconds");
         }
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) {
             autonomousOptions.setDelayStartSeconds(autonomousOptions.getDelayStartSeconds() + 1);
             autonomousOptions.setDelayStartSeconds((autonomousOptions.getDelayStartSeconds() > 15) ? 0 : autonomousOptions.getDelayStartSeconds());
             telemetry.speak("delay start " + autonomousOptions.getDelayStartSeconds() + " seconds");
@@ -161,7 +161,7 @@ public class AutonomousConfiguration {
         teleReadyToStart.setValue(readyToStart);
 
         //Save the options to a file if ready to start and start button is pressed.
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.START) && getReadyToStart()) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.START) && getReadyToStart()) {
             SaveOptions();
             savedToFile = true;
             teleSavedToFile.setValue(true);

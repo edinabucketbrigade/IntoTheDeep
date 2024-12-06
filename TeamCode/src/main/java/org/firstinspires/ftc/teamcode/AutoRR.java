@@ -36,6 +36,7 @@ import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -68,6 +69,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 public class AutoRR extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
     private MecanumDrive drive;
+    GamepadEx gamepad = new GamepadEx(gamepad1);
     private final Lift lift = new Lift(robot);
     private final Bucket bucket = new Bucket(robot);
     private final Claw claw = new Claw(robot);
@@ -81,7 +83,7 @@ public class AutoRR extends LinearOpMode {
     public void runOpMode() {
         robot.init();
         AutonomousConfiguration autonomousConfiguration = new AutonomousConfiguration();
-        autonomousConfiguration.init(this.gamepad1, this.telemetry, hardwareMap.appContext);
+        autonomousConfiguration.init(this.gamepad, this.telemetry, hardwareMap.appContext);
 
         while (!opModeIsActive()) {
             autonomousConfiguration.init_loop();
