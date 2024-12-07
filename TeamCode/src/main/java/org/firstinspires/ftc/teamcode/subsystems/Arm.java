@@ -15,7 +15,7 @@ public class Arm extends SubSystem {
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
-    private final int ARM_FRONT = -1650;
+    private final int ARM_FRONT = -1640;
     private final int ARM_NEUTRAL = -844;
     private final int ARM_BACK = 0;
 
@@ -43,7 +43,7 @@ public class Arm extends SubSystem {
         switch (armState) {
             case Back:
                 if (Math.abs(robot.armMotor.getCurrentPosition() - ARM_BACK) < ARM_POSITION_TOLERANCE) {
-                    if (DPAD_UP) {
+                    if (DPAD_DOWN) {
                         robot.armMotor.setTargetPosition(ARM_FRONT);
                         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.armMotor.setPower(ARM_MAX_POWER);
@@ -59,7 +59,7 @@ public class Arm extends SubSystem {
 
             case Front:
                 if (Math.abs(robot.armMotor.getCurrentPosition() - ARM_FRONT) < ARM_POSITION_TOLERANCE) {
-                    if (DPAD_DOWN) {
+                    if (DPAD_UP) {
                         robot.armMotor.setTargetPosition(ARM_BACK);
                         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.armMotor.setPower(ARM_MAX_POWER);
@@ -75,13 +75,13 @@ public class Arm extends SubSystem {
 
             case Neutral:
                 if (Math.abs(robot.armMotor.getCurrentPosition() - ARM_NEUTRAL) < ARM_POSITION_TOLERANCE) {
-                    if (DPAD_DOWN) {
+                    if (DPAD_UP) {
                         robot.armMotor.setTargetPosition(ARM_BACK);
                         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.armMotor.setPower(ARM_MAX_POWER);
                         armState = ArmPosition.Back;
                     }
-                    if (DPAD_UP) {
+                    if (DPAD_DOWN) {
                         robot.armMotor.setTargetPosition(ARM_FRONT);
                         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         robot.armMotor.setPower(ARM_MAX_POWER);
