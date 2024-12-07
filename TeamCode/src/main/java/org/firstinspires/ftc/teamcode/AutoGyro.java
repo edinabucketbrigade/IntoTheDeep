@@ -458,25 +458,24 @@ public class AutoGyro extends LinearOpMode {
 
         // Segments are the parts of a path (one part of your autonomous strategy,)
         ArrayList<Object> segments = new ArrayList<>();
-        segments.add(new DriveStraight(24, 0));
-        segments.add(new Turn(-45));
-        segments.add(new HoldHeading(0, .5));
-        paths.add(segments);
-
-        segments = new ArrayList<>();
-        segments.add(new DriveStraight(17, -45));
+        segments.add(new DriveStraight(-24, 10));
         segments.add(new Turn(45));
-        segments.add(new HoldHeading(45, .5));
         paths.add(segments);
-
-        segments = new ArrayList<>();
-        segments.add(new DriveStraight(17, 45));
-        segments.add(new Turn(0));
-        segments.add(new HoldHeading(0, 1));
-        paths.add(segments);
-
-        segments = new ArrayList<>();
-        segments.add(new DriveStraight(-45, 0));
-        paths.add(segments);
+//
+//        segments = new ArrayList<>();
+//        segments.add(new DriveStraight(17, -45));
+//        segments.add(new Turn(45));
+//        segments.add(new HoldHeading(45, .5));
+//        paths.add(segments);
+//
+//        segments = new ArrayList<>();
+//        segments.add(new DriveStraight(17, 45));
+//        segments.add(new Turn(0));
+//        segments.add(new HoldHeading(0, 1));
+//        paths.add(segments);
+//
+//        segments = new ArrayList<>();
+//        segments.add(new DriveStraight(-45, 0));
+//        paths.add(segments);
     }
 }
