@@ -20,7 +20,7 @@ public class Arm extends SubSystem {
     private final int ARM_BACK = 0;
 
     private final double ARM_MAX_POWER = .7;
-    private final int ARM_POSITION_TOLERANCE = 10;
+    private final int ARM_POSITION_TOLERANCE = 20;
 
     public Arm(RobotHardware robot) {
         this.robot = robot;
