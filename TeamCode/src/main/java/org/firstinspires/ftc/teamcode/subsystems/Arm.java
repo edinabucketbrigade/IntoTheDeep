@@ -22,7 +22,7 @@ public class Arm extends SubSystem {
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
-    private final int ARM_FRONT = -1650;
+    private final int ARM_FRONT = -1640;
     private final int ARM_NEUTRAL = -844;
     private final int ARM_BACK = 0;
 
@@ -51,7 +51,7 @@ public class Arm extends SubSystem {
         switch (armState) {
             case Back:
                 if (Math.abs(arm.getCurrentPosition() - ARM_BACK) < ARM_POSITION_TOLERANCE) {
-                    if (DPAD_UP) {
+                    if (DPAD_DOWN) {
                         arm.setTargetPosition(ARM_FRONT);
                         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         arm.setPower(ARM_MAX_POWER);
@@ -69,7 +69,7 @@ public class Arm extends SubSystem {
 
             case Front:
                 if (Math.abs(arm.getCurrentPosition() - ARM_FRONT) < ARM_POSITION_TOLERANCE) {
-                    if (DPAD_DOWN) {
+                    if (DPAD_UP) {
                         arm.setTargetPosition(ARM_BACK);
                         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         arm.setPower(ARM_MAX_POWER);
@@ -86,13 +86,13 @@ public class Arm extends SubSystem {
 
             case Neutral:
                 if (Math.abs(arm.getCurrentPosition() - ARM_NEUTRAL) < ARM_POSITION_TOLERANCE) {
-                    if (DPAD_DOWN) {
+                    if (DPAD_UP) {
                         arm.setTargetPosition(ARM_BACK);
                         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         arm.setPower(ARM_MAX_POWER);
                         armState = ArmPosition.Back;
                     }
-                    if (DPAD_UP) {
+                    if (DPAD_DOWN) {
                         arm.setTargetPosition(ARM_FRONT);
                         arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                         arm.setPower(ARM_MAX_POWER);

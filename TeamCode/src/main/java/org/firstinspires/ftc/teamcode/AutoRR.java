@@ -37,6 +37,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -84,6 +85,8 @@ public class AutoRR extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init();
+        lift.init();
+        bucket.init();
         AutonomousConfiguration autonomousConfiguration = new AutonomousConfiguration();
         autonomousConfiguration.init(this.gamepad1, this.telemetry, hardwareMap.appContext);
 
@@ -92,7 +95,7 @@ public class AutoRR extends LinearOpMode {
         }
 
         if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
-            initialPose = new Pose2d(-24, -60, Math.tan(0));
+            initialPose = new Pose2d(24, 60, Math.toRadians(0));
         }
 
         if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Right) {
@@ -119,7 +122,7 @@ public class AutoRR extends LinearOpMode {
                 new SequentialAction(
                         moveToBuckets,
                         lift.lifHigh(),
-                        new SleepAction(.5),
+                        new SleepAction(5),
                         bucket.bucketUp(),
                         bucket.bucketDown(),
                         lift.liftDown(),
