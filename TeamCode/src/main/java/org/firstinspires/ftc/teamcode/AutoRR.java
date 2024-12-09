@@ -37,7 +37,6 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -90,6 +89,7 @@ public class AutoRR extends LinearOpMode {
         AutonomousConfiguration autonomousConfiguration = new AutonomousConfiguration();
         autonomousConfiguration.init(this.gamepad1, this.telemetry, hardwareMap.appContext);
 
+        // Loop until menu selections are made.
         while (!opModeIsActive()) {
             autonomousConfiguration.init_loop();
         }
@@ -112,9 +112,6 @@ public class AutoRR extends LinearOpMode {
             telemetry.update();
         }
 
-        // Make sure the imu is correct.
-        robot.imu.resetYaw();
-
         // Delay if requested.
         sleep(autonomousConfiguration.getDelayStartSeconds());
 
@@ -122,9 +119,13 @@ public class AutoRR extends LinearOpMode {
                 new SequentialAction(
                         moveToBuckets,
                         lift.lifHigh(),
-                        new SleepAction(5),
+                        new SleepAction(.5),
                         bucket.bucketUp(),
+                        // Wait for bucket to dump.
+                        new SleepAction(1),
                         bucket.bucketDown(),
+                        // Make sure bucket is down.
+                        new SleepAction(1),
                         lift.liftDown(),
                         moveFromBucketsToObservatory
                 ));
