@@ -40,6 +40,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.enums.BucketPosition;
+import org.firstinspires.ftc.teamcode.enums.LiftPosition;
+import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 import java.util.ArrayList;
 
@@ -83,6 +86,7 @@ public class AutoGyro extends LinearOpMode {
     private double rightSpeed = 0;
     private int leftTarget = 0;
     private int rightTarget = 0;
+    private Lift lift;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -152,6 +156,8 @@ public class AutoGyro extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init();
+        lift = new Lift(robot);
+        lift.init();
 
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -160,8 +166,7 @@ public class AutoGyro extends LinearOpMode {
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        robot.rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
+        robot.rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         /* The next two lines define Hub orientation.
          * To Do:  EDIT these two lines to match YOUR mounting configuration.
@@ -193,6 +198,7 @@ public class AutoGyro extends LinearOpMode {
         // Set the encoders for closed loop speed control, and reset the heading.
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         robot.imu.resetYaw();
 
         // Step through each segment of each path.
@@ -210,12 +216,24 @@ public class AutoGyro extends LinearOpMode {
                     case "HoldHeading":
                         holdHeading(TURN_SPEED, ((HoldHeading) segment).heading, ((HoldHeading) segment).holdTime);
                         break;
+                         */
+
                     default:
+                        if (segment.equals(LiftPosition.Down)) {
+                            lift.setProperties(true, false, false);
+                            lift.update();
+                        } else if (segment.equals(LiftPosition.LowBasket)) {
+                            lift.setProperties(false, true, false);
+                            lift.update();
+                        } else if (segment.equals(LiftPosition.HighBasket)) {
+                            lift.setProperties(false, false, true);
+                            lift.update();
+                        }
                         telemetry.addData("class", segment.getClass().getName());
                         telemetry.update();
                         sleep(3000);
 
-                         */
+
                 }
             }
         }
@@ -458,8 +476,12 @@ public class AutoGyro extends LinearOpMode {
 
         // Segments are the parts of a path (one part of your autonomous strategy,)
         ArrayList<Object> segments = new ArrayList<>();
-        segments.add(new DriveStraight(-24, 10));
+        segments.add(new DriveStraight(-2, 10));
         segments.add(new Turn(45));
+        segments.add(LiftPosition.HighBasket);
+        segments.add(BucketPosition.Up);
+        segments.add(BucketPosition.Down);
+        segments.add(LiftPosition.Down);
         paths.add(segments);
 //
 //        segments = new ArrayList<>();

@@ -91,9 +91,6 @@ public class DriverControl extends LinearOpMode {
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
-            claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
-
             // Arm driver gamepad (B on the driver hub)
             lift.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.A),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.X),
@@ -101,6 +98,9 @@ public class DriverControl extends LinearOpMode {
 
             bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_UP));
+
+            claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value
