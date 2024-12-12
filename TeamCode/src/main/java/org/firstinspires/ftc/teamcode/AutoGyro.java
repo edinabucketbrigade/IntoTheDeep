@@ -42,6 +42,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.enums.BucketPosition;
 import org.firstinspires.ftc.teamcode.enums.LiftPosition;
+import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 import java.util.ArrayList;
@@ -87,6 +88,7 @@ public class AutoGyro extends LinearOpMode {
     private int leftTarget = 0;
     private int rightTarget = 0;
     private Lift lift;
+    private Bucket bucket;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -229,6 +231,14 @@ public class AutoGyro extends LinearOpMode {
                             lift.setProperties(false, false, true);
                             lift.update();
                         }
+
+                        if (segment.equals(BucketPosition.Down)) {
+                            bucket.setProperties(false, true);
+                            bucket.update();
+                        } else if (segment.equals(BucketPosition.Up)) {
+                            bucket.setProperties(true, false);
+                        }
+
                         telemetry.addData("class", segment.getClass().getName());
                         telemetry.update();
                         sleep(3000);
