@@ -240,12 +240,12 @@ public class AutoGyro extends LinearOpMode {
                             bucket.update();
                         } else if (segment.equals(BucketPosition.Up)) {
                             bucket.setProperties(true, false);
+                            bucket.update();
                         }
 
                         telemetry.addData("class", segment.getClass().getName());
                         telemetry.update();
                         sleep(3000);
-
 
                 }
             }
