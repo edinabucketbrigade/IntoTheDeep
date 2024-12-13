@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -63,11 +64,15 @@ public class DriverControl extends LinearOpMode {
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
     GamepadEx gamepadTwo = null;
+    TriggerReader triggerReaderLeft;
+    TriggerReader triggerReaderRight;
 
     @Override
     public void runOpMode() {
         gamepadOne = new GamepadEx(gamepad1);
         gamepadTwo = new GamepadEx(gamepad2);
+        triggerReaderLeft = new TriggerReader(gamepadTwo, GamepadKeys.Trigger.LEFT_TRIGGER);
+        triggerReaderRight = new TriggerReader(gamepadTwo, GamepadKeys.Trigger.RIGHT_TRIGGER);
         robot.init();
         lift.init();
         arm.init();
@@ -86,7 +91,9 @@ public class DriverControl extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             gamepadOne.readButtons();
-            gamepadTwo.readButtons();
+
+            triggerReaderLeft.readValue();
+            triggerReaderRight.readValue();
 
             // Driver gamepad (A on the driver hub)
             arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
@@ -101,11 +108,12 @@ public class DriverControl extends LinearOpMode {
             bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_UP));
 
-           // claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+            // claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
             //        gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER),
+                    (triggerReaderLeft.wasJustPressed() || triggerReaderRight.wasJustPressed()));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value
