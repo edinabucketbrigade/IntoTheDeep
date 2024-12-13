@@ -63,6 +63,7 @@ public class DriverControl extends LinearOpMode {
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
     GamepadEx gamepadTwo = null;
+    //TODO: Add TriggerReaders for both triggers.
 
     @Override
     public void runOpMode() {
@@ -87,6 +88,7 @@ public class DriverControl extends LinearOpMode {
         while (opModeIsActive()) {
             gamepadOne.readButtons();
             gamepadTwo.readButtons();
+            //TODO: Add triggerReader.GetValue() for each trigger.
 
             // Driver gamepad (A on the driver hub)
             arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
@@ -104,6 +106,7 @@ public class DriverControl extends LinearOpMode {
            // claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
             //        gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
+            //TODO: Add trigger parameter.
             intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
