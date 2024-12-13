@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -18,12 +19,14 @@ public class TestCRServo extends OpMode {
     private CRServo servo;
     private double position = 0;
     private GamepadEx gamepad;
+    private TriggerReader triggerReader;
 
     @Override
     public void init() {
         // Make the name match your config file and robot.
-        servo = new CRServo(hardwareMap, "crservo1");
+        servo = new CRServo(hardwareMap, "servo1");
         gamepad = new GamepadEx(gamepad1);
+        triggerReader = new TriggerReader(gamepad, GamepadKeys.Trigger.LEFT_TRIGGER);
         showTelemetry();
         telemetry.update();
     }
@@ -37,6 +40,8 @@ public class TestCRServo extends OpMode {
     @Override
     public void loop() {
         gamepad.readButtons();
+        triggerReader.readValue();
+
         if (gamepad.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
             position = -.8;
         }
@@ -45,7 +50,8 @@ public class TestCRServo extends OpMode {
             position = .8;
         }
 
-        if (gamepad.wasJustReleased(GamepadKeys.Button.Y)) {
+        if (gamepad.wasJustReleased(GamepadKeys.Button.Y) ||
+                triggerReader.wasJustPressed()) {
             position = 0;
         }
 
@@ -64,9 +70,10 @@ public class TestCRServo extends OpMode {
     private void showTelemetry() {
         telemetry.addLine("Left bumper = -.8");
         telemetry.addLine("Right bumper = .8");
-        telemetry.addLine("Y = .5 (stop)");
+        telemetry.addLine("Y or Left Trigger = .5 (stop)");
         telemetry.addLine("Dpad up: Increase position");
         telemetry.addLine("Dpad down: Decrease position");
-        telemetry.addData("Position", servo.get());
+        telemetry.addData("Speed", servo.get());
+        telemetry.addData("Inverted", servo.getInverted());
     }
 }
