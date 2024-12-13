@@ -10,7 +10,7 @@ public class Intake extends SubSystem {
     public boolean rightBumperPressed = false;
     public boolean leftBumperPressed = false;
 
-    public Intake(RobotHardware robot){
+    public Intake(RobotHardware robot) {
         this.robot = robot;
     }
 
@@ -26,12 +26,15 @@ public class Intake extends SubSystem {
 
     }
 
+    //TODO: Change power values and add trigger code to stop servo.
+    // On a CRServo 0 stops, <0 is reverse, >0 is forward.
     @Override
     public void update() {
-    if(leftBumperPressed){
-        robot.intakeServo.setPower(0);
-    }if(rightBumperPressed){
-        robot.intakeServo.setPower(1);
+        if (leftBumperPressed) {
+            robot.intakeServo.setPower(0);
+        }
+        if (rightBumperPressed) {
+            robot.intakeServo.setPower(1);
         }
     }
 
