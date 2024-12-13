@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,8 +16,9 @@ public class RobotHardware {
     public DcMotor rightFrontDrive = null;
     public DcMotor rightBackDrive = null;
 
-    public Servo clawServo = null;
+    //public Servo clawServo = null;
     public Servo bucketServo = null;
+    public CRServo intakeServo = null;
 
     public DcMotorEx liftMotor = null;
     //5203 series, 384.5 ppr - encoder resolution
@@ -51,8 +53,9 @@ public class RobotHardware {
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
-        clawServo = myOpMode.hardwareMap.get(Servo.class,"clawServo");
+        //clawServo = myOpMode.hardwareMap.get(Servo.class,"clawServo");
         bucketServo = myOpMode.hardwareMap.get(Servo.class,"bucketServo");
+        intakeServo = myOpMode.hardwareMap.get(CRServo.class,"intakeServo");
 
     }
 

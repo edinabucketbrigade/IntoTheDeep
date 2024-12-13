@@ -117,9 +117,10 @@ public class AutoGyro extends LinearOpMode {
     // Increase these numbers if the heading does not correct strongly enough (eg: a heavy robot or using tracks)
     // Decrease these numbers if the heading does not settle on the correct value (eg: very agile robot with omni wheels)
     /*
-    static final double P_TURN_GAIN = 0.02;     // Larger is more responsive, but also less stable.
+       // Larger is more responsive, but also less stable.
 
      */
+    static final double P_TURN_GAIN = 0.02;
     static final double P_DRIVE_GAIN = 0.03;     // Larger is more responsive, but also less stable.
 
     // The following classes define parameters to the driving methods. They are used to construct
@@ -160,6 +161,8 @@ public class AutoGyro extends LinearOpMode {
         robot.init();
         lift = new Lift(robot);
         lift.init();
+        bucket = new Bucket(robot);
+        bucket.init();
 
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -263,8 +266,8 @@ public class AutoGyro extends LinearOpMode {
         driveSpeed = drive;     // save this value as a class member so it can be used by telemetry.
         turnSpeed = turn;      // save this value as a class member so it can be used by telemetry.
 
-        leftSpeed = drive;
-        rightSpeed = drive;
+        leftSpeed = drive - turn;
+        rightSpeed = drive + turn;
 
         // Scale speeds down if either one exceeds +/- 1.0;
         double max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
@@ -361,12 +364,12 @@ public class AutoGyro extends LinearOpMode {
 
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && (Math.abs(headingError) > HEADING_THRESHOLD)) {
-            /*
+
 
             // Determine required steering to keep on heading
             turnSpeed = getSteeringCorrection(heading, P_TURN_GAIN);
 
-             */
+
 
             // Clip the speed to the maximum permitted value.
             turnSpeed = Range.clip(turnSpeed, -maxTurnSpeed, maxTurnSpeed);
@@ -402,11 +405,11 @@ public class AutoGyro extends LinearOpMode {
 
         // keep looping while we have time remaining.
         while (opModeIsActive() && (holdTimer.time() < holdTime)) {
-            /*
+
             // Determine required steering to keep on heading
             turnSpeed = getSteeringCorrection(heading, P_TURN_GAIN);
 
-             */
+
 
             // Clip the speed to the maximum permitted value.
             turnSpeed = Range.clip(turnSpeed, -maxTurnSpeed, maxTurnSpeed);
