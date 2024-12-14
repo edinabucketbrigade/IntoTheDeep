@@ -253,9 +253,10 @@ public class AutoGyro extends LinearOpMode {
                             arm.update();
                         } else if (segment.equals(ArmPosition.Front)) {
                             arm.setProperties(true, false, false);
-                            bucket.update();
+                            arm.update();
                         } else if (segment.equals(ArmPosition.Neutral)) {
                             arm.setProperties(false, false, true);
+                            arm.update();
                         }
 
                         telemetry.addData("class", segment.getClass().getName());
