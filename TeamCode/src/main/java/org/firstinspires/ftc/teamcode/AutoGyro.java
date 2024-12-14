@@ -42,6 +42,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.enums.BucketPosition;
 import org.firstinspires.ftc.teamcode.enums.LiftPosition;
+import org.firstinspires.ftc.teamcode.enums.ArmPosition;
+import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
@@ -89,6 +91,7 @@ public class AutoGyro extends LinearOpMode {
     private int rightTarget = 0;
     private Lift lift;
     private Bucket bucket;
+    private Arm arm;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -163,6 +166,8 @@ public class AutoGyro extends LinearOpMode {
         lift.init();
         bucket = new Bucket(robot);
         bucket.init();
+        arm = new Arm(robot);
+        arm.init();
 
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -241,6 +246,16 @@ public class AutoGyro extends LinearOpMode {
                         } else if (segment.equals(BucketPosition.Up)) {
                             bucket.setProperties(true, false);
                             bucket.update();
+                        }
+
+                        if (segment.equals(ArmPosition.Back)) {
+                            arm.setProperties(false, true, false);
+                            arm.update();
+                        } else if (segment.equals(ArmPosition.Front)) {
+                            arm.setProperties(true, false, false);
+                            bucket.update();
+                        } else if (segment.equals(ArmPosition.Neutral)) {
+                            arm.setProperties(false, false, true);
                         }
 
                         telemetry.addData("class", segment.getClass().getName());
@@ -491,10 +506,13 @@ public class AutoGyro extends LinearOpMode {
         ArrayList<Object> segments = new ArrayList<>();
         segments.add(new DriveStraight(-2, 10));
         segments.add(new Turn(45));
+        segments.add(ArmPosition.Neutral);
         segments.add(LiftPosition.HighBasket);
-        segments.add(BucketPosition.Up);
         segments.add(BucketPosition.Down);
+        segments.add(BucketPosition.Up);
         segments.add(LiftPosition.Down);
+        segments.add(ArmPosition.Back);
+
         paths.add(segments);
 //
 //        segments = new ArrayList<>();
