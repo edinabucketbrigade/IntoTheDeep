@@ -15,7 +15,7 @@ public class Arm extends SubSystem {
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
-    private final int ARM_FRONT = -1670;
+    private final int ARM_FRONT = -1690;
     private final int ARM_NEUTRAL = -844;
     private final int ARM_BACK = 0;
 

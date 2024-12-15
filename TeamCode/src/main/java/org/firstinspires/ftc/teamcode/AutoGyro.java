@@ -505,8 +505,9 @@ public class AutoGyro extends LinearOpMode {
 
         // Segments are the parts of a path (one part of your autonomous strategy,)
         ArrayList<Object> segments = new ArrayList<>();
-        segments.add(new DriveStraight(-2, 10));
+        segments.add(new DriveStraight(4.25, 0));
         segments.add(new Turn(45));
+        //segments.add(new HoldHeading(-45, 10));
         segments.add(ArmPosition.Neutral);
         segments.add(LiftPosition.HighBasket);
         segments.add(BucketPosition.Down);
