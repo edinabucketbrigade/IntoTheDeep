@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class RobotHardware {
@@ -40,8 +41,17 @@ public class RobotHardware {
         rightBackDrive = myOpMode.hardwareMap.get(DcMotor.class, "rightBackDrive");
 
         liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
-        liftMotor.setDirection(DcMotor.Direction.FORWARD);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        stopAndResetEncoder(liftMotor);
+        PIDFCoefficients pidfVelocityCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDFCoefficients pidfPositionCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
+        // These values are recommended as a starting point if you are tuning a PID.
+        pidfVelocityCoefficients.p = 1.063f;
+        pidfVelocityCoefficients.i = 1.063f;
+        pidfVelocityCoefficients.f = 10.63f;
+        liftMotor.setVelocityPIDFCoefficients(pidfVelocityCoefficients.p, pidfVelocityCoefficients.i, pidfVelocityCoefficients.d, pidfVelocityCoefficients.f);
+        liftMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfPositionCoefficients);
+        liftMotor.setPositionPIDFCoefficients(10f);
+        liftMotor.setTargetPositionTolerance(10);
 
         armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "armMotor");
         armMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -54,8 +64,8 @@ public class RobotHardware {
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
         //clawServo = myOpMode.hardwareMap.get(Servo.class,"clawServo");
-        bucketServo = myOpMode.hardwareMap.get(Servo.class,"bucketServo");
-        intakeServo = myOpMode.hardwareMap.get(CRServo.class,"intakeServo");
+        bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
+        intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
 
     }
 
@@ -92,5 +102,17 @@ public class RobotHardware {
         rightFrontDrive.setPower(rightFrontPower);
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
+    }
+
+    /**
+     * This seems to be the only way to reliably stop a motor and reset the encoder.
+     * This wos only tested on a goBilda motor.
+     *
+     * @param motor Motor to stop.
+     */
+    public void stopAndResetEncoder(DcMotorEx motor) {
+        motor.setPower(0);
+        motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 }

@@ -20,7 +20,8 @@ public class Lift extends SubSystem {
     private final int LIFT_HIGH = -2601;
 
     private final double LIFT_MAX_POWER = .7;
-    private final int LIFT_POSITION_TOLERANCE = 20;
+    // The tolerance and PIDF values are set in RobotHardware.init().
+    private final int LIFT_POSITION_TOLERANCE = robot.liftMotor.getTargetPositionTolerance();
 
     public Lift(RobotHardware robot) {
         this.robot = robot;
@@ -30,8 +31,7 @@ public class Lift extends SubSystem {
     public void init() {
         liftState = LiftPosition.Down;
         // Make sure encoder is 0 at start
-        robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.stopAndResetEncoder(robot.liftMotor);
     }
 
     @Override

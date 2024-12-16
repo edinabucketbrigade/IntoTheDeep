@@ -49,6 +49,7 @@ public class EncoderTest extends OpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private GamepadEx gamePad;
     private DcMotorEx motor;
+    private int POSITION_TOLERANCE = 20;
 
     /**
      * This method will be called once, when the INIT button is pressed.
@@ -130,6 +131,7 @@ public class EncoderTest extends OpMode {
 
         telemetry.addData("Target", "%d", motor.getTargetPosition());
         telemetry.addData("Position", "%d", motor.getCurrentPosition());
+        telemetry.addData("Toleramce error", Math.abs(motor.getCurrentPosition() - POSITION_TOLERANCE));
         telemetry.addData("Velocity", "%6.2f", motor.getVelocity());
         telemetry.addData("Power", "%6.2f", motor.getPower());
         telemetry.addData("Busy", motor.isBusy());
@@ -154,7 +156,7 @@ public class EncoderTest extends OpMode {
      * This seems to be the only way to reliably stop a motor and reset the encoder.
      * This wos only tested on a goBilda motor.
      *
-     * @param motor  Motor to stop.
+     * @param motor Motor to stop.
      */
     private void stopAndResetEncoder(DcMotorEx motor) {
         motor.setPower(0);
