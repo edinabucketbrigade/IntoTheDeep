@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -30,6 +29,8 @@ public class Intake extends SubSystem {
 
     }
 
+    //TODO: Change power values and add trigger code to stop servo.
+    // On a CRServo 0 stops, <0 is reverse, >0 is forward.
     @Override
     public void update() {
         if (triggersPressed) {

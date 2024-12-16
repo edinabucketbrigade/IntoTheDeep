@@ -91,13 +91,9 @@ public class DriverControl extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             gamepadOne.readButtons();
-
             triggerReaderLeft.readValue();
             triggerReaderRight.readValue();
-
-            // Driver gamepad (A on the driver hub)
-            arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
+            gamepadTwo.readButtons();
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
             // Arm driver gamepad (B on the driver hub)
@@ -111,6 +107,7 @@ public class DriverControl extends LinearOpMode {
             // claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
             //        gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
+            //TODO: Add trigger parameter.
             intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER),
                     (triggerReaderLeft.wasJustPressed() || triggerReaderRight.wasJustPressed()));
