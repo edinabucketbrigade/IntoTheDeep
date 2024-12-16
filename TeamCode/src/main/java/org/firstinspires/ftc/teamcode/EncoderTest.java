@@ -49,7 +49,6 @@ public class EncoderTest extends OpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     private GamepadEx gamePad;
     private DcMotorEx motor;
-    private int POSITION_TOLERANCE = 20;
 
     /**
      * This method will be called once, when the INIT button is pressed.
@@ -74,8 +73,8 @@ public class EncoderTest extends OpMode {
         pidfVelocityCoefficients.f = 10.63f;
         motor.setVelocityPIDFCoefficients(pidfVelocityCoefficients.p, pidfVelocityCoefficients.i, pidfVelocityCoefficients.d, pidfVelocityCoefficients.f);
         motor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfPositionCoefficients);
-        motor.setPositionPIDFCoefficients(10f);
-        motor.setTargetPositionTolerance(5);
+        motor.setTargetPositionTolerance(10);
+        motor.setPositionPIDFCoefficients(8f);
     }
 
     /**
@@ -110,9 +109,9 @@ public class EncoderTest extends OpMode {
         gamePad.readButtons();
         telemetry.addData("Status", "Run Time: " + runtime);
         // The actual increment and speed will depend on the motor you are testing.
-        float ENCODER_INCREMENT = 769f;
+        float ENCODER_INCREMENT = 3000f;
         double MAX_VELOCITY = 2900;
-        double RUN_VELOCITY = MAX_VELOCITY * .7f;
+        double RUN_VELOCITY = MAX_VELOCITY * .85f;
         if (gamePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
             motor.setTargetPosition((int) (motor.getCurrentPosition() + ENCODER_INCREMENT));
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -131,7 +130,7 @@ public class EncoderTest extends OpMode {
 
         telemetry.addData("Target", "%d", motor.getTargetPosition());
         telemetry.addData("Position", "%d", motor.getCurrentPosition());
-        telemetry.addData("Toleramce error", Math.abs(motor.getCurrentPosition() - POSITION_TOLERANCE));
+        telemetry.addData("Toleramce error", Math.abs(motor.getTargetPosition() - motor.getCurrentPosition()) - motor.getTargetPositionTolerance());
         telemetry.addData("Velocity", "%6.2f", motor.getVelocity());
         telemetry.addData("Power", "%6.2f", motor.getPower());
         telemetry.addData("Busy", motor.isBusy());

@@ -95,7 +95,10 @@ public class DriverControl extends LinearOpMode {
             triggerReaderRight.readValue();
             gamepadTwo.readButtons();
 
-            gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT);
+            // Driver gamepad (A on the driver hub)
+            arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
             // Arm driver gamepad (B on the driver hub)
             lift.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.A),
