@@ -13,7 +13,6 @@ public class Lift extends SubSystem {
     public boolean yPressed = false;
 
     // Encoder positions for the lift.
-    //TODO Test to find the proper values.
     private final int LIFT_DOWN = 0;
     private final int LIFT_LOW = -797;
 
@@ -40,9 +39,11 @@ public class Lift extends SubSystem {
 
     @Override
     public void update() {
+        boolean liftIsAtPosition = (robot.liftMotor.getTargetPosition() - robot.liftMotor.getCurrentPosition()) < LIFT_POSITION_TOLERANCE;
         switch (liftState) {
             case Down:
-                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
+                // Make sure lift has reached the target before allowing the next move.
+                if (liftIsAtPosition) {
                     if (xPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_LOW);
                         robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -59,7 +60,7 @@ public class Lift extends SubSystem {
                 }
                 break;
             case LowBasket:
-                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
+                if (liftIsAtPosition) {
                     if (aPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -76,7 +77,7 @@ public class Lift extends SubSystem {
                 }
                 break;
             case HighBasket:
-                if (Math.abs(robot.liftMotor.getCurrentPosition() - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
+                if (liftIsAtPosition) {
                     if (aPressed) {
                         robot.liftMotor.setTargetPosition(LIFT_DOWN);
                         robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -87,11 +88,9 @@ public class Lift extends SubSystem {
                 break;
             default:
                 // if get here, there is a problem
-                robot.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.liftMotor.setPower(0);
+                robot.stopAndResetEncoder(robot.liftMotor);
                 liftState = LiftPosition.Down;
         }
-
     }
 
     // Respond to gamepad inputs.
