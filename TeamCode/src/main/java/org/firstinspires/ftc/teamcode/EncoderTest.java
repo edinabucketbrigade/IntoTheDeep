@@ -62,19 +62,20 @@ public class EncoderTest extends OpMode {
         motor = hardwareMap.get(DcMotorEx.class, "motor");
         // Make sure the motor is stopped and encoder is set to 0;
         stopAndResetEncoder(motor);
-        // Use encoders to enable manual movement of the motor to deternmine position values.
+        // Use encoders to enable manual movement of the motor to determine position values.
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         PIDFCoefficients pidfVelocityCoefficients = motor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
         PIDFCoefficients pidfPositionCoefficients = motor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
         // These values are recommended as a starting point if you are tuning a PID.
-        pidfVelocityCoefficients.p = 1.063f;
-        pidfVelocityCoefficients.i = 1.063f;
-        pidfVelocityCoefficients.f = 10.63f;
+        pidfVelocityCoefficients.p = 1.1069f;
+        pidfVelocityCoefficients.i = 1.1069f;
+        pidfVelocityCoefficients.d = 0f;
+        pidfVelocityCoefficients.f = 11.069f;
         motor.setVelocityPIDFCoefficients(pidfVelocityCoefficients.p, pidfVelocityCoefficients.i, pidfVelocityCoefficients.d, pidfVelocityCoefficients.f);
         motor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfPositionCoefficients);
         motor.setTargetPositionTolerance(10);
-        motor.setPositionPIDFCoefficients(8f);
+        motor.setPositionPIDFCoefficients(5f);
     }
 
     /**
@@ -110,8 +111,8 @@ public class EncoderTest extends OpMode {
         telemetry.addData("Status", "Run Time: " + runtime);
         // The actual increment and speed will depend on the motor you are testing.
         float ENCODER_INCREMENT = 3000f;
-        double MAX_VELOCITY = 2900;
-        double RUN_VELOCITY = MAX_VELOCITY * .85f;
+        double MAX_VELOCITY = 2960;
+        double RUN_VELOCITY = MAX_VELOCITY * .75f;
         if (gamePad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
             motor.setTargetPosition((int) (motor.getCurrentPosition() + ENCODER_INCREMENT));
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

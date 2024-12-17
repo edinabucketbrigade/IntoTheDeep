@@ -50,7 +50,7 @@ public class RobotHardware {
         pidfVelocityCoefficients.f = 10.63f;
         liftMotor.setVelocityPIDFCoefficients(pidfVelocityCoefficients.p, pidfVelocityCoefficients.i, pidfVelocityCoefficients.d, pidfVelocityCoefficients.f);
         liftMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfPositionCoefficients);
-        liftMotor.setPositionPIDFCoefficients(10f);
+        liftMotor.setPositionPIDFCoefficients(8f);
         liftMotor.setTargetPositionTolerance(10);
 
         armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "armMotor");
