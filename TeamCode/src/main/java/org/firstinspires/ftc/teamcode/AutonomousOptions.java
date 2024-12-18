@@ -14,6 +14,8 @@ public class AutonomousOptions implements Serializable {
     private AllianceColor allianceColor;
     private StartPosition startPosition;
     private ParkLocation parklocation;
+    private PutSampleInBasket putSampleInBasket;
+    private HangSpecimans hangSpecimans;
 
     public AllianceColor getAllianceColor() {
         return allianceColor;
@@ -37,6 +39,22 @@ public class AutonomousOptions implements Serializable {
 
     public void setParkLocation(ParkLocation parklocation) {
         this.parklocation = parklocation;
+    }
+
+    public PutSampleInBasket getputSampleInBasket() {
+        return putSampleInBasket;
+    }
+
+    public void setPutSampleInBasket(PutSampleInBasket putSampleInBasket) {
+        this.putSampleInBasket = putSampleInBasket;
+    }
+
+    public HangSpecimans getHangSpecimans() {
+        return hangSpecimans;
+    }
+
+    public void setHangSpecimans(HangSpecimans hangSpecimans) {
+        this.hangSpecimans = hangSpecimans;
     }
 
     public int getDelayStartSeconds() {
@@ -79,6 +97,24 @@ public class AutonomousOptions implements Serializable {
         Observatory;
 
         public ParkLocation getNext() {
+            return values()[(ordinal() + 1) % values().length];
+        }
+    }
+
+    public enum PutSampleInBasket {
+        Yes,
+        No;
+
+        public PutSampleInBasket getNext() {
+            return values()[(ordinal() + 1) % values().length];
+        }
+    }
+
+    public enum HangSpecimans {
+        Yes,
+        No;
+
+        public HangSpecimans getNext() {
             return values()[(ordinal() + 1) % values().length];
         }
     }

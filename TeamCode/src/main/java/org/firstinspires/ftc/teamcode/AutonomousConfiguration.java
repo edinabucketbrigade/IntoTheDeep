@@ -158,7 +158,8 @@ public class AutonomousConfiguration {
         teleDelayStartSeconds.setValue(autonomousOptions.getDelayStartSeconds());
 
         //Have the required options been set?
-        readyToStart = !(autonomousOptions.getAllianceColor() == AutonomousOptions.AllianceColor.None || autonomousOptions.getStartPosition() == AutonomousOptions.StartPosition.None);
+        readyToStart = !(autonomousOptions.getAllianceColor() == AutonomousOptions.AllianceColor.None
+                || autonomousOptions.getStartPosition() == AutonomousOptions.StartPosition.None);
         teleReadyToStart.setValue(readyToStart);
 
         //Save the options to a file if ready to start and start button is pressed.
