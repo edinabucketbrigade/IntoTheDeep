@@ -12,10 +12,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class RobotHardware {
     /* Declare OpMode members. */
     private final LinearOpMode myOpMode;   // gain access to methods in the calling OpMode.
-    public DcMotor leftFrontDrive = null;
-    public DcMotor leftBackDrive = null;
-    public DcMotor rightFrontDrive = null;
-    public DcMotor rightBackDrive = null;
+    public DcMotorEx leftFrontDrive = null;
+    public DcMotorEx leftBackDrive = null;
+    public DcMotorEx rightFrontDrive = null;
+    public DcMotorEx rightBackDrive = null;
 
     //public Servo clawServo = null;
     public Servo bucketServo = null;
@@ -35,10 +35,10 @@ public class RobotHardware {
     public void init() {
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
-        leftFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "leftFrontDrive");
-        leftBackDrive = myOpMode.hardwareMap.get(DcMotor.class, "leftBackDrive");
-        rightFrontDrive = myOpMode.hardwareMap.get(DcMotor.class, "rightFrontDrive");
-        rightBackDrive = myOpMode.hardwareMap.get(DcMotor.class, "rightBackDrive");
+        leftFrontDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "leftFrontDrive");
+        leftBackDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "leftBackDrive");
+        rightFrontDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "rightFrontDrive");
+        rightBackDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "rightBackDrive");
 
         liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
         stopAndResetEncoder(liftMotor);
@@ -53,6 +53,7 @@ public class RobotHardware {
         liftMotor.setPositionPIDFCoefficients(8f);
         liftMotor.setTargetPositionTolerance(10);
 
+        //TODO: Add pidf like Lift above if needed.
         armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "armMotor");
         armMotor.setDirection(DcMotor.Direction.FORWARD);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -63,7 +64,6 @@ public class RobotHardware {
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
-        //clawServo = myOpMode.hardwareMap.get(Servo.class,"clawServo");
         bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
         intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
 
