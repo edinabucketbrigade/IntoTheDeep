@@ -52,11 +52,9 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 public class DriverControl extends LinearOpMode {
     private final ElapsedTime runtime = new ElapsedTime();
     // Create a RobotHardware object to be used to access robot hardware.
-    // Prefix any hardware functions with "robot." to access this class.
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
     private final Arm arm = new Arm(robot);
-    //private final Claw claw = new Claw(robot);
     private final Bucket bucket = new Bucket(robot);
     private final Intake intake = new Intake(robot);
 
@@ -68,17 +66,18 @@ public class DriverControl extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        // Gamepad A
         gamepadOne = new GamepadEx(gamepad1);
+        // Gamepad B
         gamepadTwo = new GamepadEx(gamepad2);
+
         triggerReaderLeft = new TriggerReader(gamepadTwo, GamepadKeys.Trigger.LEFT_TRIGGER);
         triggerReaderRight = new TriggerReader(gamepadTwo, GamepadKeys.Trigger.RIGHT_TRIGGER);
         robot.init();
         lift.init();
         arm.init();
-        //claw.init();
         bucket.init();
         intake.init();
-
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -111,7 +110,7 @@ public class DriverControl extends LinearOpMode {
             // claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
             //        gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
-            //TODO: Add trigger parameter.
+            // Triggers act like switches. Either one will stop the intake.
             intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER),
                     (triggerReaderLeft.wasJustPressed() || triggerReaderRight.wasJustPressed()));
@@ -124,7 +123,6 @@ public class DriverControl extends LinearOpMode {
 
             lift.update();
             arm.update();
-            //claw.update();
             bucket.update();
             intake.update();
 
@@ -144,8 +142,6 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Arm Mode", robot.armMotor.getMode());
             telemetry.addData("Arm PIDF Run To Position", robot.armMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
-
-
         }
     }
 }
