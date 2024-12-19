@@ -1,26 +1,34 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import static org.firstinspires.ftc.teamcode.enums.ArmPosition.Neutral;
+
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.enums.LiftPosition;
 
 public class Lift extends SubSystem {
     public LiftPosition liftState;
+    public DcMotorEx lift;
     private RobotHardware robot;
     public boolean aPressed = false;
     public boolean xPressed = false;
     public boolean yPressed = false;
 
     // Encoder positions for the lift.
+    //TODO Test to find the proper values.
     private final int LIFT_DOWN = 0;
     private final int LIFT_LOW = -797;
 
-    private final int LIFT_HIGH = -2601;
+    private final int LIFT_HIGH = -1866;
 
     private final double LIFT_MAX_POWER = .7;
-    // The tolerance and PIDF values are set in RobotHardware.init().
-    private final int LIFT_POSITION_TOLERANCE = robot.liftMotor.getTargetPositionTolerance();
+    private final int LIFT_POSITION_TOLERANCE = 10;
 
     public Lift(RobotHardware robot) {
         this.robot = robot;
@@ -29,8 +37,10 @@ public class Lift extends SubSystem {
     @Override
     public void init() {
         liftState = LiftPosition.Down;
+        lift = robot.liftMotor;
         // Make sure encoder is 0 at start
-        robot.stopAndResetEncoder(robot.liftMotor);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -39,58 +49,136 @@ public class Lift extends SubSystem {
 
     @Override
     public void update() {
-        boolean liftIsAtPosition = (robot.liftMotor.getTargetPosition() - robot.liftMotor.getCurrentPosition()) < LIFT_POSITION_TOLERANCE;
         switch (liftState) {
             case Down:
-                // Make sure lift has reached the target before allowing the next move.
-                if (liftIsAtPosition) {
+                if (Math.abs(lift.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
                     if (xPressed) {
-                        robot.liftMotor.setTargetPosition(LIFT_LOW);
-                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        robot.liftMotor.setPower(LIFT_MAX_POWER);
+                        lift.setTargetPosition(LIFT_LOW);
+                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        lift.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.LowBasket;
                     }
 
                     if (yPressed) {
-                        robot.liftMotor.setTargetPosition(LIFT_HIGH);
-                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        robot.liftMotor.setPower(LIFT_MAX_POWER);
+                        lift.setTargetPosition(LIFT_HIGH);
+                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        lift.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.HighBasket;
                     }
                 }
                 break;
             case LowBasket:
-                if (liftIsAtPosition) {
+                if (Math.abs(lift.getCurrentPosition() - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
-                        robot.liftMotor.setTargetPosition(LIFT_DOWN);
-                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        robot.liftMotor.setPower(LIFT_MAX_POWER);
+                        lift.setTargetPosition(LIFT_DOWN);
+                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        lift.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.Down;
                     }
 
                     if (yPressed) {
-                        robot.liftMotor.setTargetPosition(LIFT_HIGH);
-                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        robot.liftMotor.setPower(LIFT_MAX_POWER);
+                        lift.setTargetPosition(LIFT_HIGH);
+                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        lift.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.HighBasket;
                     }
                 }
                 break;
             case HighBasket:
-                if (liftIsAtPosition) {
+                if (Math.abs(lift.getCurrentPosition() - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
-                        robot.liftMotor.setTargetPosition(LIFT_DOWN);
-                        robot.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        robot.liftMotor.setPower(LIFT_MAX_POWER);
+                        lift.setTargetPosition(LIFT_DOWN);
+                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        lift.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.Down;
                     }
                 }
                 break;
             default:
                 // if get here, there is a problem
-                robot.stopAndResetEncoder(robot.liftMotor);
+                lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                lift.setPower(0);
                 liftState = LiftPosition.Down;
         }
+
+    }
+
+    public class LiftDown implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                lift.setTargetPosition(LIFT_DOWN);
+                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                lift.setPower(LIFT_MAX_POWER);
+                liftState = LiftPosition.Down;
+                initialized = true;
+            }
+            double currentPosition = lift.getCurrentPosition();
+            packet.put("Lift position", currentPosition);
+            if (Math.abs(currentPosition - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public Action liftDown() {
+        return new LiftDown();
+    }
+
+    public class LiftLow implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                lift.setTargetPosition(LIFT_LOW);
+                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                lift.setPower(LIFT_MAX_POWER);
+                liftState = LiftPosition.LowBasket;
+                initialized = true;
+            }
+            double currentPosition = lift.getCurrentPosition();
+            packet.put("Lift position", currentPosition);
+            if (Math.abs(currentPosition - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public Action lifLow() {
+        return new LiftLow();
+    }
+
+    public class LiftHigh implements Action {
+        private boolean initialized = false;
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            if (!initialized) {
+                lift.setTargetPosition(LIFT_HIGH);
+                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                lift.setPower(LIFT_MAX_POWER);
+                liftState = LiftPosition.HighBasket;
+                initialized = true;
+            }
+            double currentPosition = lift.getCurrentPosition();
+            packet.put("Lift position", currentPosition);
+            if (Math.abs(currentPosition - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
+
+    public Action lifHigh() {
+        return new LiftHigh();
     }
 
     // Respond to gamepad inputs.

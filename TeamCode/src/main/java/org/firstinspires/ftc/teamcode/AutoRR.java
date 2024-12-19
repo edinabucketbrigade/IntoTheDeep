@@ -109,11 +109,11 @@ public class AutoRR extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         moveToBuckets.build(),
-//                        lift.lifHigh(),
+                        lift.lifHigh(),
                         new SleepAction(.5),
-//                        bucket.bucketUp(),
-//                        bucket.bucketDown(),
-//                        lift.liftDown(),
+                        bucket.bucketUp(),
+                        bucket.bucketDown(),
+                        lift.liftDown(),
                         moveFromBucketsToObservatory
                 ));
 
