@@ -41,14 +41,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.enums.StartPosition;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*
  *  Converted to use RR.
@@ -74,23 +69,27 @@ public class AutoRR extends LinearOpMode {
     private MecanumDrive drive;
     private final Lift lift = new Lift(robot);
     private final Bucket bucket = new Bucket(robot);
-    private final Claw claw = new Claw(robot);
     private final Arm arm = new Arm(robot);
     private Pose2d initialPose;
     // Trajectories and Actions for RR to follow.
-    private StartPosition startPosition = StartPosition.None;
     private TrajectoryActionBuilder moveToBuckets;
     private Action moveFromBucketsToObservatory;
 
     @Override
     public void runOpMode() {
         robot.init();
-        //TODO: Add menu code here to get start position
-        if (startPosition == StartPosition.Left) {
+        AutonomousConfiguration autonomousConfiguration = new AutonomousConfiguration();
+        autonomousConfiguration.init(this.gamepad1, this.telemetry, hardwareMap.appContext);
+
+        while (!opModeIsActive()) {
+            autonomousConfiguration.init_loop();
+        }
+
+        if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
             initialPose = new Pose2d(-24, -60, Math.tan(0));
         }
 
-        if (startPosition == StartPosition.Right) {
+        if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
             initialPose = new Pose2d(12, -60, Math.tan(0));
         }
 
@@ -110,11 +109,11 @@ public class AutoRR extends LinearOpMode {
         Actions.runBlocking(
                 new SequentialAction(
                         moveToBuckets.build(),
-                        lift.lifHigh(),
+//                        lift.lifHigh(),
                         new SleepAction(.5),
-                        bucket.bucketUp(),
-                        bucket.bucketDown(),
-                        lift.liftDown(),
+//                        bucket.bucketUp(),
+//                        bucket.bucketDown(),
+//                        lift.liftDown(),
                         moveFromBucketsToObservatory
                 ));
 
