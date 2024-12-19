@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -42,6 +41,8 @@ public class AutonomousConfiguration {
     private Telemetry.Item teleAlliance;
     private Telemetry.Item teleStartPosition;
     private Telemetry.Item teleParkLocation;
+    private Telemetry.Item telePutSampleInBasket;
+    private Telemetry.Item teleHangSpecimans;
     private Telemetry.Item teleDelayStartSeconds;
     private Telemetry.Item teleReadyToStart;
     private Telemetry.Item teleSavedToFile;
@@ -78,6 +79,14 @@ public class AutonomousConfiguration {
         return autonomousOptions.getParkLocation();
     }
 
+    public AutonomousOptions.PutSampleInBasket getPutSampleInBasket() {
+        return autonomousOptions.getPutSampleInBasket();
+    }
+
+    public AutonomousOptions.HangSpecimens getHangSpecimans() {
+        return autonomousOptions.getHangSpecimens();
+    }
+
     public int getDelayStartSeconds() {
         return autonomousOptions.getDelayStartSeconds();
     }
@@ -90,6 +99,8 @@ public class AutonomousConfiguration {
         teleAlliance = telemetry.addData("X = Blue, B = Red", autonomousOptions.getAllianceColor());
         teleStartPosition = telemetry.addData("D-pad left/right, select start position", autonomousOptions.getStartPosition());
         teleParkLocation = telemetry.addData("D-pad up to cycle park location", autonomousOptions.getParkLocation());
+        telePutSampleInBasket = telemetry.addData("Left bumper to cycle Put sample in basket", autonomousOptions.getPutSampleInBasket());
+        teleHangSpecimans = telemetry.addData("Right bumper to cycle hang specimens", autonomousOptions.getHangSpecimens());
         teleDelayStartSeconds = telemetry.addData("Left & Right buttons, Delay Start", autonomousOptions.getDelayStartSeconds());
         teleReadyToStart = telemetry.addData("Ready to start: ", getReadyToStart());
         teleSavedToFile = telemetry.addData("Saved to file:", savedToFile);
@@ -142,6 +153,32 @@ public class AutonomousConfiguration {
             }
             autonomousOptions.setParkLocation(parkLocation);
             teleParkLocation.setValue(parkLocation);
+        }
+
+        // Put samples in the basket
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
+            AutonomousOptions.PutSampleInBasket putSampleInBasket = autonomousOptions.getPutSampleInBasket().getNext();
+            switch (putSampleInBasket) {
+                case No:
+                    telemetry.speak("put samples,no.");
+                case Yes:
+                    telemetry.speak("put samples, yes.");
+            }
+            autonomousOptions.setPutSampleInBasket(putSampleInBasket);
+            telePutSampleInBasket.setValue(putSampleInBasket);
+        }
+
+        // Hang specimens
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) {
+            AutonomousOptions.HangSpecimens hangSpecimens = autonomousOptions.getHangSpecimens().getNext();
+            switch (hangSpecimens) {
+                case No:
+                    telemetry.speak("hang specimens,no.");
+                case Yes:
+                    telemetry.speak("hang specimens, yes.");
+            }
+            autonomousOptions.setHangSpecimens(hangSpecimens);
+            teleHangSpecimans.setValue(hangSpecimens);
         }
 
         // Keep range within 0-15 seconds. Wrap at either end.
