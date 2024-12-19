@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -64,9 +65,14 @@ public class RobotHardware {
         rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        // Now initialize the IMU with this mounting orientation
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+
         bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
         intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
-
     }
 
     /**
