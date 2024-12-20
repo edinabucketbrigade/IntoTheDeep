@@ -121,10 +121,10 @@ public class DriverControl extends LinearOpMode {
             double yaw = gamepadOne.getRightX();
             robot.moveRobot(axial, lateral, yaw);
 
-            lift.update();
-            arm.update();
-            bucket.update();
-            intake.update();
+//            lift.update();
+//            arm.update();
+//            bucket.update();
+//            intake.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Lift State", lift.liftState);
