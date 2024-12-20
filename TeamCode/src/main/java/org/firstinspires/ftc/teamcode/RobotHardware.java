@@ -29,7 +29,7 @@ public class RobotHardware {
     public IMU imu = null;
 
     private double SLOW_SPEED = 0.4;
-    
+
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
     public RobotHardware(LinearOpMode opMode) {
@@ -142,5 +142,30 @@ public class RobotHardware {
         motor.setPower(0);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    /**
+     * Scale a joystick value to smooth it for motor control.
+     * Square results in finer control a slow speeds, but less aggressive than
+     * the cube version.
+     */
+    public static double ScaleMotorSquare(double joyStickPosition) {
+        return joyStickPosition * joyStickPosition;
+    }
+
+    /**
+     * Scale a joystick value to smooth it for motor setting.
+     * The cube results in finer control at slow speeds.
+     */
+    public static double ScaleMotorCube(double joyStickPosition) {
+        return Math.pow(joyStickPosition, 3.0);
+    }
+
+    /**
+     * Scale the joystick value to smooth it for motor settings.
+     * This algorithm gives a bit more sensitivity than the ScaleMotorCube() method.
+     */
+    private double ScaleMotorTan(double input) {
+        return (input / 1.07) * (.62 * (Math.pow(input, 2)) + .45);
     }
 }
