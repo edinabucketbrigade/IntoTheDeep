@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-
+//TODO: Add RR Action code if this is going to by used by RR in the new robot.
 public class Intake extends SubSystem {
     private final RobotHardware robot;
+    private CRServo intakeServo;
     public boolean rightBumperPressed = false;
     public boolean leftBumperPressed = false;
     public boolean triggersPressed = false;
@@ -21,8 +23,9 @@ public class Intake extends SubSystem {
 
     @Override
     public void init() {
-        robot.intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
-        robot.intakeServo.setPower(SERVO_STOP);
+        intakeServo = robot.intakeServo;
+        intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
+        intakeServo.setPower(SERVO_STOP);
     }
 
     @Override
@@ -35,15 +38,15 @@ public class Intake extends SubSystem {
     @Override
     public void update() {
         if (triggersPressed) {
-            robot.intakeServo.setPower(SERVO_STOP);
+            intakeServo.setPower(SERVO_STOP);
         }
 
         if (leftBumperPressed) {
-            robot.intakeServo.setPower(-MAX_SERVO_SPEED);
+            intakeServo.setPower(-MAX_SERVO_SPEED);
         }
 
         if (rightBumperPressed) {
-            robot.intakeServo.setPower(MAX_SERVO_SPEED);
+            intakeServo.setPower(MAX_SERVO_SPEED);
         }
     }
 

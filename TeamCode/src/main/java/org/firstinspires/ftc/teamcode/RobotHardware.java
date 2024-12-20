@@ -18,7 +18,7 @@ public class RobotHardware {
     public DcMotorEx rightFrontDrive = null;
     public DcMotorEx rightBackDrive = null;
 
-    //public Servo clawServo = null;
+    public Servo clawServo = null;
     public Servo bucketServo = null;
     public CRServo intakeServo = null;
 
