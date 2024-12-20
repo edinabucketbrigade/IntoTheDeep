@@ -39,7 +39,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 /*
@@ -56,14 +55,13 @@ public class DriverControl extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
     private final Arm arm = new Arm(robot);
-    //private final Claw claw = new Claw(robot);
+    private final Claw claw = new Claw(robot);
     private final Bucket bucket = new Bucket(robot);
-    private final Intake intake = new Intake(robot);
+
 
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
     GamepadEx gamepadTwo = null;
-    //TODO: Add TriggerReaders for both triggers.
 
     @Override
     public void runOpMode() {
@@ -72,9 +70,8 @@ public class DriverControl extends LinearOpMode {
         robot.init();
         lift.init();
         arm.init();
-        //claw.init();
+        claw.init();
         bucket.init();
-        intake.init();
 
 
         // Wait for the game to start (driver presses START)
@@ -88,12 +85,14 @@ public class DriverControl extends LinearOpMode {
         while (opModeIsActive()) {
             gamepadOne.readButtons();
             gamepadTwo.readButtons();
-            //TODO: Add triggerReader.GetValue() for each trigger.
 
             // Driver gamepad (A on the driver hub)
             arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
+
+            claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             // Arm driver gamepad (B on the driver hub)
             lift.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.A),
@@ -103,14 +102,6 @@ public class DriverControl extends LinearOpMode {
             bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_UP));
 
-           // claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-            //        gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
-
-            //TODO: Add trigger parameter.
-            intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER),
-                    gamepadTwo.wasJustPressed(GamepadKeys.Button.B));
-
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value
             double lateral = gamepadOne.getLeftX();
@@ -119,9 +110,8 @@ public class DriverControl extends LinearOpMode {
 
             lift.update();
             arm.update();
-            //claw.update();
+            claw.update();
             bucket.update();
-            intake.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Lift State", lift.liftState);
