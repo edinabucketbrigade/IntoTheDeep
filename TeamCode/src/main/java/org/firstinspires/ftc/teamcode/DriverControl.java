@@ -89,10 +89,9 @@ public class DriverControl extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             gamepadOne.readButtons();
+            gamepadTwo.readButtons();
             triggerReaderLeft.readValue();
             triggerReaderRight.readValue();
-            gamepadTwo.readButtons();
-            //TODO: Add triggerReader.GetValue() for each trigger.
 
             // Driver gamepad (A on the driver hub)
             arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
@@ -121,10 +120,10 @@ public class DriverControl extends LinearOpMode {
             double yaw = gamepadOne.getRightX();
             robot.moveRobot(axial, lateral, yaw);
 
-//            lift.update();
-//            arm.update();
-//            bucket.update();
-//            intake.update();
+            lift.update();
+            arm.update();
+            bucket.update();
+            intake.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Lift State", lift.liftState);

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.enums.ArmPosition.Neutral;
-
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
@@ -14,7 +12,7 @@ import org.firstinspires.ftc.teamcode.enums.LiftPosition;
 
 public class Lift extends SubSystem {
     public LiftPosition liftState;
-    public DcMotorEx lift;
+    public DcMotorEx liftMotor;
     private RobotHardware robot;
     public boolean aPressed = false;
     public boolean xPressed = false;
@@ -36,11 +34,8 @@ public class Lift extends SubSystem {
 
     @Override
     public void init() {
+        liftMotor = robot.liftMotor;
         liftState = LiftPosition.Down;
-        lift = robot.liftMotor;
-        // Make sure encoder is 0 at start
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -51,53 +46,53 @@ public class Lift extends SubSystem {
     public void update() {
         switch (liftState) {
             case Down:
-                if (Math.abs(lift.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
+                if (Math.abs(liftMotor.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
                     if (xPressed) {
-                        lift.setTargetPosition(LIFT_LOW);
-                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        lift.setPower(LIFT_MAX_POWER);
+                        liftMotor.setTargetPosition(LIFT_LOW);
+                        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.LowBasket;
                     }
 
                     if (yPressed) {
-                        lift.setTargetPosition(LIFT_HIGH);
-                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        lift.setPower(LIFT_MAX_POWER);
+                        liftMotor.setTargetPosition(LIFT_HIGH);
+                        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.HighBasket;
                     }
                 }
                 break;
             case LowBasket:
-                if (Math.abs(lift.getCurrentPosition() - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
+                if (Math.abs(liftMotor.getCurrentPosition() - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
-                        lift.setTargetPosition(LIFT_DOWN);
-                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        lift.setPower(LIFT_MAX_POWER);
+                        liftMotor.setTargetPosition(LIFT_DOWN);
+                        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.Down;
                     }
 
                     if (yPressed) {
-                        lift.setTargetPosition(LIFT_HIGH);
-                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        lift.setPower(LIFT_MAX_POWER);
+                        liftMotor.setTargetPosition(LIFT_HIGH);
+                        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.HighBasket;
                     }
                 }
                 break;
             case HighBasket:
-                if (Math.abs(lift.getCurrentPosition() - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
+                if (Math.abs(liftMotor.getCurrentPosition() - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
                     if (aPressed) {
-                        lift.setTargetPosition(LIFT_DOWN);
-                        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        lift.setPower(LIFT_MAX_POWER);
+                        liftMotor.setTargetPosition(LIFT_DOWN);
+                        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        liftMotor.setPower(LIFT_MAX_POWER);
                         liftState = LiftPosition.Down;
                     }
                 }
                 break;
             default:
                 // if get here, there is a problem
-                lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                lift.setPower(0);
+                liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                liftMotor.setPower(0);
                 liftState = LiftPosition.Down;
         }
 
@@ -109,13 +104,13 @@ public class Lift extends SubSystem {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
-                lift.setTargetPosition(LIFT_DOWN);
-                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                lift.setPower(LIFT_MAX_POWER);
+                liftMotor.setTargetPosition(LIFT_DOWN);
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftMotor.setPower(LIFT_MAX_POWER);
                 liftState = LiftPosition.Down;
                 initialized = true;
             }
-            double currentPosition = lift.getCurrentPosition();
+            double currentPosition = liftMotor.getCurrentPosition();
             packet.put("Lift position", currentPosition);
             if (Math.abs(currentPosition - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
                 return false;
@@ -135,13 +130,13 @@ public class Lift extends SubSystem {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
-                lift.setTargetPosition(LIFT_LOW);
-                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                lift.setPower(LIFT_MAX_POWER);
+                liftMotor.setTargetPosition(LIFT_LOW);
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftMotor.setPower(LIFT_MAX_POWER);
                 liftState = LiftPosition.LowBasket;
                 initialized = true;
             }
-            double currentPosition = lift.getCurrentPosition();
+            double currentPosition = liftMotor.getCurrentPosition();
             packet.put("Lift position", currentPosition);
             if (Math.abs(currentPosition - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
                 return false;
@@ -161,13 +156,13 @@ public class Lift extends SubSystem {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (!initialized) {
-                lift.setTargetPosition(LIFT_HIGH);
-                lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                lift.setPower(LIFT_MAX_POWER);
+                liftMotor.setTargetPosition(LIFT_HIGH);
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftMotor.setPower(LIFT_MAX_POWER);
                 liftState = LiftPosition.HighBasket;
                 initialized = true;
             }
-            double currentPosition = lift.getCurrentPosition();
+            double currentPosition = liftMotor.getCurrentPosition();
             packet.put("Lift position", currentPosition);
             if (Math.abs(currentPosition - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
                 return false;

@@ -46,6 +46,7 @@ public class RobotHardware {
 
         liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
         stopAndResetEncoder(liftMotor);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         PIDFCoefficients pidfVelocityCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
         PIDFCoefficients pidfPositionCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
         // These values are recommended as a starting point if you are tuning a PID.
@@ -60,7 +61,8 @@ public class RobotHardware {
         //TODO: Add pidf like Lift above if needed.
         armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "armMotor");
         armMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        stopAndResetEncoder(armMotor);
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
