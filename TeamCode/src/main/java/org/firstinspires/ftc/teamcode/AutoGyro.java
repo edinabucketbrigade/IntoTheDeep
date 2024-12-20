@@ -40,6 +40,12 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.enums.BucketPosition;
+import org.firstinspires.ftc.teamcode.enums.LiftPosition;
+import org.firstinspires.ftc.teamcode.enums.ArmPosition;
+import org.firstinspires.ftc.teamcode.subsystems.Arm;
+import org.firstinspires.ftc.teamcode.subsystems.Bucket;
+import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 import java.util.ArrayList;
 
@@ -83,6 +89,9 @@ public class AutoGyro extends LinearOpMode {
     private double rightSpeed = 0;
     private int leftTarget = 0;
     private int rightTarget = 0;
+    private Lift lift;
+    private Bucket bucket;
+    private Arm arm;
 
     // Calculate the COUNTS_PER_INCH for your specific drive train.
     // Go to your motor vendor website to determine your motor's COUNTS_PER_MOTOR_REV
@@ -111,9 +120,10 @@ public class AutoGyro extends LinearOpMode {
     // Increase these numbers if the heading does not correct strongly enough (eg: a heavy robot or using tracks)
     // Decrease these numbers if the heading does not settle on the correct value (eg: very agile robot with omni wheels)
     /*
-    static final double P_TURN_GAIN = 0.02;     // Larger is more responsive, but also less stable.
+       // Larger is more responsive, but also less stable.
 
      */
+    static final double P_TURN_GAIN = 0.02;
     static final double P_DRIVE_GAIN = 0.03;     // Larger is more responsive, but also less stable.
 
     // The following classes define parameters to the driving methods. They are used to construct
@@ -152,6 +162,12 @@ public class AutoGyro extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init();
+        lift = new Lift(robot);
+        lift.init();
+        bucket = new Bucket(robot);
+        bucket.init();
+        arm = new Arm(robot);
+        arm.init();
 
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -160,8 +176,7 @@ public class AutoGyro extends LinearOpMode {
         robot.rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         robot.leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        robot.rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
-
+        robot.rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         /* The next two lines define Hub orientation.
          * To Do:  EDIT these two lines to match YOUR mounting configuration.
@@ -193,6 +208,7 @@ public class AutoGyro extends LinearOpMode {
         // Set the encoders for closed loop speed control, and reset the heading.
         robot.leftBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBackDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         robot.imu.resetYaw();
 
         // Step through each segment of each path.
@@ -210,12 +226,43 @@ public class AutoGyro extends LinearOpMode {
                     case "HoldHeading":
                         holdHeading(TURN_SPEED, ((HoldHeading) segment).heading, ((HoldHeading) segment).holdTime);
                         break;
+                         */
+
                     default:
+                        if (segment.equals(LiftPosition.Down)) {
+                            lift.setProperties(true, false, false);
+                            lift.update();
+                        } else if (segment.equals(LiftPosition.LowBasket)) {
+                            lift.setProperties(false, true, false);
+                            lift.update();
+                        } else if (segment.equals(LiftPosition.HighBasket)) {
+                            lift.setProperties(false, false, true);
+                            lift.update();
+                        }
+
+                        if (segment.equals(BucketPosition.Down)) {
+                            bucket.setProperties(false, true);
+                            bucket.update();
+                        } else if (segment.equals(BucketPosition.Up)) {
+                            bucket.setProperties(true, false);
+                            bucket.update();
+                        }
+
+                        if (segment.equals(ArmPosition.Back)) {
+                            arm.setProperties(false, true, false);
+                            arm.update();
+                        } else if (segment.equals(ArmPosition.Front)) {
+                            arm.setProperties(true, false, false);
+                            arm.update();
+                        } else if (segment.equals(ArmPosition.Neutral)) {
+                            arm.setProperties(false, false, true);
+                            arm.update();
+                        }
+
                         telemetry.addData("class", segment.getClass().getName());
                         telemetry.update();
                         sleep(3000);
 
-                         */
                 }
             }
         }
@@ -235,8 +282,8 @@ public class AutoGyro extends LinearOpMode {
         driveSpeed = drive;     // save this value as a class member so it can be used by telemetry.
         turnSpeed = turn;      // save this value as a class member so it can be used by telemetry.
 
-        leftSpeed = drive;
-        rightSpeed = drive;
+        leftSpeed = drive - turn;
+        rightSpeed = drive + turn;
 
         // Scale speeds down if either one exceeds +/- 1.0;
         double max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
@@ -333,12 +380,12 @@ public class AutoGyro extends LinearOpMode {
 
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && (Math.abs(headingError) > HEADING_THRESHOLD)) {
-            /*
+
 
             // Determine required steering to keep on heading
             turnSpeed = getSteeringCorrection(heading, P_TURN_GAIN);
 
-             */
+
 
             // Clip the speed to the maximum permitted value.
             turnSpeed = Range.clip(turnSpeed, -maxTurnSpeed, maxTurnSpeed);
@@ -374,11 +421,11 @@ public class AutoGyro extends LinearOpMode {
 
         // keep looping while we have time remaining.
         while (opModeIsActive() && (holdTimer.time() < holdTime)) {
-            /*
+
             // Determine required steering to keep on heading
             turnSpeed = getSteeringCorrection(heading, P_TURN_GAIN);
 
-             */
+
 
             // Clip the speed to the maximum permitted value.
             turnSpeed = Range.clip(turnSpeed, -maxTurnSpeed, maxTurnSpeed);
@@ -458,8 +505,16 @@ public class AutoGyro extends LinearOpMode {
 
         // Segments are the parts of a path (one part of your autonomous strategy,)
         ArrayList<Object> segments = new ArrayList<>();
-        segments.add(new DriveStraight(-24, 10));
+        segments.add(new DriveStraight(4.25, 0));
         segments.add(new Turn(45));
+        //segments.add(new HoldHeading(-45, 10));
+        segments.add(ArmPosition.Neutral);
+        segments.add(LiftPosition.HighBasket);
+        segments.add(BucketPosition.Down);
+        segments.add(BucketPosition.Up);
+        segments.add(LiftPosition.Down);
+        segments.add(ArmPosition.Back);
+
         paths.add(segments);
 //
 //        segments = new ArrayList<>();
