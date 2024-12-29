@@ -43,6 +43,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
 /*
@@ -68,7 +69,7 @@ public class AutoRR extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
     private MecanumDrive drive;
     private final Lift lift = new Lift(robot);
-    private final Bucket bucket = new Bucket(robot);
+    private final Intake intake = new Intake(robot);
     private final Arm arm = new Arm(robot);
     private Pose2d initialPose;
     // Trajectories and Actions for RR to follow.
@@ -85,6 +86,7 @@ public class AutoRR extends LinearOpMode {
             autonomousConfiguration.init_loop();
         }
 
+        // Menu options determine start pose.
         if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
             initialPose = new Pose2d(-24, -60, Math.tan(0));
         }
@@ -94,6 +96,7 @@ public class AutoRR extends LinearOpMode {
         }
 
         drive = new MecanumDrive(hardwareMap, initialPose);
+
         // Setup the paths.
         initializePath();
 
@@ -107,18 +110,21 @@ public class AutoRR extends LinearOpMode {
         robot.imu.resetYaw();
 
         Actions.runBlocking(
-                new SequentialAction(
+                new
+
+                        SequentialAction(
                         moveToBuckets.build(),
-                        lift.lifHigh(),
+//                        lift.lifHigh(),
                         new SleepAction(.5),
-                        bucket.bucketUp(),
-                        bucket.bucketDown(),
-                        lift.liftDown(),
+//                        bucket.bucketUp(),
+//                        bucket.bucketDown(),
+//                        lift.liftDown(),
                         moveFromBucketsToObservatory
                 ));
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
         sleep(1000);  // Pause to display last telemetry message.
     }
 
@@ -136,7 +142,7 @@ public class AutoRR extends LinearOpMode {
     public void initializePath() {
         moveToBuckets = drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45));
-        //
+
         moveFromBucketsToObservatory = moveToBuckets.endTrajectory().fresh()
                 .strafeToLinearHeading(new Vector2d(50, -60), Math.toRadians(0))
                 .build();
