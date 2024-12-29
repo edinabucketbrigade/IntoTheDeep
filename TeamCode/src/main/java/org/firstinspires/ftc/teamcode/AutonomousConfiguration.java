@@ -99,8 +99,8 @@ public class AutonomousConfiguration {
         teleAlliance = telemetry.addData("X = Blue, B = Red", autonomousOptions.getAllianceColor());
         teleStartPosition = telemetry.addData("D-pad left/right, select start position", autonomousOptions.getStartPosition());
         teleParkLocation = telemetry.addData("D-pad up to cycle park location", autonomousOptions.getParkLocation());
-        telePutSampleInBasket = telemetry.addData("Left bumper to cycle Put sample in basket", autonomousOptions.getPutSampleInBasket());
-        teleHangSpecimans = telemetry.addData("Right bumper to cycle hang specimens", autonomousOptions.getHangSpecimens());
+        telePutSampleInBasket = telemetry.addData("Y to cycle Put sample in basket", autonomousOptions.getPutSampleInBasket());
+        teleHangSpecimans = telemetry.addData("A to cycle hang specimens", autonomousOptions.getHangSpecimens());
         teleDelayStartSeconds = telemetry.addData("Left & Right buttons, Delay Start", autonomousOptions.getDelayStartSeconds());
         teleReadyToStart = telemetry.addData("Ready to start: ", getReadyToStart());
         teleSavedToFile = telemetry.addData("Saved to file:", savedToFile);
@@ -156,7 +156,7 @@ public class AutonomousConfiguration {
         }
 
         // Put samples in the basket
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.Y)) {
             AutonomousOptions.PutSampleInBasket putSampleInBasket = autonomousOptions.getPutSampleInBasket().getNext();
             switch (putSampleInBasket) {
                 case No:
@@ -169,7 +169,7 @@ public class AutonomousConfiguration {
         }
 
         // Hang specimens
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)) {
             AutonomousOptions.HangSpecimens hangSpecimens = autonomousOptions.getHangSpecimens().getNext();
             switch (hangSpecimens) {
                 case No:
@@ -213,6 +213,8 @@ public class AutonomousConfiguration {
         autonomousOptions.setAllianceColor(AutonomousOptions.AllianceColor.None);
         autonomousOptions.setStartPosition(AutonomousOptions.StartPosition.None);
         autonomousOptions.setParkLocation(AutonomousOptions.ParkLocation.None);
+        autonomousOptions.setHangSpecimens(AutonomousOptions.HangSpecimens.No);
+        autonomousOptions.setPutSampleInBasket(AutonomousOptions.PutSampleInBasket.No);
         autonomousOptions.setDelayStartSeconds(0);
         readyToStart = false;
         savedToFile = false;
