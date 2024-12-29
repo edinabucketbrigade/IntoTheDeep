@@ -89,7 +89,7 @@ public class AutoRR extends LinearOpMode {
             initialPose = new Pose2d(-24, -60, Math.tan(0));
         }
 
-        if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
+        if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Right) {
             initialPose = new Pose2d(12, -60, Math.tan(0));
         }
 
