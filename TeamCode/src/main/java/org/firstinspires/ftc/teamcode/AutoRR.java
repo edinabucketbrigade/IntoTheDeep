@@ -86,6 +86,15 @@ public class AutoRR extends LinearOpMode {
             autonomousConfiguration.init_loop();
         }
 
+        // Make sure required menu options are set.
+        if (!autonomousConfiguration.getReadyToStart()){
+            telemetry.addLine("Auto options are not set.");
+            telemetry.speak("Auto options are not set.");
+            telemetry.update();
+            sleep(4000);
+            requestOpModeStop();
+        }
+
         // Menu options determine start pose.
         if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
             initialPose = new Pose2d(-24, -60, Math.tan(0));
@@ -101,26 +110,23 @@ public class AutoRR extends LinearOpMode {
         initializePath();
 
         // Wait for the game to start (Display Gyro value while waiting)
-        while (opModeInInit()) {
-            telemetry.addData(">", "Robot Heading = %4.0f", getHeading());
-            telemetry.update();
-        }
+//        while (opModeInInit()) {
+//            telemetry.addData(">", "Robot Heading = %4.0f", getHeading());
+//            telemetry.update();
+//        }
 
         // Make sure the imu is correct.
         robot.imu.resetYaw();
 
-        Actions.runBlocking(
-                new
-
-                        SequentialAction(
-                        moveToBuckets.build(),
+        Actions.runBlocking(new SequentialAction(
+                moveToBuckets.build(),
 //                        lift.lifHigh(),
-                        new SleepAction(.5),
+                new SleepAction(.5),
 //                        bucket.bucketUp(),
 //                        bucket.bucketDown(),
 //                        lift.liftDown(),
-                        moveFromBucketsToObservatory
-                ));
+                moveFromBucketsToObservatory
+        ));
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

@@ -35,7 +35,7 @@ public class AutonomousConfiguration {
     private AutonomousOptions autonomousOptions;
     private GamepadEx gamepadEx;
     private Context context;
-    private boolean readyToStart;
+    private boolean readyToStart = false;
     private boolean savedToFile;
     private Telemetry telemetry;
     private Telemetry.Item teleAlliance;
@@ -106,6 +106,7 @@ public class AutonomousConfiguration {
         teleSavedToFile = telemetry.addData("Saved to file:", savedToFile);
         telemetry.addLine("Start button saves to a file and goes to 'Wait for Start'");
         telemetry.addLine("Back button resets all options.");
+//        telemetry.addData("Dir", context.getFilesDir());
         telemetry.update();
     }
 
@@ -113,10 +114,6 @@ public class AutonomousConfiguration {
     // game pad Start.
     public void init_loop() {
         gamepadEx.readButtons();
-        //Set default options (ignore what was saved to the file.)
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.BACK)) {
-            resetOptions();
-        }
         //Alliance Color
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.X)) {
             autonomousOptions.setAllianceColor(AutonomousOptions.AllianceColor.Blue);
@@ -196,8 +193,8 @@ public class AutonomousConfiguration {
         teleDelayStartSeconds.setValue(autonomousOptions.getDelayStartSeconds());
 
         //Have the required options been set?
-        readyToStart = !(autonomousOptions.getAllianceColor() == AutonomousOptions.AllianceColor.None
-                || autonomousOptions.getStartPosition() == AutonomousOptions.StartPosition.None);
+        readyToStart = ((autonomousOptions.getAllianceColor() != AutonomousOptions.AllianceColor.None) &&
+                (autonomousOptions.getStartPosition() != AutonomousOptions.StartPosition.None));
         teleReadyToStart.setValue(readyToStart);
 
         //Save the options to a file if ready to start and start button is pressed.
@@ -206,6 +203,12 @@ public class AutonomousConfiguration {
             savedToFile = true;
             teleSavedToFile.setValue(true);
         }
+
+        //Set default options (ignore what was saved to the file.)
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.BACK)) {
+            resetOptions();
+        }
+
         telemetry.update();
     }
 
