@@ -109,12 +109,6 @@ public class AutoRR extends LinearOpMode {
         // Setup the paths.
         initializePath();
 
-        // Wait for the game to start (Display Gyro value while waiting)
-//        while (opModeInInit()) {
-//            telemetry.addData(">", "Robot Heading = %4.0f", getHeading());
-//            telemetry.update();
-//        }
-
         // Make sure the imu is correct.
         robot.imu.resetYaw();
 
