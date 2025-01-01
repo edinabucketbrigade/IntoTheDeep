@@ -87,13 +87,16 @@ public class AutoRR extends LinearOpMode {
         }
 
         // Make sure required menu options are set.
-        if (!autonomousConfiguration.getReadyToStart()){
+        if (!autonomousConfiguration.getReadyToStart()) {
             telemetry.addLine("Auto options are not set.");
             telemetry.speak("Auto options are not set.");
             telemetry.update();
             sleep(4000);
-            requestOpModeStop();
+            return;
         }
+
+        telemetry.addLine("Auto Running");
+        telemetry.update();
 
         // Menu options determine start pose.
         if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
