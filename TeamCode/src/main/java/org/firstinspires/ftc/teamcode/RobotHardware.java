@@ -44,25 +44,25 @@ public class RobotHardware {
         rightFrontDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "rightFrontDrive");
         rightBackDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "rightBackDrive");
 
-//        liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
-//        stopAndResetEncoder(liftMotor);
-//        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        PIDFCoefficients pidfVelocityCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
-//        PIDFCoefficients pidfPositionCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
-//        // These values are recommended as a starting point if you are tuning a PID.
-//        pidfVelocityCoefficients.p = 1.063f;
-//        pidfVelocityCoefficients.i = 1.063f;
-//        pidfVelocityCoefficients.f = 10.63f;
-//        liftMotor.setVelocityPIDFCoefficients(pidfVelocityCoefficients.p, pidfVelocityCoefficients.i, pidfVelocityCoefficients.d, pidfVelocityCoefficients.f);
-//        liftMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfPositionCoefficients);
-//        liftMotor.setPositionPIDFCoefficients(8f);
-//        liftMotor.setTargetPositionTolerance(10);
+        liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
+        stopAndResetEncoder(liftMotor);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        PIDFCoefficients pidfVelocityCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDFCoefficients pidfPositionCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION);
+        // These values are recommended as a starting point if you are tuning a PID.
+        pidfVelocityCoefficients.p = 1.063f;
+        pidfVelocityCoefficients.i = 1.063f;
+        pidfVelocityCoefficients.f = 10.63f;
+        liftMotor.setVelocityPIDFCoefficients(pidfVelocityCoefficients.p, pidfVelocityCoefficients.i, pidfVelocityCoefficients.d, pidfVelocityCoefficients.f);
+        liftMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_TO_POSITION, pidfPositionCoefficients);
+        liftMotor.setPositionPIDFCoefficients(8f);
+        liftMotor.setTargetPositionTolerance(10);
 
         //TODO: Add pidf like Lift above if needed.
-//        armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "armMotor");
-//        armMotor.setDirection(DcMotor.Direction.FORWARD);
-//        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        stopAndResetEncoder(armMotor);
+        armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "armMotor");
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        stopAndResetEncoder(armMotor);
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -76,7 +76,7 @@ public class RobotHardware {
         // Now initialize the IMU with this mounting orientation
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
-//        bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
+        bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
         intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
     }
 
