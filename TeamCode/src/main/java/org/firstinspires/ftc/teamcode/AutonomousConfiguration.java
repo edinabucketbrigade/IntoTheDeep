@@ -42,7 +42,7 @@ public class AutonomousConfiguration {
     private Telemetry.Item teleStartPosition;
     private Telemetry.Item teleParkLocation;
     private Telemetry.Item telePutSampleInBasket;
-    private Telemetry.Item teleHangSpecimans;
+    private Telemetry.Item teleHangSpecimens;
     private Telemetry.Item teleDelayStartSeconds;
     private Telemetry.Item teleReadyToStart;
     private Telemetry.Item teleSavedToFile;
@@ -83,7 +83,7 @@ public class AutonomousConfiguration {
         return autonomousOptions.getPutSampleInBasket();
     }
 
-    public AutonomousOptions.HangSpecimens getHangSpecimans() {
+    public AutonomousOptions.HangSpecimens getHangSpecimens() {
         return autonomousOptions.getHangSpecimens();
     }
 
@@ -100,7 +100,7 @@ public class AutonomousConfiguration {
         teleStartPosition = telemetry.addData("D-pad left/right, select start position", autonomousOptions.getStartPosition());
         teleParkLocation = telemetry.addData("D-pad up to cycle park location", autonomousOptions.getParkLocation());
         telePutSampleInBasket = telemetry.addData("Y to cycle Put sample in basket", autonomousOptions.getPutSampleInBasket());
-        teleHangSpecimans = telemetry.addData("A to cycle hang specimens", autonomousOptions.getHangSpecimens());
+        teleHangSpecimens = telemetry.addData("A to cycle hang specimens", autonomousOptions.getHangSpecimens());
         teleDelayStartSeconds = telemetry.addData("Left & Right buttons, Delay Start", autonomousOptions.getDelayStartSeconds());
         teleReadyToStart = telemetry.addData("Ready to start: ", getReadyToStart());
         teleSavedToFile = telemetry.addData("Saved to file:", savedToFile);
@@ -175,7 +175,7 @@ public class AutonomousConfiguration {
                     telemetry.speak("hang specimens, yes.");
             }
             autonomousOptions.setHangSpecimens(hangSpecimens);
-            teleHangSpecimans.setValue(hangSpecimens);
+            teleHangSpecimens.setValue(hangSpecimens);
         }
 
         // Keep range within 0-15 seconds. Wrap at either end.
