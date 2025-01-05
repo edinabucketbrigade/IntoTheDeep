@@ -35,14 +35,14 @@ public class AutonomousConfiguration {
     private AutonomousOptions autonomousOptions;
     private GamepadEx gamepadEx;
     private Context context;
-    private boolean readyToStart;
+    private boolean readyToStart = false;
     private boolean savedToFile;
     private Telemetry telemetry;
     private Telemetry.Item teleAlliance;
     private Telemetry.Item teleStartPosition;
     private Telemetry.Item teleParkLocation;
     private Telemetry.Item telePutSampleInBasket;
-    private Telemetry.Item teleHangSpecimans;
+    private Telemetry.Item teleHangSpecimens;
     private Telemetry.Item teleDelayStartSeconds;
     private Telemetry.Item teleReadyToStart;
     private Telemetry.Item teleSavedToFile;
@@ -83,7 +83,7 @@ public class AutonomousConfiguration {
         return autonomousOptions.getPutSampleInBasket();
     }
 
-    public AutonomousOptions.HangSpecimens getHangSpecimans() {
+    public AutonomousOptions.HangSpecimens getHangSpecimens() {
         return autonomousOptions.getHangSpecimens();
     }
 
@@ -99,11 +99,12 @@ public class AutonomousConfiguration {
         teleAlliance = telemetry.addData("X = Blue, B = Red", autonomousOptions.getAllianceColor());
         teleStartPosition = telemetry.addData("D-pad left/right, select start position", autonomousOptions.getStartPosition());
         teleParkLocation = telemetry.addData("D-pad up to cycle park location", autonomousOptions.getParkLocation());
-        telePutSampleInBasket = telemetry.addData("Left bumper to cycle Put sample in basket", autonomousOptions.getPutSampleInBasket());
-        teleHangSpecimans = telemetry.addData("Right bumper to cycle hang specimens", autonomousOptions.getHangSpecimens());
+        telePutSampleInBasket = telemetry.addData("Y to cycle Put sample in basket", autonomousOptions.getPutSampleInBasket());
+        teleHangSpecimens = telemetry.addData("A to cycle hang specimens", autonomousOptions.getHangSpecimens());
         teleDelayStartSeconds = telemetry.addData("Left & Right buttons, Delay Start", autonomousOptions.getDelayStartSeconds());
         teleReadyToStart = telemetry.addData("Ready to start: ", getReadyToStart());
         teleSavedToFile = telemetry.addData("Saved to file:", savedToFile);
+        telemetry.addLine("Start button saves to a file.");
         telemetry.addLine("Back button resets all options.");
         telemetry.update();
     }
@@ -112,10 +113,6 @@ public class AutonomousConfiguration {
     // game pad Start.
     public void init_loop() {
         gamepadEx.readButtons();
-        //Set default options (ignore what was saved to the file.)
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.BACK)) {
-            resetOptions();
-        }
         //Alliance Color
         if (gamepadEx.wasJustReleased(GamepadKeys.Button.X)) {
             autonomousOptions.setAllianceColor(AutonomousOptions.AllianceColor.Blue);
@@ -156,7 +153,7 @@ public class AutonomousConfiguration {
         }
 
         // Put samples in the basket
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.LEFT_BUMPER)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.Y)) {
             AutonomousOptions.PutSampleInBasket putSampleInBasket = autonomousOptions.getPutSampleInBasket().getNext();
             switch (putSampleInBasket) {
                 case No:
@@ -169,7 +166,7 @@ public class AutonomousConfiguration {
         }
 
         // Hang specimens
-        if (gamepadEx.wasJustReleased(GamepadKeys.Button.RIGHT_BUMPER)) {
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.A)) {
             AutonomousOptions.HangSpecimens hangSpecimens = autonomousOptions.getHangSpecimens().getNext();
             switch (hangSpecimens) {
                 case No:
@@ -178,7 +175,7 @@ public class AutonomousConfiguration {
                     telemetry.speak("hang specimens, yes.");
             }
             autonomousOptions.setHangSpecimens(hangSpecimens);
-            teleHangSpecimans.setValue(hangSpecimens);
+            teleHangSpecimens.setValue(hangSpecimens);
         }
 
         // Keep range within 0-15 seconds. Wrap at either end.
@@ -195,8 +192,8 @@ public class AutonomousConfiguration {
         teleDelayStartSeconds.setValue(autonomousOptions.getDelayStartSeconds());
 
         //Have the required options been set?
-        readyToStart = !(autonomousOptions.getAllianceColor() == AutonomousOptions.AllianceColor.None
-                || autonomousOptions.getStartPosition() == AutonomousOptions.StartPosition.None);
+        readyToStart = ((autonomousOptions.getAllianceColor() != AutonomousOptions.AllianceColor.None) &&
+                (autonomousOptions.getStartPosition() != AutonomousOptions.StartPosition.None));
         teleReadyToStart.setValue(readyToStart);
 
         //Save the options to a file if ready to start and start button is pressed.
@@ -204,7 +201,14 @@ public class AutonomousConfiguration {
             SaveOptions();
             savedToFile = true;
             teleSavedToFile.setValue(true);
+            telemetry.speak("Ready to start.");
         }
+
+        //Set default options (ignore what was saved to the file.)
+        if (gamepadEx.wasJustReleased(GamepadKeys.Button.BACK)) {
+            resetOptions();
+        }
+
         telemetry.update();
     }
 
@@ -213,6 +217,8 @@ public class AutonomousConfiguration {
         autonomousOptions.setAllianceColor(AutonomousOptions.AllianceColor.None);
         autonomousOptions.setStartPosition(AutonomousOptions.StartPosition.None);
         autonomousOptions.setParkLocation(AutonomousOptions.ParkLocation.None);
+        autonomousOptions.setHangSpecimens(AutonomousOptions.HangSpecimens.No);
+        autonomousOptions.setPutSampleInBasket(AutonomousOptions.PutSampleInBasket.No);
         autonomousOptions.setDelayStartSeconds(0);
         readyToStart = false;
         savedToFile = false;
