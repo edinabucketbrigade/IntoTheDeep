@@ -104,9 +104,8 @@ public class AutonomousConfiguration {
         teleDelayStartSeconds = telemetry.addData("Left & Right buttons, Delay Start", autonomousOptions.getDelayStartSeconds());
         teleReadyToStart = telemetry.addData("Ready to start: ", getReadyToStart());
         teleSavedToFile = telemetry.addData("Saved to file:", savedToFile);
-        telemetry.addLine("Start button saves to a file and goes to 'Wait for Start'");
+        telemetry.addLine("Start button saves to a file.");
         telemetry.addLine("Back button resets all options.");
-//        telemetry.addData("Dir", context.getFilesDir());
         telemetry.update();
     }
 
@@ -202,6 +201,7 @@ public class AutonomousConfiguration {
             SaveOptions();
             savedToFile = true;
             teleSavedToFile.setValue(true);
+            telemetry.speak("Ready to start.");
         }
 
         //Set default options (ignore what was saved to the file.)
