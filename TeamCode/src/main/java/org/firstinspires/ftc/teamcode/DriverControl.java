@@ -39,6 +39,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
@@ -56,7 +57,7 @@ public class DriverControl extends LinearOpMode {
     private final Lift lift = new Lift(robot);
     private final Arm arm = new Arm(robot);
     private final Bucket bucket = new Bucket(robot);
-    private final Intake intake = new Intake(robot);
+    private final Claw intake = new Claw(robot);
 
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
@@ -110,9 +111,9 @@ public class DriverControl extends LinearOpMode {
             //        gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             // Triggers act like switches. Either one will stop the intake.
-            intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER),
-                    (triggerReaderLeft.wasJustPressed() || triggerReaderRight.wasJustPressed()));
+//            intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+//                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER),
+//                    (triggerReaderLeft.wasJustPressed() || triggerReaderRight.wasJustPressed()));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value
