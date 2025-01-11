@@ -20,7 +20,8 @@ public class RobotHardware {
 
     public Servo clawServo = null;
     public Servo bucketServo = null;
-    public CRServo intakeServo = null;
+    public Servo wristServo = null;
+    //public CRServo intakeServo = null;
 
     public DcMotorEx liftMotor = null;
     //5203 series, 384.5 ppr - encoder resolution
@@ -77,7 +78,9 @@ public class RobotHardware {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
-        intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
+        clawServo = myOpMode.hardwareMap.get(Servo.class, "clawServo");
+        wristServo = myOpMode.hardwareMap.get(Servo.class, "wristServo");
+        //intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
     }
 
     /**
