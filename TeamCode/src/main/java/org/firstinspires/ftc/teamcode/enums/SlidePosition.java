@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.enums;
 
-public enum ArmPosition {
+public enum SlidePosition {
     Front,
     Neutral,
     Back

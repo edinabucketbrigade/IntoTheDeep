@@ -60,7 +60,7 @@ public class RobotHardware {
         liftMotor.setTargetPositionTolerance(10);
 
         //TODO: Add pidf like Lift above if needed.
-        armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "armMotor");
+        armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "slideMotor");
         armMotor.setDirection(DcMotor.Direction.FORWARD);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         stopAndResetEncoder(armMotor);

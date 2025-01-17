@@ -41,8 +41,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.subsystems.Arm;
-import org.firstinspires.ftc.teamcode.subsystems.Bucket;
+import org.firstinspires.ftc.teamcode.subsystems.Slide;
 import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
 
@@ -70,7 +69,7 @@ public class AutoRR extends LinearOpMode {
     private MecanumDrive drive;
     private final Lift lift = new Lift(robot);
     private final Intake intake = new Intake(robot);
-    private final Arm arm = new Arm(robot);
+    private final Slide arm = new Slide(robot);
     private Pose2d initialPose;
     // Trajectories and Actions for RR to follow.
     private TrajectoryActionBuilder moveToBuckets;

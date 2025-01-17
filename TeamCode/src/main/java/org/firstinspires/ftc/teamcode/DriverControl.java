@@ -37,7 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.subsystems.Arm;
+import org.firstinspires.ftc.teamcode.subsystems.Slide;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
@@ -55,7 +55,7 @@ public class DriverControl extends LinearOpMode {
     // Create a RobotHardware object to be used to access robot hardware.
     public RobotHardware robot = new RobotHardware(this);
     private final Lift lift = new Lift(robot);
-    private final Arm arm = new Arm(robot);
+    private final Slide slide = new Slide(robot);
     private final Bucket bucket = new Bucket(robot);
     private final Claw claw = new Claw(robot);
     private final Wrist wrist = new Wrist(robot);
@@ -77,7 +77,7 @@ public class DriverControl extends LinearOpMode {
         triggerReaderRight = new TriggerReader(gamepadTwo, GamepadKeys.Trigger.RIGHT_TRIGGER);
         robot.init();
         lift.init();
-        arm.init();
+        slide.init();
         bucket.init();
         claw.init();
         wrist.init();
@@ -101,7 +101,7 @@ public class DriverControl extends LinearOpMode {
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
-            // Arm driver gamepad (B on the driver hub)
+            // Slide driver gamepad (B on the driver hub)
             lift.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.A),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.X),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.Y));
@@ -124,7 +124,7 @@ public class DriverControl extends LinearOpMode {
             robot.moveRobot(axial, lateral, yaw);
 
             lift.update();
-            arm.update();
+            slide.update();
             bucket.update();
             claw.update();
             wrist.update();
@@ -137,13 +137,13 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Lift Busy", robot.liftMotor.isBusy());
             telemetry.addData("Lift Mode", robot.liftMotor.getMode());
             telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
-            telemetry.addData("Arm State", arm.armState);
-            telemetry.addData("Arm Target", "%d", robot.armMotor.getTargetPosition());
-            telemetry.addData("Arm position", "%d", robot.armMotor.getCurrentPosition());
-            telemetry.addData("Arm Power", "%6.2f", robot.armMotor.getPower());
-            telemetry.addData("Arm Busy", robot.armMotor.isBusy());
-            telemetry.addData("Arm Mode", robot.armMotor.getMode());
-            telemetry.addData("Arm PIDF Run To Position", robot.armMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
+            telemetry.addData("Slide State", slide.slideState);
+            telemetry.addData("Slide Target", "%d", robot.armMotor.getTargetPosition());
+            telemetry.addData("Slide position", "%d", robot.armMotor.getCurrentPosition());
+            telemetry.addData("Slide Power", "%6.2f", robot.armMotor.getPower());
+            telemetry.addData("Slide Busy", robot.armMotor.isBusy());
+            telemetry.addData("Slide Mode", robot.armMotor.getMode());
+            telemetry.addData("Slide PIDF Run To Position", robot.armMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
         }
     }
