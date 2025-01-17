@@ -40,8 +40,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.subsystems.Arm;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.Wrist;
 
 /*
  * This is a teleop opMode designed to work with a RobotHardware class and the FtcLib library.
@@ -57,7 +57,8 @@ public class DriverControl extends LinearOpMode {
     private final Lift lift = new Lift(robot);
     private final Arm arm = new Arm(robot);
     private final Bucket bucket = new Bucket(robot);
-    private final Claw intake = new Claw(robot);
+    private final Claw claw = new Claw(robot);
+    private final Wrist wrist = new Wrist(robot);
 
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
@@ -78,7 +79,8 @@ public class DriverControl extends LinearOpMode {
         lift.init();
         arm.init();
         bucket.init();
-        intake.init();
+        claw.init();
+        wrist.init();
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");
@@ -95,7 +97,7 @@ public class DriverControl extends LinearOpMode {
             triggerReaderRight.readValue();
 
             // Driver gamepad (A on the driver hub)
-            arm.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
+            wrist.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
@@ -107,8 +109,8 @@ public class DriverControl extends LinearOpMode {
             bucket.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_UP));
 
-            // claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-            //        gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+            claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                   gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             // Triggers act like switches. Either one will stop the intake.
 //            intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
@@ -124,7 +126,8 @@ public class DriverControl extends LinearOpMode {
             lift.update();
             arm.update();
             bucket.update();
-            intake.update();
+            claw.update();
+            wrist.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Lift State", lift.liftState);
