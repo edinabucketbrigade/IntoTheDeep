@@ -17,11 +17,7 @@ public class Slide extends SubSystem {
     public SlidePosition slideState;
     public DcMotorEx slideMotor;
     private RobotHardware robot;
-    public boolean DPAD_UP = false;
-    public boolean DPAD_DOWN = false;
-    public boolean DPAD_RIGHT = false;
     public double slidePower = 0;
-    public double rightTrigger = 0;
     private final int SLIDE_FRONT = -1650;
     private final int SLIDE_NEUTRAL = -844;
     private final int SLIDE_BACK = 0;
@@ -36,7 +32,7 @@ public class Slide extends SubSystem {
     @Override
     public void init() {
         slideState = SlidePosition.Back;
-        slideMotor = robot.armMotor;
+        slideMotor = robot.slideMotor;
     }
 
     @Override
@@ -128,6 +124,6 @@ public class Slide extends SubSystem {
     }
 
     public void setProperties(double slidePower) {
-        slidePower = slidePower;
+        this.slidePower = slidePower;
     }
 }

@@ -2,10 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -26,7 +24,7 @@ public class RobotHardware {
     public DcMotorEx liftMotor = null;
     //5203 series, 384.5 ppr - encoder resolution
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
-    public DcMotorEx armMotor = null;
+    public DcMotorEx slideMotor = null;
     public IMU imu = null;
 
     private double SLOW_SPEED = 0.4;
@@ -60,10 +58,14 @@ public class RobotHardware {
         liftMotor.setTargetPositionTolerance(10);
 
         //TODO: Add pidf like Lift above if needed.
-        armMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "slideMotor");
-        armMotor.setDirection(DcMotor.Direction.FORWARD);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        stopAndResetEncoder(armMotor);
+        slideMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "slideMotor");
+        slideMotor.setDirection(DcMotor.Direction.FORWARD);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        stopAndResetEncoder(slideMotor);
+        // Set the slide motor for driver control.
+        if (myOpMode.getClass().getSimpleName() == "DriverControl") {
+            slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
         leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         leftBackDrive.setDirection(DcMotor.Direction.FORWARD);

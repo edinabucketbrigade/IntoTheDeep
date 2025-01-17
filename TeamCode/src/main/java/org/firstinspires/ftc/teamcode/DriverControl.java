@@ -138,12 +138,12 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Lift Mode", robot.liftMotor.getMode());
             telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.addData("Slide State", slide.slideState);
-            telemetry.addData("Slide Target", "%d", robot.armMotor.getTargetPosition());
-            telemetry.addData("Slide position", "%d", robot.armMotor.getCurrentPosition());
-            telemetry.addData("Slide Power", "%6.2f", robot.armMotor.getPower());
-            telemetry.addData("Slide Busy", robot.armMotor.isBusy());
-            telemetry.addData("Slide Mode", robot.armMotor.getMode());
-            telemetry.addData("Slide PIDF Run To Position", robot.armMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
+            telemetry.addData("Slide Target", "%d", robot.slideMotor.getTargetPosition());
+            telemetry.addData("Slide position", "%d", robot.slideMotor.getCurrentPosition());
+            telemetry.addData("Slide Power", "%6.2f", robot.slideMotor.getPower());
+            telemetry.addData("Slide Busy", robot.slideMotor.isBusy());
+            telemetry.addData("Slide Mode", robot.slideMotor.getMode());
+            telemetry.addData("Slide PIDF Run To Position", robot.slideMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
             telemetry.update();
         }
     }
