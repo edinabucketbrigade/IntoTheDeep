@@ -20,6 +20,8 @@ public class Slide extends SubSystem {
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
+    public double slidePower = 0;
+    public double rightTrigger = 0;
     private final int SLIDE_FRONT = -1650;
     private final int SLIDE_NEUTRAL = -844;
     private final int SLIDE_BACK = 0;
@@ -44,64 +46,7 @@ public class Slide extends SubSystem {
 
     @Override
     public void update() {
-        switch (slideState) {
-            case Back:
-                if (Math.abs(slideMotor.getCurrentPosition() - SLIDE_BACK) < SLIDE_POSITION_TOLERANCE) {
-                    if (DPAD_UP) {
-                        slideMotor.setTargetPosition(SLIDE_FRONT);
-                        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        slideMotor.setPower(SLIDE_MAX_POWER);
-                        slideState = SlidePosition.Front;
-                    }
-                    if (DPAD_RIGHT) {
-                        slideMotor.setTargetPosition(SLIDE_NEUTRAL);
-                        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        slideMotor.setPower(SLIDE_MAX_POWER);
-                        slideState = Neutral;
-                    }
-                }
-                break;
-
-            case Front:
-                if (Math.abs(slideMotor.getCurrentPosition() - SLIDE_FRONT) < SLIDE_POSITION_TOLERANCE) {
-                    if (DPAD_DOWN) {
-                        slideMotor.setTargetPosition(SLIDE_BACK);
-                        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        slideMotor.setPower(SLIDE_MAX_POWER);
-                        slideState = SlidePosition.Back;
-                    }
-                    if (DPAD_RIGHT) {
-                        slideMotor.setTargetPosition(SLIDE_NEUTRAL);
-                        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        slideMotor.setPower(SLIDE_MAX_POWER);
-                        slideState = Neutral;
-                    }
-                }
-                break;
-
-            case Neutral:
-                if (Math.abs(slideMotor.getCurrentPosition() - SLIDE_NEUTRAL) < SLIDE_POSITION_TOLERANCE) {
-                    if (DPAD_DOWN) {
-                        slideMotor.setTargetPosition(SLIDE_BACK);
-                        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        slideMotor.setPower(SLIDE_MAX_POWER);
-                        slideState = SlidePosition.Back;
-                    }
-                    if (DPAD_UP) {
-                        slideMotor.setTargetPosition(SLIDE_FRONT);
-                        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        slideMotor.setPower(SLIDE_MAX_POWER);
-                        slideState = SlidePosition.Front;
-                    }
-                }
-                break;
-
-            default:
-                // if get here, there is a problem
-                slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                slideMotor.setPower(0);
-                slideState = SlidePosition.Front;
-        }
+        slideMotor.setPower(slidePower);
     }
 
     public class SlideNeutral implements Action {
@@ -182,9 +127,7 @@ public class Slide extends SubSystem {
         return new SlideFront();
     }
 
-    public void setProperties(boolean dpadDown, boolean dpadUp, boolean dpadNeutral) {
-        DPAD_DOWN = dpadDown;
-        DPAD_UP = dpadUp;
-        DPAD_RIGHT = dpadNeutral;
+    public void setProperties(double slidePower) {
+        slidePower = slidePower;
     }
 }

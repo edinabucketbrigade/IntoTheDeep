@@ -110,12 +110,12 @@ public class DriverControl extends LinearOpMode {
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.DPAD_UP));
 
             claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                   gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
-            // Triggers act like switches. Either one will stop the intake.
-//            intake.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-//                    gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER),
-//                    (triggerReaderLeft.wasJustPressed() || triggerReaderRight.wasJustPressed()));
+            // Left trigger reverses the slide motor. Using both triggers will add the results
+            // together.
+            slide.setProperties(-gamepadTwo.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) +
+                    gamepadTwo.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
             double axial = -gamepadOne.getLeftY();  // Note: pushing stick forward gives negative value
