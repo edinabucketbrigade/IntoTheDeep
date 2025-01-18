@@ -18,8 +18,8 @@ public class Slide extends SubSystem {
     public DcMotorEx slideMotor;
     private RobotHardware robot;
     public double slidePower = 0;
-    private final int SLIDE_FRONT = -1650;
-    private final int SLIDE_NEUTRAL = -844;
+    private final int SLIDE_FRONT = 1650;
+    private final int SLIDE_NEUTRAL = 844;
     private final int SLIDE_BACK = 0;
 
     private final double SLIDE_MAX_POWER = .7;
@@ -42,7 +42,10 @@ public class Slide extends SubSystem {
 
     @Override
     public void update() {
-        slideMotor.setPower(slidePower);
+        int currentPosition=slideMotor.getCurrentPosition();
+        if (currentPosition < SLIDE_FRONT && currentPosition > SLIDE_BACK) {
+            slideMotor.setPower(slidePower);
+        }
     }
 
     public class SlideNeutral implements Action {
