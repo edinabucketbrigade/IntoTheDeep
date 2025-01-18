@@ -38,6 +38,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -65,6 +66,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 @Autonomous(name = "RR", group = "Robot")
 //@Disabled
 public class AutoRR extends LinearOpMode {
+    private final ElapsedTime runTine = new ElapsedTime();
     public RobotHardware robot = new RobotHardware(this);
     private MecanumDrive drive;
     private final Lift lift = new Lift(robot);
@@ -92,6 +94,10 @@ public class AutoRR extends LinearOpMode {
             telemetry.update();
             sleep(4000);
             return;
+        }
+        runTine.reset();
+        while (runTine.seconds() <= autonomousConfiguration.getDelayStartSeconds()) {
+            sleep(10);
         }
 
         telemetry.addLine("Auto Running");
