@@ -150,7 +150,9 @@ public class RobotHardware {
      * the cube version.
      */
     public static double ScaleMotorSquare(double joyStickPosition) {
-        return joyStickPosition * joyStickPosition;
+        boolean positionIsNegative = joyStickPosition < 0;
+        double result = joyStickPosition * joyStickPosition;
+        return positionIsNegative ? -result : result;
     }
 
     /**
