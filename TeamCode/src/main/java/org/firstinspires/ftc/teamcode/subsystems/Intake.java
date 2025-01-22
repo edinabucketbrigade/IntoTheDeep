@@ -23,7 +23,7 @@ public class Intake extends SubSystem {
 
     @Override
     public void init() {
-        intakeServo = robot.intakeServo;
+        //intakeServo = robot.intakeServo;
         intakeServo.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeServo.setPower(SERVO_STOP);
     }
