@@ -27,9 +27,6 @@ public class RobotHardware {
     public DcMotorEx slideMotor = null;
     public IMU imu = null;
 
-    private double SLOW_SPEED = 0.4;
-
-
     // Define a constructor that allows the OpMode to pass a reference to itself.
     public RobotHardware(LinearOpMode opMode) {
         myOpMode = opMode;
@@ -95,9 +92,7 @@ public class RobotHardware {
      * Positive Yaw is counter-clockwise
      */
     public void moveRobot(double x, double y, double yaw) {
-        x = x * SLOW_SPEED;
-        y = y * SLOW_SPEED;
-        yaw = yaw * SLOW_SPEED;
+
         /*
          This is a version from gm0.org.
 
