@@ -1,4 +1,4 @@
-package pedroPathing.constants;
+package pedroPathing.Constants;
 
 import com.pedropathing.localization.Localizers;
 import com.pedropathing.follower.FollowerConstants;
