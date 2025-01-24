@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
@@ -96,84 +95,6 @@ public class Lift extends SubSystem {
                 liftState = LiftPosition.Down;
         }
 
-    }
-
-    public class LiftDown implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                liftMotor.setTargetPosition(LIFT_DOWN);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftMotor.setPower(LIFT_MAX_POWER);
-                liftState = LiftPosition.Down;
-                initialized = true;
-            }
-            double currentPosition = liftMotor.getCurrentPosition();
-            packet.put("Lift position", currentPosition);
-            if (Math.abs(currentPosition - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action liftDown() {
-        return new LiftDown();
-    }
-
-    public class LiftLow implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                liftMotor.setTargetPosition(LIFT_LOW);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftMotor.setPower(LIFT_MAX_POWER);
-                liftState = LiftPosition.LowBasket;
-                initialized = true;
-            }
-            double currentPosition = liftMotor.getCurrentPosition();
-            packet.put("Lift position", currentPosition);
-            if (Math.abs(currentPosition - LIFT_LOW) < LIFT_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action lifLow() {
-        return new LiftLow();
-    }
-
-    public class LiftHigh implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                liftMotor.setTargetPosition(LIFT_HIGH);
-                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftMotor.setPower(LIFT_MAX_POWER);
-                liftState = LiftPosition.HighBasket;
-                initialized = true;
-            }
-            double currentPosition = liftMotor.getCurrentPosition();
-            packet.put("Lift position", currentPosition);
-            if (Math.abs(currentPosition - LIFT_HIGH) < LIFT_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action lifHigh() {
-        return new LiftHigh();
     }
 
     // Respond to gamepad inputs.

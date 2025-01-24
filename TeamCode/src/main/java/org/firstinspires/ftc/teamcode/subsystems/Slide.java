@@ -1,13 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.enums.SlidePosition.Back;
-import static org.firstinspires.ftc.teamcode.enums.SlidePosition.Neutral;
-
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -46,84 +38,6 @@ public class Slide extends SubSystem {
         if (currentPosition < SLIDE_FRONT && currentPosition > SLIDE_BACK) {
             slideMotor.setPower(slidePower);
         }
-    }
-
-    public class SlideNeutral implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                slideMotor.setTargetPosition(SLIDE_NEUTRAL);
-                slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideMotor.setPower(SLIDE_MAX_POWER);
-                slideState = Neutral;
-                initialized = true;
-            }
-            double currentPosition = slideMotor.getCurrentPosition();
-            packet.put("Slide position", currentPosition);
-            if (Math.abs(currentPosition - SLIDE_NEUTRAL) < SLIDE_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action SlideNeutral() {
-        return new SlideNeutral();
-    }
-
-    public class SlideBack implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                slideMotor.setTargetPosition(SLIDE_BACK);
-                slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideMotor.setPower(SLIDE_MAX_POWER);
-                slideState = Back;
-                initialized = true;
-            }
-            double currentPosition = slideMotor.getCurrentPosition();
-            packet.put("Slide position", currentPosition);
-            if (Math.abs(currentPosition - SLIDE_BACK) < SLIDE_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action SlideBack() {
-        return new SlideBack();
-    }
-
-    public class SlideFront implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                slideMotor.setTargetPosition(SLIDE_FRONT);
-                slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideMotor.setPower(SLIDE_MAX_POWER);
-                slideState = Back;
-                initialized = true;
-            }
-            double currentPosition = slideMotor.getCurrentPosition();
-            packet.put("Slide position", currentPosition);
-            if (Math.abs(currentPosition - SLIDE_FRONT) < SLIDE_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action SlideFront() {
-        return new SlideFront();
     }
 
     public void setProperties(double slidePower) {

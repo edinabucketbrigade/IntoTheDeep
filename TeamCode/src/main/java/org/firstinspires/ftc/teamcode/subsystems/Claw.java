@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -51,31 +47,6 @@ public class Claw extends SubSystem {
         }
     }
 
-    public class ClawClose implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            claw.setPosition(CLAW_CLOSED);
-            clawState = ClawPosition.Close;
-            return false;
-        }
-    }
-
-    public Action clawClose() {
-        return new ClawClose();
-    }
-
-    public class ClawOpen implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            claw.setPosition(CLAW_OPEN);
-            clawState = ClawPosition.Open;
-            return false;
-        }
-    }
-
-    public Action clawOpen() {
-        return new ClawOpen();
-    }
 
     public void setProperties(boolean leftBumper, boolean rightBumper) {
         leftBumperPressed = leftBumper;

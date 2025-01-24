@@ -29,13 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.SleepAction;
-import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -68,14 +61,10 @@ import org.firstinspires.ftc.teamcode.subsystems.Lift;
 public class AutoRR extends LinearOpMode {
     private final ElapsedTime runTine = new ElapsedTime();
     public RobotHardware robot = new RobotHardware(this);
-    private MecanumDrive drive;
     private final Lift lift = new Lift(robot);
     private final Intake intake = new Intake(robot);
     private final Slide arm = new Slide(robot);
-    private Pose2d initialPose;
     // Trajectories and Actions for RR to follow.
-    private TrajectoryActionBuilder moveToBuckets;
-    private Action moveFromBucketsToObservatory;
 
     @Override
     public void runOpMode() {
@@ -105,30 +94,17 @@ public class AutoRR extends LinearOpMode {
 
         // Menu options determine start pose.
         if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
-            initialPose = new Pose2d(-24, -60, Math.tan(0));
+//            initialPose = new Pose2d(-24, -60, Math.tan(0));
         }
 
         if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Right) {
-            initialPose = new Pose2d(12, -60, Math.tan(0));
+//            initialPose = new Pose2d(12, -60, Math.tan(0));
         }
 
-        drive = new MecanumDrive(hardwareMap, initialPose);
-
         // Setup the paths.
-        initializePath();
 
         // Make sure the imu is correct.
         robot.imu.resetYaw();
-
-        Actions.runBlocking(new SequentialAction(
-                moveToBuckets.build(),
-//                        lift.lifHigh(),
-                new SleepAction(.5),
-//                        bucket.bucketUp(),
-//                        bucket.bucketDown(),
-//                        lift.liftDown(),
-                moveFromBucketsToObservatory
-        ));
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -142,17 +118,5 @@ public class AutoRR extends LinearOpMode {
     public double getHeading() {
         YawPitchRollAngles orientation = robot.imu.getRobotYawPitchRollAngles();
         return orientation.getYaw(AngleUnit.DEGREES);
-    }
-
-    /**
-     * Create RR Trajectories and Actions.
-     */
-    public void initializePath() {
-        moveToBuckets = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45));
-
-        moveFromBucketsToObservatory = moveToBuckets.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(50, -60), Math.toRadians(0))
-                .build();
     }
 }

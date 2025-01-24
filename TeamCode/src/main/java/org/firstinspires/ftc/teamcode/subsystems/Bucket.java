@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.subsystems;
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -50,32 +49,6 @@ public class Bucket extends SubSystem {
                     bucketState = BucketPosition.Up;
                 }
         }
-    }
-
-    public class BucketDown implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bucket.setPosition(BUCKET_DOWN);
-            bucketState = BucketPosition.Down;
-            return false;
-        }
-    }
-
-    public Action bucketDown() {
-        return new BucketDown();
-    }
-
-    public class BucketUp implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bucket.setPosition(BUCKET_UP);
-            bucketState = BucketPosition.Up;
-            return false;
-        }
-    }
-
-    public Action bucketUp() {
-        return new BucketUp();
     }
 
     public void setProperties(boolean leftBumper, boolean rightBumper) {
