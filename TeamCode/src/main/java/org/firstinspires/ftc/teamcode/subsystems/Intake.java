@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+
 //TODO: Add RR Action code if this is going to by used by RR in the new robot.
 public class Intake extends SubSystem {
     private final RobotHardware robot;

@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
