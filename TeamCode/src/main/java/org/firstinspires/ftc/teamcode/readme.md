@@ -1,4 +1,12 @@
 ## TeamCode Module
+Note:
+ This branch is now setup for Pedro Pathing. The important links are below.
+
+Documentation - https://pedropathing.com/
+
+Quickstart Repository - https://github.com/Pedro-Pathing/Quickstart
+
+PP Version of MeepMeep - https://pedro-path-generator.vercel.app/
 
 Welcome!
 
