@@ -12,8 +12,8 @@ import com.pedropathing.localization.PoseUpdater;
 import com.pedropathing.util.DashboardPoseTracker;
 import com.pedropathing.util.Drawing;
 
-import pedroPathing.constants.FConstants;
-import pedroPathing.constants.LConstants;
+import pedroPathing.Constants.FConstants;
+import pedroPathing.Constants.LConstants;
 
 /**
  * This is the TurnTuner OpMode. This tracks the turning movement of the robot and displays the
