@@ -40,7 +40,47 @@ public class Wrist extends SubSystem {
 
     @Override
     public void update() {
+        switch (wristState) {
+            case Down:
+                if (DPAD_UP) {
+                    wrist.setPosition(WRIST_UP);
+                    wristState = WristPosition.Up;
+                    break;
+                }
 
+                if (DPAD_RIGHT) {
+                    wrist.setPosition(WRIST_NEUTRAL);
+                    wristState = WristPosition.Neutral;
+                    break;
+                }
+            case Up:
+                if (DPAD_DOWN) {
+                    wrist.setPosition(WRIST_DOWN);
+                    wristState=WristPosition.Down;
+                    break;
+                }
+
+                if(DPAD_RIGHT){
+                    wrist.setPosition(WRIST_NEUTRAL);
+                    wristState=WristPosition.Neutral;
+                    break;
+                }
+            case Neutral:
+                if (DPAD_DOWN) {
+                    wrist.setPosition(WRIST_DOWN);
+                    wristState=WristPosition.Down;
+                    break;
+                }
+
+                if(DPAD_UP){
+                    wrist.setPosition(WRIST_UP);
+                    wristState=WristPosition.Up;
+                    break;
+                }
+            default:
+                wrist.setPosition(WRIST_NEUTRAL);
+                wristState=WristPosition.Neutral;
+        }
     }
 
     public class WristDown implements Action {
@@ -53,7 +93,7 @@ public class Wrist extends SubSystem {
     }
 
     public Action wristDown() {
-        return new WristNeutral();
+        return new WristDown();
     }
 
 
@@ -81,7 +121,7 @@ public class Wrist extends SubSystem {
     }
 
     public Action wristUp() {
-        return new WristNeutral();
+        return new WristUp();
     }
 
     public void setProperties(boolean dpadDown, boolean dpadUp, boolean dpadNeutral) {
