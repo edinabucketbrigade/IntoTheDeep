@@ -77,6 +77,7 @@ public class RobotHardware {
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
+//        bucketServo.setDirection(Servo.Direction.REVERSE);
         clawServo = myOpMode.hardwareMap.get(Servo.class, "clawServo");
         wristServo = myOpMode.hardwareMap.get(Servo.class, "wristServo");
         //intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
