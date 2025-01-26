@@ -23,6 +23,8 @@ public class TestServo extends OpMode {
     static final double INCREMENT = 0.1;     // amount to slew servo each button press.
     private Servo servo;
     private double position = 0;
+    private double minPosition = 0;
+    private double maxPosition = 1;
     private GamepadEx gamepad;
 
     @Override
@@ -55,6 +57,21 @@ public class TestServo extends OpMode {
             position = .5;
         }
 
+        // Set min scale position
+        if (gamepad.wasJustReleased(GamepadKeys.Button.X)) {
+            minPosition = position;
+        }
+
+        // Set max scale position
+        if (gamepad.wasJustReleased(GamepadKeys.Button.B)) {
+            maxPosition = position;
+        }
+
+        // Scale to the min and max.
+        if (gamepad.wasJustReleased(GamepadKeys.Button.A)) {
+            servo.scaleRange(minPosition, maxPosition);
+        }
+
         if (gamepad.wasJustReleased(GamepadKeys.Button.DPAD_UP) && position < 1) {
             position += INCREMENT;
         }
@@ -75,10 +92,12 @@ public class TestServo extends OpMode {
         telemetry.addLine("Left bumper = 0");
         telemetry.addLine("Right bumper = 1");
         telemetry.addLine("Y = .5 (middle)");
+        telemetry.addLine("X = set min., B = set max., A = Set scale");
         telemetry.addLine("Dpad up: Increase position");
         telemetry.addLine("Dpad down: Decrease position");
         telemetry.addLine("Left stick button = Change direction");
         telemetry.addData("Position (not from servo)", position);
+        telemetry.addData("Scale", "%1.1f - %1.1f", minPosition, maxPosition);
         telemetry.addData("Direction", servo.getDirection());
         telemetry.addData("Port", servo.getPortNumber());
         telemetry.update();
