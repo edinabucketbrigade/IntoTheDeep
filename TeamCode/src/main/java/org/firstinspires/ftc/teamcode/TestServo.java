@@ -63,6 +63,10 @@ public class TestServo extends OpMode {
             position -= INCREMENT;
         }
 
+        if (gamepad.wasJustReleased(GamepadKeys.Button.LEFT_STICK_BUTTON)) {
+            servo.setDirection(servo.getDirection() == Servo.Direction.FORWARD ? Servo.Direction.REVERSE : Servo.Direction.FORWARD);
+        }
+
         servo.setPosition(position);
         showTelemetry();
     }
@@ -73,7 +77,10 @@ public class TestServo extends OpMode {
         telemetry.addLine("Y = .5 (middle)");
         telemetry.addLine("Dpad up: Increase position");
         telemetry.addLine("Dpad down: Decrease position");
+        telemetry.addLine("Left stick button = Change direction");
         telemetry.addData("Position (not from servo)", position);
+        telemetry.addData("Direction", servo.getDirection());
+        telemetry.addData("Port", servo.getPortNumber());
         telemetry.update();
     }
 }
