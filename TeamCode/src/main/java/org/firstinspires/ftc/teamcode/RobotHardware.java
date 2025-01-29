@@ -16,14 +16,18 @@ public class RobotHardware {
     public DcMotorEx rightFrontDrive = null;
     public DcMotorEx rightBackDrive = null;
 
+    // 2002-0180-0002
     public Servo clawServo = null;
+    // 2000-0025-0003
     public Servo bucketServo = null;
+    // 2000-0025-0002
     public Servo wristServo = null;
     //public CRServo intakeServo = null;
 
+    // 5203-2402-0019
     public DcMotorEx liftMotor = null;
-    //5203 series, 384.5 ppr - encoder resolution
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
+    //5203 series, 384.5 ppr - encoder resolution
     public DcMotorEx slideMotor = null;
     public IMU imu = null;
 
