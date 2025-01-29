@@ -10,7 +10,9 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 public class RobotHardware {
     /* Declare OpMode members. */
@@ -85,15 +87,20 @@ public class RobotHardware {
         // Now initialize the IMU with this mounting orientation
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        // .setPwmRange() is intended to enable the full range of the servos.
         bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
+        ((ServoImplEx) bucketServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         bucketServo.setDirection(Servo.Direction.REVERSE);
         bucketServo.scaleRange(0.05, 0.75);
+
         clawServo = myOpMode.hardwareMap.get(Servo.class, "clawServo");
+        ((ServoImplEx) clawServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         clawServo.scaleRange(0, 0.55);
+
         wristServo = myOpMode.hardwareMap.get(Servo.class, "wristServo");
+        ((ServoImplEx) wristServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         wristServo.setDirection(Servo.Direction.REVERSE);
         wristServo.scaleRange(0.15, 0.7);
-        //intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
     }
 
     /**
