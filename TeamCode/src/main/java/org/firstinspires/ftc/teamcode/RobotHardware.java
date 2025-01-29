@@ -1,9 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.ftc.Encoder;
+import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
+import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,6 +29,7 @@ public class RobotHardware {
     //5203 series, 384.5 ppr - encoder resolution
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
     public DcMotorEx slideMotor = null;
+    public Encoder slideEncoder = null;
     public IMU imu = null;
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
@@ -59,6 +64,10 @@ public class RobotHardware {
         slideMotor.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         stopAndResetEncoder(slideMotor);
+        slideEncoder = new OverflowEncoder(new RawEncoder(RobotHardware.this.slideMotor));
+        slideEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
         // Set the slide motor for driver control.
         if (myOpMode.getClass().getSimpleName() == "DriverControl") {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
