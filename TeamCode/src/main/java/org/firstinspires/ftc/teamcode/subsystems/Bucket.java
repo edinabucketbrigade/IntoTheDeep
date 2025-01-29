@@ -78,8 +78,8 @@ public class Bucket extends SubSystem {
         return new BucketUp();
     }
 
-    public void setProperties(boolean leftBumper, boolean rightBumper) {
-        DPAD_DOWN = leftBumper;
-        DPAD_UP = rightBumper;
+    public void setProperties(boolean dpadDown, boolean dpadUp) {
+        DPAD_DOWN = dpadDown;
+        DPAD_UP = dpadUp;
     }
 }

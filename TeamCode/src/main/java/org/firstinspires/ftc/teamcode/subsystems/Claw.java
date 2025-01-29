@@ -40,12 +40,12 @@ public class Claw extends SubSystem {
         switch (clawState) {
             case Close:
                 if (leftBumperPressed) {
-                    claw.setPosition(CLAW_CLOSED);
+                    claw.setPosition(CLAW_OPEN);
                     clawState = ClawPosition.Open;
                 }
             case Open:
                 if (rightBumperPressed) {
-                    claw.setPosition(CLAW_OPEN);
+                    claw.setPosition(CLAW_CLOSED);
                     clawState = ClawPosition.Close;
                 }
         }

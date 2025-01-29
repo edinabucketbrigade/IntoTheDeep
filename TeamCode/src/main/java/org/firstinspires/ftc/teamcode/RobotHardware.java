@@ -1,12 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.roadrunner.ftc.Encoder;
+import com.acmerobotics.roadrunner.ftc.OverflowEncoder;
+import com.acmerobotics.roadrunner.ftc.RawEncoder;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 public class RobotHardware {
     /* Declare OpMode members. */
@@ -29,6 +35,7 @@ public class RobotHardware {
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
     //5203 series, 384.5 ppr - encoder resolution
     public DcMotorEx slideMotor = null;
+    public Encoder slideEncoder = null;
     public IMU imu = null;
 
     // Define a constructor that allows the OpMode to pass a reference to itself.
@@ -63,6 +70,10 @@ public class RobotHardware {
         slideMotor.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         stopAndResetEncoder(slideMotor);
+        slideEncoder = new OverflowEncoder(new RawEncoder(RobotHardware.this.slideMotor));
+        slideEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
         // Set the slide motor for driver control.
         if (myOpMode.getClass().getSimpleName() == "DriverControl") {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -80,15 +91,20 @@ public class RobotHardware {
         // Now initialize the IMU with this mounting orientation
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        // .setPwmRange() is intended to enable the full range of the servos.
         bucketServo = myOpMode.hardwareMap.get(Servo.class, "bucketServo");
+        ((ServoImplEx) bucketServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         bucketServo.setDirection(Servo.Direction.REVERSE);
         bucketServo.scaleRange(0.05, 0.75);
+
         clawServo = myOpMode.hardwareMap.get(Servo.class, "clawServo");
+        ((ServoImplEx) clawServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         clawServo.scaleRange(0, 0.55);
+
         wristServo = myOpMode.hardwareMap.get(Servo.class, "wristServo");
+        ((ServoImplEx) wristServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
         wristServo.setDirection(Servo.Direction.REVERSE);
         wristServo.scaleRange(0.15, 0.7);
-        //intakeServo = myOpMode.hardwareMap.get(CRServo.class, "intakeServo");
     }
 
     /**
