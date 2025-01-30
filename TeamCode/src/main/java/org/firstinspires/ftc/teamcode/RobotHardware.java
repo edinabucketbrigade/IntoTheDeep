@@ -75,7 +75,7 @@ public class RobotHardware {
 
 
         // Set the slide motor for driver control.
-        if (myOpMode.getClass().getSimpleName() == "DriverControl") {
+        if (myOpMode.getClass().getSimpleName().equals("DriverControl")) {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
