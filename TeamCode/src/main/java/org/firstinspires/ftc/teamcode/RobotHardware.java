@@ -54,13 +54,13 @@ public class RobotHardware {
         liftMotor.setPositionPIDFCoefficients(8f);
         liftMotor.setTargetPositionTolerance(10);
 
-        //TODO: Add pidf like Lift above if needed.
+        //TODO: Add printf like Lift above if needed.
         slideMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "slideMotor");
         slideMotor.setDirection(DcMotor.Direction.FORWARD);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         stopAndResetEncoder(slideMotor);
         // Set the slide motor for driver control.
-        if (myOpMode.getClass().getSimpleName() == "DriverControl") {
+        if (myOpMode.getClass().getSimpleName().equals("DriverControl")) {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
