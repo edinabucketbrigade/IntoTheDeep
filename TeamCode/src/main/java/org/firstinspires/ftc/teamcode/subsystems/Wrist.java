@@ -17,9 +17,9 @@ public class Wrist extends SubSystem {
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
-    private final double WRIST_DOWN = 0;
+    private final double WRIST_DOWN = 0.35;
     private final double WRIST_NEUTRAL = 0.5;
-    private final double WRIST_UP = 1;
+    private final double WRIST_UP = 0.9;
 
     public Wrist(RobotHardware robot) {
         this.robot = robot;
@@ -28,9 +28,9 @@ public class Wrist extends SubSystem {
 
     @Override
     public void init() {
-        wristState = WristPosition.Neutral;
+        wristState = WristPosition.Down;
         wrist = robot.wristServo;
-        wrist.setPosition(WRIST_NEUTRAL);
+        wrist.setPosition(WRIST_DOWN);
     }
 
     @Override
@@ -78,8 +78,8 @@ public class Wrist extends SubSystem {
                     break;
                 }
             default:
-                wrist.setPosition(WRIST_NEUTRAL);
-                wristState=WristPosition.Neutral;
+//                wrist.setPosition(WRIST_UP);
+//                wristState=WristPosition.Up;
         }
     }
 

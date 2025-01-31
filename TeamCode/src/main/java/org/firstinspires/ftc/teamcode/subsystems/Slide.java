@@ -10,7 +10,7 @@ public class Slide extends SubSystem {
     public DcMotorEx slideMotor;
     private RobotHardware robot;
     public double slidePower = 0;
-    private final int SLIDE_MAX = -1370;
+    private final int SLIDE_MAX = -100;
 
     private final double SLIDE_MAX_POWER = .7;
     private final int SLIDE_POSITION_TOLERANCE = 10;
