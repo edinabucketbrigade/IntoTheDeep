@@ -17,8 +17,8 @@ public class Bucket extends SubSystem {
     private RobotHardware robot;
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
-    private final double BUCKET_DOWN = 0.2;
-    private final double BUCKET_UP = 0.1;
+    private final double BUCKET_DOWN = 0;
+    private final double BUCKET_UP = 1;
 
     public Bucket(RobotHardware robot) {
         this.robot = robot;
@@ -78,8 +78,8 @@ public class Bucket extends SubSystem {
         return new BucketUp();
     }
 
-    public void setProperties(boolean leftBumper, boolean rightBumper) {
-        DPAD_DOWN = leftBumper;
-        DPAD_UP = rightBumper;
+    public void setProperties(boolean dpadDown, boolean dpadUp) {
+        DPAD_DOWN = dpadDown;
+        DPAD_UP = dpadUp;
     }
 }

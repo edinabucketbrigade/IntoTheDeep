@@ -144,6 +144,9 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Slide Busy", robot.slideMotor.isBusy());
             telemetry.addData("Slide Mode", robot.slideMotor.getMode());
             telemetry.addData("Slide PIDF Run To Position", robot.slideMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
+            telemetry.addData("Claw position", "%1.2f", claw.claw.getPosition());
+            telemetry.addData("Bucket position", "%1.2f", bucket.bucket.getPosition());
+            telemetry.addData("Wrist position", "%1.2f", wrist.wrist.getPosition());
             telemetry.update();
         }
     }

@@ -17,7 +17,7 @@ public class Claw extends SubSystem {
     public boolean rightBumperPressed = false;
     public boolean leftBumperPressed = false;
     private final double CLAW_CLOSED = 1;
-    private final double CLAW_OPEN = 0.5;
+    private final double CLAW_OPEN = 0;
 
     public Claw(RobotHardware robot) {
         this.robot = robot;
@@ -40,12 +40,12 @@ public class Claw extends SubSystem {
         switch (clawState) {
             case Close:
                 if (leftBumperPressed) {
-                    claw.setPosition(CLAW_CLOSED);
+                    claw.setPosition(CLAW_OPEN);
                     clawState = ClawPosition.Open;
                 }
             case Open:
                 if (rightBumperPressed) {
-                    claw.setPosition(CLAW_OPEN);
+                    claw.setPosition(CLAW_CLOSED);
                     clawState = ClawPosition.Close;
                 }
         }

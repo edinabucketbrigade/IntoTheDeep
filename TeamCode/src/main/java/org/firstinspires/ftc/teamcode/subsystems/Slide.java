@@ -1,13 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
-import static org.firstinspires.ftc.teamcode.enums.SlidePosition.Back;
-import static org.firstinspires.ftc.teamcode.enums.SlidePosition.Neutral;
-
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
@@ -18,9 +10,7 @@ public class Slide extends SubSystem {
     public DcMotorEx slideMotor;
     private RobotHardware robot;
     public double slidePower = 0;
-    private final int SLIDE_FRONT = 1650;
-    private final int SLIDE_NEUTRAL = 844;
-    private final int SLIDE_BACK = 0;
+    private final int SLIDE_MAX = -1370;
 
     private final double SLIDE_MAX_POWER = .7;
     private final int SLIDE_POSITION_TOLERANCE = 10;
@@ -42,88 +32,10 @@ public class Slide extends SubSystem {
 
     @Override
     public void update() {
-        int currentPosition=slideMotor.getCurrentPosition();
-        if (currentPosition < SLIDE_FRONT && currentPosition > SLIDE_BACK) {
+        int currentPosition = slideMotor.getCurrentPosition();
+        if (currentPosition > SLIDE_MAX) {
             slideMotor.setPower(slidePower);
         }
-    }
-
-    public class SlideNeutral implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                slideMotor.setTargetPosition(SLIDE_NEUTRAL);
-                slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideMotor.setPower(SLIDE_MAX_POWER);
-                slideState = Neutral;
-                initialized = true;
-            }
-            double currentPosition = slideMotor.getCurrentPosition();
-            packet.put("Slide position", currentPosition);
-            if (Math.abs(currentPosition - SLIDE_NEUTRAL) < SLIDE_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action SlideNeutral() {
-        return new SlideNeutral();
-    }
-
-    public class SlideBack implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                slideMotor.setTargetPosition(SLIDE_BACK);
-                slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideMotor.setPower(SLIDE_MAX_POWER);
-                slideState = Back;
-                initialized = true;
-            }
-            double currentPosition = slideMotor.getCurrentPosition();
-            packet.put("Slide position", currentPosition);
-            if (Math.abs(currentPosition - SLIDE_BACK) < SLIDE_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action SlideBack() {
-        return new SlideBack();
-    }
-
-    public class SlideFront implements Action {
-        private boolean initialized = false;
-
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            if (!initialized) {
-                slideMotor.setTargetPosition(SLIDE_FRONT);
-                slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                slideMotor.setPower(SLIDE_MAX_POWER);
-                slideState = Back;
-                initialized = true;
-            }
-            double currentPosition = slideMotor.getCurrentPosition();
-            packet.put("Slide position", currentPosition);
-            if (Math.abs(currentPosition - SLIDE_FRONT) < SLIDE_POSITION_TOLERANCE) {
-                return false;
-            } else {
-                return true;
-            }
-        }
-    }
-
-    public Action SlideFront() {
-        return new SlideFront();
     }
 
     public void setProperties(double slidePower) {
