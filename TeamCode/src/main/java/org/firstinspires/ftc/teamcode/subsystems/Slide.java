@@ -10,10 +10,13 @@ public class Slide extends SubSystem {
     public DcMotorEx slideMotor;
     private RobotHardware robot;
     public double slidePower = 0;
-    private final int SLIDE_MAX = -100;
+    private final int SLIDE_MAX = 1320;
+    private int currentPosition;
+    public boolean extended() {
+        if (currentPosition > 700) return true;
+        else return false;
+    }
 
-    private final double SLIDE_MAX_POWER = .7;
-    private final int SLIDE_POSITION_TOLERANCE = 10;
 //-1344
     public Slide(RobotHardware robot) {
         this.robot = robot;
@@ -33,8 +36,8 @@ public class Slide extends SubSystem {
 
     @Override
     public void update() {
-        int currentPosition = slideMotor.getCurrentPosition();
-        if (currentPosition > SLIDE_MAX && slidePower > 0) {
+        currentPosition = slideMotor.getCurrentPosition();
+        if (currentPosition < SLIDE_MAX && slidePower > 0) {
             slideMotor.setPower(slidePower);
         } else if (currentPosition >= 0 && slidePower < 0) {
             slideMotor.setPower(slidePower);

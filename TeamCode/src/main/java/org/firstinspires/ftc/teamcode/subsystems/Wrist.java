@@ -17,8 +17,8 @@ public class Wrist extends SubSystem {
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
-    private final double WRIST_DOWN = 0.35;
-    private final double WRIST_NEUTRAL = 0.5;
+    private final double WRIST_DOWN = 0.3;
+    private final double WRIST_NEUTRAL = 0.8;
     private final double WRIST_UP = 0.9;
 
     public Wrist(RobotHardware robot) {

@@ -118,9 +118,10 @@ public class DriverControl extends LinearOpMode {
                     gamepadTwo.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER));
 
             // POV Mode uses left joystick to go forward & strafe, and right joystick to rotate.
-            double axial = RobotHardware.ScaleMotorCube(-gamepadOne.getLeftY());  // Note: pushing stick forward gives negative value
-            double lateral = RobotHardware.ScaleMotorCube(gamepadOne.getLeftX());
-            double yaw = RobotHardware.ScaleMotorCube(gamepadOne.getRightX());
+            boolean x = slide.extended();
+            double axial = RobotHardware.ScaleMotorCube(-gamepadOne.getLeftY(), x);  // Note: pushing stick forward gives negative value
+            double lateral = RobotHardware.ScaleMotorCube(gamepadOne.getLeftX(), x);
+            double yaw = RobotHardware.ScaleMotorCube(gamepadOne.getRightX(), x);
             robot.moveRobot(axial, lateral, yaw);
 
             lift.update();

@@ -23,7 +23,7 @@ public class Lift extends SubSystem {
     private final int LIFT_DOWN = 0;
     private final int LIFT_LOW = -797;
 
-    private final int LIFT_HIGH = -1866;
+    private final int LIFT_HIGH = -2650;
 
     private final double LIFT_MAX_POWER = .7;
     private final int LIFT_POSITION_TOLERANCE = 10;
@@ -36,6 +36,7 @@ public class Lift extends SubSystem {
     public void init() {
         liftMotor = robot.liftMotor;
         liftState = LiftPosition.Down;
+        liftMotor.setPower(LIFT_DOWN);
     }
 
     @Override
