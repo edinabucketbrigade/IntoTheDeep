@@ -126,12 +126,15 @@ public class AutoRR extends LinearOpMode {
         // Make sure the imu is correct.
         robot.imu.resetYaw();
 
+        // Wrist in neutral
+        Actions.runBlocking(wrist.wristNeutral());
+
         Actions.runBlocking(new SequentialAction(
-                wrist.wristNeutral(),
                 moveToBuckets.build(),
                 lift.lifHigh(),
                 new SleepAction(.5),
                 bucket.bucketUp(),
+                new SleepAction(.5),
                 bucket.bucketDown(),
                 lift.liftDown(),
                 moveFromBucketsToObservatory
