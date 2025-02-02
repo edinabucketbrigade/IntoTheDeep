@@ -42,9 +42,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.subsystems.Slide;
-import org.firstinspires.ftc.teamcode.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.Slide;
+import org.firstinspires.ftc.teamcode.subsystems.Wrist;
 
 /*
  *  Converted to use RR.
@@ -70,8 +71,10 @@ public class AutoRR extends LinearOpMode {
     public RobotHardware robot = new RobotHardware(this);
     private MecanumDrive drive;
     private final Lift lift = new Lift(robot);
-    private final Intake intake = new Intake(robot);
-    private final Slide arm = new Slide(robot);
+    private final Wrist wrist = new Wrist(robot);
+    //private final Intake intake = new Intake(robot);
+    private final Slide slide = new Slide(robot);
+    private final Bucket bucket = new Bucket(robot);
     private Pose2d initialPose;
     // Trajectories and Actions for RR to follow.
     private TrajectoryActionBuilder moveToBuckets;
@@ -80,6 +83,9 @@ public class AutoRR extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init();
+        lift.init();
+        bucket.init();
+        wrist.init();
         AutonomousConfiguration autonomousConfiguration = new AutonomousConfiguration();
         autonomousConfiguration.init(this.gamepad1, this.telemetry, hardwareMap.appContext);
 
@@ -121,12 +127,13 @@ public class AutoRR extends LinearOpMode {
         robot.imu.resetYaw();
 
         Actions.runBlocking(new SequentialAction(
+                wrist.wristNeutral(),
                 moveToBuckets.build(),
-//                        lift.lifHigh(),
+                lift.lifHigh(),
                 new SleepAction(.5),
-//                        bucket.bucketUp(),
-//                        bucket.bucketDown(),
-//                        lift.liftDown(),
+                bucket.bucketUp(),
+                bucket.bucketDown(),
+                lift.liftDown(),
                 moveFromBucketsToObservatory
         ));
 

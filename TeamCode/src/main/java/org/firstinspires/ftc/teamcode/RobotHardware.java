@@ -49,6 +49,11 @@ public class RobotHardware {
         rightFrontDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "rightFrontDrive");
         rightBackDrive = myOpMode.hardwareMap.get(DcMotorEx.class, "rightBackDrive");
 
+        leftFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
         stopAndResetEncoder(liftMotor);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -63,9 +68,9 @@ public class RobotHardware {
         liftMotor.setPositionPIDFCoefficients(8f);
         liftMotor.setTargetPositionTolerance(10);
 
-        //TODO: Add printf like Lift above if needed.
+        //TODO: Add pidf like Lift above if needed.
         slideMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "slideMotor");
-        slideMotor.setDirection(DcMotor.Direction.FORWARD);
+        slideMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         stopAndResetEncoder(slideMotor);
         slideEncoder = new OverflowEncoder(new RawEncoder(RobotHardware.this.slideMotor));
@@ -182,8 +187,10 @@ public class RobotHardware {
      * Scale a joystick value to smooth it for motor setting.
      * The cube results in finer control at slow speeds.
      */
-    public static double ScaleMotorCube(double joyStickPosition) {
-        return Math.pow(joyStickPosition, 3.0);
+    public static double ScaleMotorCube(double joyStickPosition, boolean slowMode) {
+        double p = Math.pow(joyStickPosition, 3.0);
+        if (slowMode) p = p/2;
+        return p;
     }
 
     /**
