@@ -6,9 +6,12 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.enums.BucketPosition;
+
+import java.util.concurrent.TimeUnit;
 
 public class Bucket extends SubSystem {
 
@@ -19,6 +22,11 @@ public class Bucket extends SubSystem {
     public boolean DPAD_DOWN = false;
     private final double BUCKET_DOWN = 1;
     private final double BUCKET_UP = 0.25;
+    private ElapsedTime elapsedTime = new ElapsedTime();
+    private double beginTime = -1.0;
+    private double runTime = 0.0;
+    // Time to move servo in milliseconds
+    private final double MOVE_TIME = 750;
 
     public Bucket(RobotHardware robot) {
         this.robot = robot;
@@ -55,9 +63,24 @@ public class Bucket extends SubSystem {
     public class BucketDown implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bucket.setPosition(BUCKET_DOWN);
-            bucketState = BucketPosition.Down;
-            return false;
+            if (beginTime < 0) { // first time to run
+                bucket.setPosition(BUCKET_DOWN);
+                bucketState = BucketPosition.Down;
+                beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
+            } else {
+                runTime = elapsedTime.now(TimeUnit.MILLISECONDS) - beginTime; // how long have we been running
+            }
+
+            telemetryPacket.put("bucket", bucket.getPosition());
+            telemetryPacket.put("bucket timer", runTime);
+
+            if (MOVE_TIME < runTime) {
+                return true;
+            } else {
+                beginTime = -1;
+                runTime = 0;
+                return false;
+            }
         }
     }
 
@@ -68,9 +91,24 @@ public class Bucket extends SubSystem {
     public class BucketUp implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-            bucket.setPosition(BUCKET_UP);
-            bucketState = BucketPosition.Up;
-            return false;
+            if (beginTime < 0) { // first time to run
+                bucket.setPosition(BUCKET_UP);
+                bucketState = BucketPosition.Up;
+                beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
+            } else {
+                runTime = elapsedTime.now(TimeUnit.MILLISECONDS) - beginTime; // how long have we been running
+            }
+
+            telemetryPacket.put("bucket", bucket.getPosition());
+            telemetryPacket.put("bucket timer", runTime);
+
+            if (MOVE_TIME < runTime) {
+                return true;
+            } else {
+                beginTime = -1;
+                runTime = 0;
+                return false;
+            }
         }
     }
 
