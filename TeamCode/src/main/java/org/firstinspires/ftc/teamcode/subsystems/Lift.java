@@ -25,7 +25,7 @@ public class Lift extends SubSystem {
 
     private final int LIFT_HIGH = -2650;
 
-    private final double LIFT_MAX_POWER = .7;
+    private final double LIFT_MAX_POWER = 1;
     private final int LIFT_POSITION_TOLERANCE = 10;
 
     public Lift(RobotHardware robot) {
