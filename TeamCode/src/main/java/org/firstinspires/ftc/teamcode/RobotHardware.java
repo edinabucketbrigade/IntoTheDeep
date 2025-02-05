@@ -111,47 +111,26 @@ public class RobotHardware {
     }
 
     /**
+     * This is robot centric.
      * Move robot according to desired axes motions
      * <p>
-     * Positive X is forward
+     * Positive y is forward
      * <p>
-     * Positive Y is strafe left
+     * Positive x is strafe left
      * <p>
      * Positive Yaw is counter-clockwise
      */
     public void moveRobot(double x, double y, double yaw) {
-
-        /*
-         This is a version from gm0.org.
-
-            x *= 1.1 // Adjust for imperfect strafing.
-            // Denominator is the largest motor power (absolute value) or 1
-            // This ensures all the powers maintain the same ratio,
-            // but only if at least one is out of the range [-1, 1]
-            double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-            double leftFrontPower = (y + x + rx) / denominator;
-            double leftBackPower = (y - x + rx) / denominator;
-            double rightFrontPower = (y - x - rx) / denominator;
-            double rightBackPower = (y + x - rx) / denominator;
-         */
-
-        // Calculate wheel powers.
-        double leftFrontPower = x - y - yaw;
-        double rightFrontPower = x + y + yaw;
-        double leftBackPower = x + y - yaw;
-        double rightBackPower = x - y + yaw;
-
-        // Normalize wheel powers to be less than 1.0
-        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
-        max = Math.max(max, Math.abs(leftBackPower));
-        max = Math.max(max, Math.abs(rightBackPower));
-
-        if (max > 1.0) {
-            leftFrontPower /= max;
-            rightFrontPower /= max;
-            leftBackPower /= max;
-            rightBackPower /= max;
-        }
+        // This is the gm0 version of mecanum drive.
+        x *= 1.1; // Adjust for imperfect strafing.
+        // Denominator is the largest motor power (absolute value) or 1
+        // This ensures all the powers maintain the same ratio,
+        // but only if at least one is out of the range [-1, 1]
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(yaw), 1);
+        double leftFrontPower = (x - y - yaw) / denominator;
+        double leftBackPower = (x + y - yaw) / denominator;
+        double rightFrontPower = (x + y + yaw) / denominator;
+        double rightBackPower = (x - y + yaw) / denominator;
 
         // Send powers to the wheels.
         leftFrontDrive.setPower(leftFrontPower);
@@ -159,6 +138,39 @@ public class RobotHardware {
         leftBackDrive.setPower(leftBackPower);
         rightBackDrive.setPower(rightBackPower);
     }
+
+    /**
+     * This is field centric
+     * Move robot according to desired axes motions
+     * <p>
+     * Positive y is forward
+     * <p>
+     * Positive x is strafe left
+     * <p>
+     * Positive Yaw is counter-clockwise
+     */
+    public void moveRobot(double x, double y, double yaw, double heading) {
+        // Rotate the movement direction counter to the bot's rotation
+        double rotX = x * Math.cos(-heading) - y * Math.sin(-heading);
+        double rotY = x * Math.sin(-heading) + y * Math.cos(-heading);
+
+        rotX = rotX * 1.1;  // Counteract imperfect strafing
+
+        // Denominator is the largest motor power (absolute value) or 1
+        // This ensures all the powers maintain the same ratio,
+        // but only if at least one is out of the range [-1, 1]
+        double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(yaw), 1);
+        double frontLeftPower = (rotY - rotX - yaw) / denominator;
+        double backLeftPower = (rotY + rotX - yaw) / denominator;
+        double frontRightPower = (rotY + rotX + yaw) / denominator;
+        double backRightPower = (rotY - rotX + yaw) / denominator;
+
+        leftFrontDrive.setPower(frontLeftPower);
+        leftBackDrive.setPower(backLeftPower);
+        rightFrontDrive.setPower(frontRightPower);
+        rightBackDrive.setPower(backRightPower);
+    }
+
 
     /**
      * This seems to be the only way to reliably stop a motor and reset the encoder.
@@ -189,7 +201,7 @@ public class RobotHardware {
      */
     public static double ScaleMotorCube(double joyStickPosition, boolean slowMode) {
         double p = Math.pow(joyStickPosition, 3.0);
-        if (slowMode) p = p/2;
+        if (slowMode) p = p / 2;
         return p;
     }
 
