@@ -82,10 +82,10 @@ public class RobotHardware {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
@@ -127,10 +127,10 @@ public class RobotHardware {
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(yaw), 1);
-        double leftFrontPower = (x - y - yaw) / denominator;
-        double leftBackPower = (x + y - yaw) / denominator;
-        double rightFrontPower = (x + y + yaw) / denominator;
-        double rightBackPower = (x - y + yaw) / denominator;
+        double leftFrontPower = (y + x + yaw) / denominator;
+        double leftBackPower = (y - x + yaw) / denominator;
+        double rightFrontPower = (y - x - yaw) / denominator;
+        double rightBackPower = (y + x - yaw) / denominator;
 
         // Send powers to the wheels.
         leftFrontDrive.setPower(leftFrontPower);
@@ -160,10 +160,10 @@ public class RobotHardware {
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
         double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(yaw), 1);
-        double frontLeftPower = (rotY - rotX - yaw) / denominator;
-        double backLeftPower = (rotY + rotX - yaw) / denominator;
-        double frontRightPower = (rotY + rotX + yaw) / denominator;
-        double backRightPower = (rotY - rotX + yaw) / denominator;
+        double frontLeftPower = (rotY + rotX + yaw) / denominator;
+        double backLeftPower = (rotY - rotX + yaw) / denominator;
+        double frontRightPower = (rotY - rotX - yaw) / denominator;
+        double backRightPower = (rotY + rotX - yaw) / denominator;
 
         leftFrontDrive.setPower(frontLeftPower);
         leftBackDrive.setPower(backLeftPower);
