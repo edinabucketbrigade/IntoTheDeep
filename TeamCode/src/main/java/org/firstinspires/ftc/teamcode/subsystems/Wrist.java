@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
-import org.firstinspires.ftc.teamcode.enums.ClawPosition;
 import org.firstinspires.ftc.teamcode.enums.WristPosition;
 
 import java.util.concurrent.TimeUnit;
@@ -17,14 +16,15 @@ public class Wrist extends SubSystem {
 
     public WristPosition wristState;
     public Servo wrist;
-    private RobotHardware robot;
+    private final RobotHardware robot;
+    private Rotate rotate;
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
     private final double WRIST_DOWN = 0.3;
     private final double WRIST_NEUTRAL = 0.8;
     private final double WRIST_UP = 0.9;
-    private ElapsedTime elapsedTime = new ElapsedTime();
+    private final ElapsedTime elapsedTime = new ElapsedTime();
     private double beginTime = -1.0;
     private double runTime = 0.0;
     // Time to move servo in milliseconds
@@ -65,31 +65,36 @@ public class Wrist extends SubSystem {
             case Up:
                 if (DPAD_DOWN) {
                     wrist.setPosition(WRIST_DOWN);
-                    wristState=WristPosition.Down;
+                    wristState = WristPosition.Down;
                     break;
                 }
 
-                if(DPAD_RIGHT){
+                if (DPAD_RIGHT) {
                     wrist.setPosition(WRIST_NEUTRAL);
-                    wristState=WristPosition.Neutral;
+                    wristState = WristPosition.Neutral;
                     break;
                 }
             case Neutral:
                 if (DPAD_DOWN) {
                     wrist.setPosition(WRIST_DOWN);
-                    wristState=WristPosition.Down;
+                    wristState = WristPosition.Down;
                     break;
                 }
 
-                if(DPAD_UP){
+                if (DPAD_UP) {
                     wrist.setPosition(WRIST_UP);
-                    wristState=WristPosition.Up;
+                    wristState = WristPosition.Up;
                     break;
                 }
             default:
 //                wrist.setPosition(WRIST_UP);
 //                wristState=WristPosition.Up;
         }
+        rotate.update();
+    }
+
+    public void setRotate(Rotate rotate) {
+        this.rotate = rotate;
     }
 
     public class WristDown implements Action {
@@ -182,5 +187,10 @@ public class Wrist extends SubSystem {
         DPAD_DOWN = dpadDown;
         DPAD_UP = dpadUp;
         DPAD_RIGHT = dpadNeutral;
+        if (DPAD_DOWN && DPAD_RIGHT) {
+            rotate.setProperties(false, true);
+        } else {
+            rotate.setProperties(true, false);
+        }
     }
 }

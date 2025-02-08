@@ -19,8 +19,8 @@ public class Claw extends SubSystem {
     private RobotHardware robot;
     public boolean rightBumperPressed = false;
     public boolean leftBumperPressed = false;
-    private final double CLAW_CLOSED = 1;
-    private final double CLAW_OPEN = 0.2;
+    private final double CLAW_OPEN = 0.975;
+    private final double CLAW_CLOSED = 0.4;
     private ElapsedTime elapsedTime = new ElapsedTime();
     private double beginTime = -1.0;
     private double runTime = 0.0;
@@ -36,7 +36,7 @@ public class Claw extends SubSystem {
     public void init() {
         clawState = ClawPosition.Close;
         claw = robot.clawServo;
-        claw.setPosition(CLAW_CLOSED);
+        claw.setPosition(CLAW_OPEN);
     }
 
     @Override
@@ -48,12 +48,12 @@ public class Claw extends SubSystem {
         switch (clawState) {
             case Close:
                 if (leftBumperPressed) {
-                    claw.setPosition(CLAW_OPEN);
+                    claw.setPosition(CLAW_CLOSED);
                     clawState = ClawPosition.Open;
                 }
             case Open:
                 if (rightBumperPressed) {
-                    claw.setPosition(CLAW_CLOSED);
+                    claw.setPosition(CLAW_OPEN);
                     clawState = ClawPosition.Close;
                 }
         }
@@ -63,7 +63,7 @@ public class Claw extends SubSystem {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (beginTime < 0) { // first time to run
-                claw.setPosition(CLAW_CLOSED);
+                claw.setPosition(CLAW_OPEN);
                 clawState = ClawPosition.Close;
                 beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
             } else {
@@ -91,7 +91,7 @@ public class Claw extends SubSystem {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (beginTime < 0) { // first time to run
-                claw.setPosition(CLAW_OPEN);
+                claw.setPosition(CLAW_CLOSED);
                 clawState = ClawPosition.Open;
                 beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
             } else {

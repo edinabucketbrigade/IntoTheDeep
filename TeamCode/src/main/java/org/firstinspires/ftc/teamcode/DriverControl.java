@@ -85,6 +85,8 @@ public class DriverControl extends LinearOpMode {
         bucket.init();
         claw.init();
         wrist.init();
+        rotate.init();
+        wrist.setRotate(rotate);
 
         // Wait for the game to start (driver presses START)
         telemetry.addData("Status", "Initialized");

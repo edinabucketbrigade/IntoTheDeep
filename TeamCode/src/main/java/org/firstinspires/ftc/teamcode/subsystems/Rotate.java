@@ -15,10 +15,10 @@ public class Rotate extends SubSystem {
     public RotatePosition rotateState;
     public Servo rotate;
     private RobotHardware robot;
-    public boolean DPAD_UP = false;
-    public boolean DPAD_DOWN = false;
-    private final double ROTATE_OUT = 1;
-    private final double ROTATE_IN = 0.25;
+    public boolean rotateIn = false;
+    public boolean rotateOut = false;
+    private final double ROTATE_OUT = 0.975;
+    private final double ROTATE_IN = 0.375;
 
     public Rotate(RobotHardware robot) {
         this.robot = robot;
@@ -40,19 +40,19 @@ public class Rotate extends SubSystem {
     public void update() {
         switch (rotateState) {
             case Out:
-                if (DPAD_DOWN) {
+                if (rotateOut) {
                     rotate.setPosition(ROTATE_IN);
                     rotateState = RotatePosition.In;
                 }
             case In:
-                if (DPAD_UP) {
+                if (rotateIn) {
                     rotate.setPosition(ROTATE_OUT);
                     rotateState = RotatePosition.Out;
                 }
         }
     }
 
-    public class BucketDown implements Action {
+    public class RotateDown implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             rotate.setPosition(ROTATE_OUT);
@@ -61,8 +61,8 @@ public class Rotate extends SubSystem {
         }
     }
 
-    public Action bucketDown() {
-        return new BucketDown();
+    public Action rotateOut() {
+        return new RotateDown();
     }
 
     public class BucketUp implements Action {
@@ -74,12 +74,12 @@ public class Rotate extends SubSystem {
         }
     }
 
-    public Action bucketUp() {
+    public Action rotateIn() {
         return new BucketUp();
     }
 
-    public void setProperties(boolean dpadDown, boolean dpadUp) {
-        DPAD_DOWN = dpadDown;
-        DPAD_UP = dpadUp;
+    public void setProperties(boolean rotateIn, boolean rotateOut) {
+        this.rotateOut = rotateOut;
+        this.rotateIn = rotateIn;
     }
 }
