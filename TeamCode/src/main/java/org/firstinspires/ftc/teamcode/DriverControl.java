@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
@@ -157,6 +158,7 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Lift Target", "%d", robot.liftMotor.getTargetPosition());
             telemetry.addData("Lift Position", "%d", robot.liftMotor.getCurrentPosition());
             telemetry.addData("Lift Power", "%6.2f", robot.liftMotor.getPower());
+            telemetry.addData("Current", robot.liftMotor.getCurrent(CurrentUnit.MILLIAMPS));
             telemetry.addData("Lift Busy", robot.liftMotor.isBusy());
             telemetry.addData("Lift Mode", robot.liftMotor.getMode());
             telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
