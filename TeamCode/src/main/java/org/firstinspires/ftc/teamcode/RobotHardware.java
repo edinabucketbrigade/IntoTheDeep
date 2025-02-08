@@ -28,6 +28,8 @@ public class RobotHardware {
     public Servo wristServo = null;
     //public CRServo intakeServo = null;
 
+    public Servo rotateServo = null;
+
     // 5203-2402-0019
     public DcMotorEx liftMotor = null;
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
@@ -108,6 +110,7 @@ public class RobotHardware {
 //        ((ServoImplEx) wristServo).setPwmRange(new PwmControl.PwmRange(500, 2500));
 //        wristServo.setDirection(Servo.Direction.REVERSE);
 //        wristServo.scaleRange(0.15, 0.7);
+        rotateServo = myOpMode.hardwareMap.get(Servo.class, "rotateServo");
     }
 
     /**

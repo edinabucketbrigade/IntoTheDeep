@@ -37,10 +37,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.subsystems.Slide;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.subsystems.Rotate;
+import org.firstinspires.ftc.teamcode.subsystems.Slide;
 import org.firstinspires.ftc.teamcode.subsystems.Wrist;
 
 /*
@@ -59,6 +60,7 @@ public class DriverControl extends LinearOpMode {
     private final Bucket bucket = new Bucket(robot);
     private final Claw claw = new Claw(robot);
     private final Wrist wrist = new Wrist(robot);
+    private final Rotate rotate = new Rotate(robot);
 
     // Use the new FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
