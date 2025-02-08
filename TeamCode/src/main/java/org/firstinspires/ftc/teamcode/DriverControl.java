@@ -122,6 +122,9 @@ public class DriverControl extends LinearOpMode {
             claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
+            rotate.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+
             // Left trigger reverses the slide motor. Using both triggers will add the results
             // together.
             slide.setProperties(-gamepadTwo.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) +
@@ -132,17 +135,21 @@ public class DriverControl extends LinearOpMode {
             double axial = RobotHardware.ScaleMotorSquare(-gamepadOne.getLeftY());  // Note: pushing stick forward gives negative value
             double lateral = RobotHardware.ScaleMotorSquare(gamepadOne.getLeftX());
             double yaw = RobotHardware.ScaleMotorSquare(gamepadOne.getRightX());
-            if (isFieldCentric) {
-                robot.moveRobot(axial, lateral, yaw);
-            } else {
-                robot.moveRobot(axial, lateral, yaw, robot.imu.getRobotYawPitchRollAngles().getYaw());
-            }
+
+            robot.moveRobot(axial, lateral, yaw);
+
+//            if (isFieldCentric) {
+//                robot.moveRobot(axial, lateral, yaw);
+//            } else {
+//                robot.moveRobot(axial, lateral, yaw, robot.imu.getRobotYawPitchRollAngles().getYaw());
+//            }
 
             lift.update();
             slide.update();
             bucket.update();
             claw.update();
             wrist.update();
+            rotate.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
             telemetry.addData("Field Centric", isFieldCentric);

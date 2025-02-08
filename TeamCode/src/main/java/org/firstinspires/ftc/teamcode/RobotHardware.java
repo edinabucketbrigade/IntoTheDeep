@@ -84,10 +84,10 @@ public class RobotHardware {
             slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightBackDrive.setDirection(DcMotor.Direction.REVERSE);
 
         imu = myOpMode.hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
@@ -125,15 +125,29 @@ public class RobotHardware {
      */
     public void moveRobot(double x, double y, double yaw) {
         // This is the gm0 version of mecanum drive.
-        x *= 1.1; // Adjust for imperfect strafing.
+        //x *= 1.1; // Adjust for imperfect strafing.
         // Denominator is the largest motor power (absolute value) or 1
         // This ensures all the powers maintain the same ratio,
         // but only if at least one is out of the range [-1, 1]
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(yaw), 1);
-        double leftFrontPower = (y + x + yaw) / denominator;
-        double leftBackPower = (y - x + yaw) / denominator;
-        double rightFrontPower = (y - x - yaw) / denominator;
-        double rightBackPower = (y + x - yaw) / denominator;
+        //double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(yaw), 1);
+
+        // Calculate wheel powers.
+        double leftFrontPower = x - y - yaw;
+        double rightFrontPower = x + y + yaw;
+        double leftBackPower = x + y - yaw;
+        double rightBackPower = x - y + yaw;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
 
         // Send powers to the wheels.
         leftFrontDrive.setPower(leftFrontPower);

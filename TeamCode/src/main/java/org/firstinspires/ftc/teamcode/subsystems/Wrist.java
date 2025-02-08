@@ -21,9 +21,9 @@ public class Wrist extends SubSystem {
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
-    private final double WRIST_DOWN = 0.3;
-    private final double WRIST_NEUTRAL = 0.8;
-    private final double WRIST_UP = 0.9;
+    private final double WRIST_UP = 0.35;
+    private final double WRIST_NEUTRAL = 0.75;
+    private final double WRIST_DOWN = 0.85;
     private final ElapsedTime elapsedTime = new ElapsedTime();
     private double beginTime = -1.0;
     private double runTime = 0.0;
@@ -39,7 +39,7 @@ public class Wrist extends SubSystem {
     public void init() {
         wristState = WristPosition.Down;
         wrist = robot.wristServo;
-        wrist.setPosition(WRIST_DOWN);
+        wrist.setPosition(WRIST_UP);
     }
 
     @Override
@@ -52,7 +52,7 @@ public class Wrist extends SubSystem {
         switch (wristState) {
             case Down:
                 if (DPAD_UP) {
-                    wrist.setPosition(WRIST_UP);
+                    wrist.setPosition(WRIST_DOWN);
                     wristState = WristPosition.Up;
                     break;
                 }
@@ -64,7 +64,7 @@ public class Wrist extends SubSystem {
                 }
             case Up:
                 if (DPAD_DOWN) {
-                    wrist.setPosition(WRIST_DOWN);
+                    wrist.setPosition(WRIST_UP);
                     wristState = WristPosition.Down;
                     break;
                 }
@@ -76,13 +76,13 @@ public class Wrist extends SubSystem {
                 }
             case Neutral:
                 if (DPAD_DOWN) {
-                    wrist.setPosition(WRIST_DOWN);
+                    wrist.setPosition(WRIST_UP);
                     wristState = WristPosition.Down;
                     break;
                 }
 
                 if (DPAD_UP) {
-                    wrist.setPosition(WRIST_UP);
+                    wrist.setPosition(WRIST_DOWN);
                     wristState = WristPosition.Up;
                     break;
                 }
@@ -90,7 +90,7 @@ public class Wrist extends SubSystem {
 //                wrist.setPosition(WRIST_UP);
 //                wristState=WristPosition.Up;
         }
-        rotate.update();
+        //rotate.update();
     }
 
     public void setRotate(Rotate rotate) {
@@ -101,7 +101,7 @@ public class Wrist extends SubSystem {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (beginTime < 0) { // first time to run
-                wrist.setPosition(WRIST_DOWN);
+                wrist.setPosition(WRIST_UP);
                 wristState = WristPosition.Down;
                 beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
             } else {
@@ -159,7 +159,7 @@ public class Wrist extends SubSystem {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
             if (beginTime < 0) { // first time to run
-                wrist.setPosition(WRIST_UP);
+                wrist.setPosition(WRIST_DOWN);
                 wristState = WristPosition.Up;
                 beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
             } else {
@@ -187,10 +187,10 @@ public class Wrist extends SubSystem {
         DPAD_DOWN = dpadDown;
         DPAD_UP = dpadUp;
         DPAD_RIGHT = dpadNeutral;
-        if (DPAD_DOWN && DPAD_RIGHT) {
-            rotate.setProperties(false, true);
-        } else {
-            rotate.setProperties(true, false);
-        }
+//        if (DPAD_DOWN && DPAD_RIGHT) {
+//            rotate.setProperties(false, true);
+//        } else {
+//            rotate.setProperties(true, false);
+//        }
     }
 }

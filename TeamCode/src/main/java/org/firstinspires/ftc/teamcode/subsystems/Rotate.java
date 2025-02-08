@@ -15,9 +15,9 @@ public class Rotate extends SubSystem {
     public RotatePosition rotateState;
     public Servo rotate;
     private RobotHardware robot;
-    public boolean rotateIn = false;
-    public boolean rotateOut = false;
-    private final double ROTATE_OUT = 0.975;
+    public boolean DPAD_RIGHT = false;
+    public boolean DPAD_LEFT = false;
+    private final double ROTATE_OUT = 1;
     private final double ROTATE_IN = 0.375;
 
     public Rotate(RobotHardware robot) {
@@ -40,12 +40,12 @@ public class Rotate extends SubSystem {
     public void update() {
         switch (rotateState) {
             case Out:
-                if (rotateOut) {
+                if (DPAD_LEFT) {
                     rotate.setPosition(ROTATE_IN);
                     rotateState = RotatePosition.In;
                 }
             case In:
-                if (rotateIn) {
+                if (DPAD_RIGHT) {
                     rotate.setPosition(ROTATE_OUT);
                     rotateState = RotatePosition.Out;
                 }
@@ -78,8 +78,8 @@ public class Rotate extends SubSystem {
         return new BucketUp();
     }
 
-    public void setProperties(boolean rotateIn, boolean rotateOut) {
-        this.rotateOut = rotateOut;
-        this.rotateIn = rotateIn;
+    public void setProperties(boolean dpadRight, boolean dpadLeft) {
+        this.DPAD_LEFT = dpadLeft;
+        this.DPAD_RIGHT = dpadRight;
     }
 }
