@@ -62,7 +62,9 @@ public class DriverControl extends LinearOpMode {
     private final Wrist wrist = new Wrist(robot);
     private final Rotate rotate = new Rotate(robot);
 
-    // Use the new FtcLib gamepad extension.
+    // Allow selecting driver or field centric control.
+    private boolean isFieldCentric = false;
+    // Use the FtcLib gamepad extension.
     GamepadEx gamepadOne = null;
     GamepadEx gamepadTwo = null;
     TriggerReader triggerReaderLeft;
@@ -103,6 +105,10 @@ public class DriverControl extends LinearOpMode {
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
+            if (gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON) && gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
+                isFieldCentric = !isFieldCentric;
+            }
+
             // gamepadTwo (B on the driver hub)
             lift.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.A),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.X),
@@ -124,7 +130,11 @@ public class DriverControl extends LinearOpMode {
             double axial = RobotHardware.ScaleMotorSquare(-gamepadOne.getLeftY());  // Note: pushing stick forward gives negative value
             double lateral = RobotHardware.ScaleMotorSquare(gamepadOne.getLeftX());
             double yaw = RobotHardware.ScaleMotorSquare(gamepadOne.getRightX());
-            robot.moveRobot(axial, lateral, yaw);
+            if (isFieldCentric) {
+                robot.moveRobot(axial, lateral, yaw);
+            } else {
+                robot.moveRobot(axial, lateral, yaw, robot.imu.getRobotYawPitchRollAngles().getYaw());
+            }
 
             lift.update();
             slide.update();
@@ -133,6 +143,7 @@ public class DriverControl extends LinearOpMode {
             wrist.update();
 
             telemetry.addData("Status", "Run Time: " + runtime);
+            telemetry.addData("Field Centric", isFieldCentric);
             telemetry.addData("Lift State", lift.liftState);
             telemetry.addData("Lift Target", "%d", robot.liftMotor.getTargetPosition());
             telemetry.addData("Lift Position", "%d", robot.liftMotor.getCurrentPosition());
@@ -146,7 +157,7 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Slide Power", "%6.2f", robot.slideMotor.getPower());
             telemetry.addData("Slide Busy", robot.slideMotor.isBusy());
             telemetry.addData("Slide Mode", robot.slideMotor.getMode());
-            telemetry.addData("Slide PIDF Run To Position", robot.slideMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
+            telemetry.addData("Slide PIDF Run Using Encoder", robot.slideMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER));
             telemetry.addData("Claw position", "%1.2f", claw.claw.getPosition());
             telemetry.addData("Bucket position", "%1.2f", bucket.bucket.getPosition());
             telemetry.addData("Wrist position", "%1.2f", wrist.wrist.getPosition());

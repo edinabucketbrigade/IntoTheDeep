@@ -5,9 +5,13 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
+import org.firstinspires.ftc.teamcode.enums.ClawPosition;
 import org.firstinspires.ftc.teamcode.enums.WristPosition;
+
+import java.util.concurrent.TimeUnit;
 
 public class Wrist extends SubSystem {
 
@@ -20,6 +24,11 @@ public class Wrist extends SubSystem {
     private final double WRIST_DOWN = 0.3;
     private final double WRIST_NEUTRAL = 0.8;
     private final double WRIST_UP = 0.9;
+    private ElapsedTime elapsedTime = new ElapsedTime();
+    private double beginTime = -1.0;
+    private double runTime = 0.0;
+    // Time to move servo in milliseconds
+    private final double MOVE_TIME = 750;
 
     public Wrist(RobotHardware robot) {
         this.robot = robot;
@@ -86,9 +95,24 @@ public class Wrist extends SubSystem {
     public class WristDown implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            wrist.setPosition(WRIST_DOWN);
-            wristState = WristPosition.Down;
-            return false;
+            if (beginTime < 0) { // first time to run
+                wrist.setPosition(WRIST_DOWN);
+                wristState = WristPosition.Down;
+                beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
+            } else {
+                runTime = elapsedTime.now(TimeUnit.MILLISECONDS) - beginTime; // how long have we been running
+            }
+
+            packet.put("bucket", wrist.getPosition());
+            packet.put("bucket timer", runTime);
+
+            if (MOVE_TIME < runTime) {
+                return true;
+            } else {
+                beginTime = -1;
+                runTime = 0;
+                return false;
+            }
         }
     }
 
@@ -100,9 +124,24 @@ public class Wrist extends SubSystem {
     public class WristNeutral implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            wrist.setPosition(WRIST_NEUTRAL);
-            wristState = WristPosition.Neutral;
-            return false;
+            if (beginTime < 0) { // first time to run
+                wrist.setPosition(WRIST_NEUTRAL);
+                wristState = WristPosition.Neutral;
+                beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
+            } else {
+                runTime = elapsedTime.now(TimeUnit.MILLISECONDS) - beginTime; // how long have we been running
+            }
+
+            packet.put("bucket", wrist.getPosition());
+            packet.put("bucket timer", runTime);
+
+            if (MOVE_TIME < runTime) {
+                return true;
+            } else {
+                beginTime = -1;
+                runTime = 0;
+                return false;
+            }
         }
     }
 
@@ -114,9 +153,24 @@ public class Wrist extends SubSystem {
     public class WristUp implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            wrist.setPosition(WRIST_UP);
-            wristState = WristPosition.Up;
-            return false;
+            if (beginTime < 0) { // first time to run
+                wrist.setPosition(WRIST_UP);
+                wristState = WristPosition.Up;
+                beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
+            } else {
+                runTime = elapsedTime.now(TimeUnit.MILLISECONDS) - beginTime; // how long have we been running
+            }
+
+            packet.put("bucket", wrist.getPosition());
+            packet.put("bucket timer", runTime);
+
+            if (MOVE_TIME < runTime) {
+                return true;
+            } else {
+                beginTime = -1;
+                runTime = 0;
+                return false;
+            }
         }
     }
 

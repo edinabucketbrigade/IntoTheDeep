@@ -5,9 +5,12 @@ import androidx.annotation.NonNull;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.enums.ClawPosition;
+
+import java.util.concurrent.TimeUnit;
 
 public class Claw extends SubSystem {
 
@@ -18,6 +21,11 @@ public class Claw extends SubSystem {
     public boolean leftBumperPressed = false;
     private final double CLAW_CLOSED = 1;
     private final double CLAW_OPEN = 0.2;
+    private ElapsedTime elapsedTime = new ElapsedTime();
+    private double beginTime = -1.0;
+    private double runTime = 0.0;
+    // Time to move servo in milliseconds
+    private final double MOVE_TIME = 750;
 
     public Claw(RobotHardware robot) {
         this.robot = robot;
@@ -54,9 +62,24 @@ public class Claw extends SubSystem {
     public class ClawClose implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            claw.setPosition(CLAW_CLOSED);
-            clawState = ClawPosition.Close;
-            return false;
+            if (beginTime < 0) { // first time to run
+                claw.setPosition(CLAW_CLOSED);
+                clawState = ClawPosition.Close;
+                beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
+            } else {
+                runTime = elapsedTime.now(TimeUnit.MILLISECONDS) - beginTime; // how long have we been running
+            }
+
+            packet.put("bucket", claw.getPosition());
+            packet.put("bucket timer", runTime);
+
+            if (MOVE_TIME < runTime) {
+                return true;
+            } else {
+                beginTime = -1;
+                runTime = 0;
+                return false;
+            }
         }
     }
 
@@ -67,9 +90,24 @@ public class Claw extends SubSystem {
     public class ClawOpen implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            claw.setPosition(CLAW_OPEN);
-            clawState = ClawPosition.Open;
-            return false;
+            if (beginTime < 0) { // first time to run
+                claw.setPosition(CLAW_OPEN);
+                clawState = ClawPosition.Open;
+                beginTime = elapsedTime.now(TimeUnit.MILLISECONDS); // record time we start running
+            } else {
+                runTime = elapsedTime.now(TimeUnit.MILLISECONDS) - beginTime; // how long have we been running
+            }
+
+            packet.put("bucket", claw.getPosition());
+            packet.put("bucket timer", runTime);
+
+            if (MOVE_TIME < runTime) {
+                return true;
+            } else {
+                beginTime = -1;
+                runTime = 0;
+                return false;
+            }
         }
     }
 
