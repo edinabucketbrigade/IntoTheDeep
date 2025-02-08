@@ -206,10 +206,12 @@ public class RobotHardware {
      * Square results in finer control a slow speeds, but less aggressive than
      * the cube version.
      */
-    public static double ScaleMotorSquare(double joyStickPosition) {
+    public static double ScaleMotorSquare(double joyStickPosition, boolean slowMode) {
         boolean positionIsNegative = joyStickPosition < 0;
         double result = joyStickPosition * joyStickPosition;
-        return positionIsNegative ? -result : result;
+        double end = positionIsNegative ? -result : result;
+        if (slowMode) end = end/2;
+        return end;
     }
 
     /**
@@ -218,7 +220,7 @@ public class RobotHardware {
      */
     public static double ScaleMotorCube(double joyStickPosition, boolean slowMode) {
         double p = Math.pow(joyStickPosition, 3.0);
-        if (slowMode) p = p / 2;
+        if (slowMode) p = p/2;
         return p;
     }
 
