@@ -90,7 +90,6 @@ public class Wrist extends SubSystem {
 //                wrist.setPosition(WRIST_UP);
 //                wristState=WristPosition.Up;
         }
-        //rotate.update();
     }
 
     public void setRotate(Rotate rotate) {
