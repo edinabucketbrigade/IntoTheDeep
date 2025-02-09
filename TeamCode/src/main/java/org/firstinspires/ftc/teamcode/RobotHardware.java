@@ -232,7 +232,9 @@ public class RobotHardware {
      * Scale the joystick value to smooth it for motor settings.
      * This algorithm gives a bit more sensitivity than the ScaleMotorCube() method.
      */
-    public static double ScaleMotorTan(double input) {
-        return (input / 1.07) * (.62 * (Math.pow(input, 2)) + .45);
+    public static double ScaleMotorTan(double joyStickPosition, boolean slowMode) {
+        double p = (joyStickPosition / 1.07) * (.62 * (Math.pow(joyStickPosition, 2)) + .45);
+        if (slowMode) p = p / 2;
+        return p;
     }
 }
