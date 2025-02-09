@@ -32,6 +32,7 @@ public class RobotHardware {
 
     // 5203-2402-0019
     public DcMotorEx liftMotor = null;
+    public Encoder liftEncoder = null;
     //5204-08139 series, 3895.9 resolution, for other arm thing motor
     //5203 series, 384.5 ppr - encoder resolution
     public DcMotorEx slideMotor = null;
@@ -57,6 +58,9 @@ public class RobotHardware {
         rightBackDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         liftMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "liftMotor");
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftEncoder = new OverflowEncoder((new RawEncoder(RobotHardware.this.liftMotor)));
+        liftEncoder.setDirection(DcMotorSimple.Direction.REVERSE);
         stopAndResetEncoder(liftMotor);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         PIDFCoefficients pidfVelocityCoefficients = liftMotor.getPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -210,7 +214,7 @@ public class RobotHardware {
         boolean positionIsNegative = joyStickPosition < 0;
         double result = joyStickPosition * joyStickPosition;
         double end = positionIsNegative ? -result : result;
-        if (slowMode) end = end/2;
+        if (slowMode) end = end / 2;
         return end;
     }
 
@@ -220,7 +224,7 @@ public class RobotHardware {
      */
     public static double ScaleMotorCube(double joyStickPosition, boolean slowMode) {
         double p = Math.pow(joyStickPosition, 3.0);
-        if (slowMode) p = p/2;
+        if (slowMode) p = p / 2;
         return p;
     }
 

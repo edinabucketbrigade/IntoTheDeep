@@ -21,9 +21,9 @@ public class Lift extends SubSystem {
     // Encoder positions for the lift.
     //TODO Test to find the proper values.
     private final int LIFT_DOWN = 0;
-    private final int LIFT_LOW = -797;
+    private final int LIFT_LOW = 797;
 
-    private final int LIFT_HIGH = -2650;
+    private final int LIFT_HIGH = 2650;
 
     private final double LIFT_MAX_POWER = 1;
     private final int LIFT_POSITION_TOLERANCE = 10;
@@ -47,7 +47,7 @@ public class Lift extends SubSystem {
     public void update() {
         switch (liftState) {
             case Down:
-                if (Math.abs(liftMotor.getCurrentPosition() - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
+                if (Math.abs(liftMotor.getCurrentPosition()) < LIFT_POSITION_TOLERANCE) {
                     if (xPressed) {
                         liftMotor.setTargetPosition(LIFT_LOW);
                         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -113,7 +113,7 @@ public class Lift extends SubSystem {
             }
             double currentPosition = liftMotor.getCurrentPosition();
             packet.put("Lift position", currentPosition);
-            if (Math.abs(currentPosition - LIFT_DOWN) < LIFT_POSITION_TOLERANCE) {
+            if (Math.abs(currentPosition) < LIFT_POSITION_TOLERANCE) {
                 return false;
             } else {
                 return true;
