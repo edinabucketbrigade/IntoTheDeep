@@ -22,9 +22,7 @@ public class Lift extends SubSystem {
     //TODO Test to find the proper values.
     private final int LIFT_DOWN = 0;
     private final int LIFT_LOW = 797;
-
     private final int LIFT_HIGH = 2650;
-
     private final double LIFT_MAX_POWER = 1;
     private final int LIFT_POSITION_TOLERANCE = 10;
 
