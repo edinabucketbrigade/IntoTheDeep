@@ -65,7 +65,7 @@ public class Rotate extends SubSystem {
         return new RotateDown();
     }
 
-    public class BucketUp implements Action {
+    public class RotateUp implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             rotate.setPosition(ROTATE_IN);
@@ -75,7 +75,7 @@ public class Rotate extends SubSystem {
     }
 
     public Action rotateIn() {
-        return new BucketUp();
+        return new RotateUp();
     }
 
     public void setProperties(boolean dpadRight, boolean dpadLeft) {
