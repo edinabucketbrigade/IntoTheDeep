@@ -23,7 +23,8 @@ public class Lift extends SubSystem {
     private final int LIFT_DOWN = 0;
     private final int LIFT_LOW = 797;
     private final int LIFT_HIGH = 2650;
-    private final double LIFT_MAX_POWER = 1;
+    private final double LIFT_UP_POWER = 1;
+    private final double LIFT_DOWN_POWER = .3;
     private final int LIFT_POSITION_TOLERANCE = 10;
 
     public Lift(RobotHardware robot) {
@@ -49,14 +50,14 @@ public class Lift extends SubSystem {
                     if (xPressed) {
                         liftMotor.setTargetPosition(LIFT_LOW);
                         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        liftMotor.setPower(LIFT_MAX_POWER);
+                        liftMotor.setPower(LIFT_UP_POWER);
                         liftState = LiftPosition.LowBasket;
                     }
 
                     if (yPressed) {
                         liftMotor.setTargetPosition(LIFT_HIGH);
                         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        liftMotor.setPower(LIFT_MAX_POWER);
+                        liftMotor.setPower(LIFT_UP_POWER);
                         liftState = LiftPosition.HighBasket;
                     }
                 }
@@ -66,14 +67,14 @@ public class Lift extends SubSystem {
                     if (aPressed) {
                         liftMotor.setTargetPosition(LIFT_DOWN);
                         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        liftMotor.setPower(LIFT_MAX_POWER);
+                        liftMotor.setPower(LIFT_DOWN_POWER);
                         liftState = LiftPosition.Down;
                     }
 
                     if (yPressed) {
                         liftMotor.setTargetPosition(LIFT_HIGH);
                         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        liftMotor.setPower(LIFT_MAX_POWER);
+                        liftMotor.setPower(LIFT_UP_POWER);
                         liftState = LiftPosition.HighBasket;
                     }
                 }
@@ -83,7 +84,7 @@ public class Lift extends SubSystem {
                     if (aPressed) {
                         liftMotor.setTargetPosition(LIFT_DOWN);
                         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        liftMotor.setPower(LIFT_MAX_POWER);
+                        liftMotor.setPower(LIFT_DOWN_POWER);
                         liftState = LiftPosition.Down;
                     }
                 }
@@ -105,7 +106,7 @@ public class Lift extends SubSystem {
             if (!initialized) {
                 liftMotor.setTargetPosition(LIFT_DOWN);
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftMotor.setPower(LIFT_MAX_POWER);
+                liftMotor.setPower(LIFT_DOWN_POWER);
                 liftState = LiftPosition.Down;
                 initialized = true;
             }
@@ -131,7 +132,7 @@ public class Lift extends SubSystem {
             if (!initialized) {
                 liftMotor.setTargetPosition(LIFT_LOW);
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftMotor.setPower(LIFT_MAX_POWER);
+                liftMotor.setPower(LIFT_UP_POWER);
                 liftState = LiftPosition.LowBasket;
                 initialized = true;
             }
@@ -157,7 +158,7 @@ public class Lift extends SubSystem {
             if (!initialized) {
                 liftMotor.setTargetPosition(LIFT_HIGH);
                 liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                liftMotor.setPower(LIFT_MAX_POWER);
+                liftMotor.setPower(LIFT_UP_POWER);
                 liftState = LiftPosition.HighBasket;
                 initialized = true;
             }
