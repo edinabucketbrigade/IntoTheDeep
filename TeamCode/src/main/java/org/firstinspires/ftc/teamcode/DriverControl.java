@@ -108,7 +108,7 @@ public class DriverControl extends LinearOpMode {
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
-            // Rotate based on wrist postion.
+            // Rotate based on wrist position.
             setRotate();
 
             // Allow manual control of rotate.
