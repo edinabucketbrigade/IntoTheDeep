@@ -108,11 +108,11 @@ public class DriverControl extends LinearOpMode {
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
-            // Rotate based on wrist position.
-            setRotate();
-
             rotate.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+
+            // Rotate based on wrist position.
+            setRotate();
 
             if (gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON) && gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
                 isFieldCentric = !isFieldCentric;
@@ -181,14 +181,14 @@ public class DriverControl extends LinearOpMode {
 
     private void setRotate() {
         // If either is true driver wants to control rotate.
-        if (!rotate.DPAD_LEFT && !rotate.DPAD_RIGHT) {
+        if (!rotate.LEFT_BUMPER && !rotate.RIGHT_BUMPER) {
             switch (wrist.wristState) {
                 case Down:
                 case Neutral:
-                    rotate.setProperties(true, false);
+                    rotate.setProperties(false, true);
                     break;
                 case Up:
-                    rotate.setProperties(false, true);
+                    rotate.setProperties(true, false);
                     break;
             }
         }
