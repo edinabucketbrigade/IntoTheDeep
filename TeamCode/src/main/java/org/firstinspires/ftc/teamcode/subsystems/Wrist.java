@@ -37,7 +37,7 @@ public class Wrist extends SubSystem {
 
     @Override
     public void init() {
-        wristState = WristPosition.Down;
+        wristState = WristPosition.Up;
         wrist = robot.wristServo;
         wrist.setPosition(WRIST_UP);
     }
