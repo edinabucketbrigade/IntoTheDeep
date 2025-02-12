@@ -78,8 +78,8 @@ public class Rotate extends SubSystem {
         return new BucketUp();
     }
 
-    public void setProperties(boolean dpadRight, boolean dpadLeft) {
-        this.DPAD_LEFT = dpadLeft;
-        this.DPAD_RIGHT = dpadRight;
+    public void setProperties(boolean rotateIn, boolean rotateOut) {
+        this.DPAD_LEFT = rotateIn;
+        this.DPAD_RIGHT = rotateOut;
     }
 }
