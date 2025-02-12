@@ -142,11 +142,11 @@ public class DriverControl extends LinearOpMode {
 
             robot.moveRobot(axial, lateral, yaw);
 
-//            if (isFieldCentric) {
-//                robot.moveRobot(axial, lateral, yaw);
-//            } else {
-//                robot.moveRobot(axial, lateral, yaw, robot.imu.getRobotYawPitchRollAngles().getYaw());
-//            }
+            if (isFieldCentric) {
+                robot.moveRobot(axial, lateral, yaw);
+            } else {
+                robot.moveRobot(axial, lateral, yaw, robot.imu.getRobotYawPitchRollAngles().getYaw());
+            }
 
             lift.update();
             slide.update();
