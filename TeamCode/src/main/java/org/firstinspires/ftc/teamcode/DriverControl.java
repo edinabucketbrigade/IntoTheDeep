@@ -108,13 +108,11 @@ public class DriverControl extends LinearOpMode {
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
-            // gamepadOne (A on the driver hub)
-            wrist.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
-
             // Rotate based on wrist position.
             setRotate();
+
+            rotate.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             if (gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON) && gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
                 isFieldCentric = !isFieldCentric;
@@ -130,9 +128,6 @@ public class DriverControl extends LinearOpMode {
 
             claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
-
-            rotate.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
             // Left trigger reverses the slide motor. Using both triggers will add the results
             // together.
@@ -183,6 +178,7 @@ public class DriverControl extends LinearOpMode {
             telemetry.update();
         }
     }
+
     private void setRotate() {
         // If either is true driver wants to control rotate.
         if (!rotate.DPAD_LEFT && !rotate.DPAD_RIGHT) {
