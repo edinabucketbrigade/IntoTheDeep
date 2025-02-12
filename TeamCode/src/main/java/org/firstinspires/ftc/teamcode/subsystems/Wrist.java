@@ -52,7 +52,7 @@ public class Wrist extends SubSystem {
         switch (wristState) {
             case Down:
                 if (DPAD_UP) {
-                    wrist.setPosition(WRIST_DOWN);
+                    wrist.setPosition(WRIST_UP);
                     wristState = WristPosition.Up;
                     break;
                 }
@@ -64,7 +64,7 @@ public class Wrist extends SubSystem {
                 }
             case Up:
                 if (DPAD_DOWN) {
-                    wrist.setPosition(WRIST_UP);
+                    wrist.setPosition(WRIST_DOWN);
                     wristState = WristPosition.Down;
                     break;
                 }
@@ -76,13 +76,13 @@ public class Wrist extends SubSystem {
                 }
             case Neutral:
                 if (DPAD_DOWN) {
-                    wrist.setPosition(WRIST_UP);
+                    wrist.setPosition(WRIST_DOWN);
                     wristState = WristPosition.Down;
                     break;
                 }
 
                 if (DPAD_UP) {
-                    wrist.setPosition(WRIST_DOWN);
+                    wrist.setPosition(WRIST_UP);
                     wristState = WristPosition.Up;
                     break;
                 }
