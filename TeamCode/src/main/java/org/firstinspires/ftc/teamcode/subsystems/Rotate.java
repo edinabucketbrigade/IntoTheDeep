@@ -52,7 +52,7 @@ public class Rotate extends SubSystem {
         }
     }
 
-    public class RotateDown implements Action {
+    public class RotateOut implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             rotate.setPosition(ROTATE_OUT);
@@ -62,10 +62,10 @@ public class Rotate extends SubSystem {
     }
 
     public Action rotateOut() {
-        return new RotateDown();
+        return new RotateOut();
     }
 
-    public class BucketUp implements Action {
+    public class RotateIn implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket telemetryPacket) {
             rotate.setPosition(ROTATE_IN);
@@ -75,7 +75,7 @@ public class Rotate extends SubSystem {
     }
 
     public Action rotateIn() {
-        return new BucketUp();
+        return new RotateIn();
     }
 
     public void setProperties(boolean rotateIn, boolean rotateOut) {
