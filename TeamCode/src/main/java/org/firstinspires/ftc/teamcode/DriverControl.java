@@ -37,6 +37,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.subsystems.Bucket;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.Lift;
@@ -107,6 +108,12 @@ public class DriverControl extends LinearOpMode {
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_UP),
                     gamepadOne.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT));
 
+            rotate.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
+                    gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
+
+            // Rotate based on wrist position.
+            setRotate();
+
             if (gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_STICK_BUTTON) && gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_STICK_BUTTON)) {
                 isFieldCentric = !isFieldCentric;
             }
@@ -122,9 +129,6 @@ public class DriverControl extends LinearOpMode {
             claw.setProperties(gamepadTwo.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
                     gamepadTwo.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
 
-            rotate.setProperties(gamepadOne.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER),
-                    gamepadOne.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER));
-
             // Left trigger reverses the slide motor. Using both triggers will add the results
             // together.
             slide.setProperties(-gamepadTwo.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) +
@@ -138,11 +142,11 @@ public class DriverControl extends LinearOpMode {
 
             robot.moveRobot(axial, lateral, yaw);
 
-//            if (isFieldCentric) {
-//                robot.moveRobot(axial, lateral, yaw);
-//            } else {
-//                robot.moveRobot(axial, lateral, yaw, robot.imu.getRobotYawPitchRollAngles().getYaw());
-//            }
+            if (isFieldCentric) {
+                robot.moveRobot(axial, lateral, yaw);
+            } else {
+                robot.moveRobot(axial, lateral, yaw, robot.imu.getRobotYawPitchRollAngles().getYaw());
+            }
 
             lift.update();
             slide.update();
@@ -157,6 +161,7 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Lift Target", "%d", robot.liftMotor.getTargetPosition());
             telemetry.addData("Lift Position", "%d", robot.liftMotor.getCurrentPosition());
             telemetry.addData("Lift Power", "%6.2f", robot.liftMotor.getPower());
+            telemetry.addData("Current", robot.liftMotor.getCurrent(CurrentUnit.MILLIAMPS));
             telemetry.addData("Lift Busy", robot.liftMotor.isBusy());
             telemetry.addData("Lift Mode", robot.liftMotor.getMode());
             telemetry.addData("Lift PIDF Run To Position", robot.liftMotor.getPIDFCoefficients(DcMotorEx.RunMode.RUN_TO_POSITION));
@@ -171,6 +176,21 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("Bucket position", "%1.2f", bucket.bucket.getPosition());
             telemetry.addData("Wrist position", "%1.2f", wrist.wrist.getPosition());
             telemetry.update();
+        }
+    }
+
+    private void setRotate() {
+        // If either is true driver wants to control rotate.
+        if (!rotate.LEFT_BUMPER && !rotate.RIGHT_BUMPER) {
+            switch (wrist.wristState) {
+                case Down:
+                case Neutral:
+                    rotate.setProperties(false, true);
+                    break;
+                case Up:
+                    rotate.setProperties(true, false);
+                    break;
+            }
         }
     }
 }

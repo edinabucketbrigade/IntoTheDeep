@@ -22,7 +22,7 @@ public class Wrist extends SubSystem {
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
     private final double WRIST_UP = 0.35;
-    private final double WRIST_NEUTRAL = 0.8;
+    private final double WRIST_NEUTRAL = 0.78;
     private final double WRIST_DOWN = 0.85;
     private final ElapsedTime elapsedTime = new ElapsedTime();
     private double beginTime = -1.0;
@@ -37,7 +37,7 @@ public class Wrist extends SubSystem {
 
     @Override
     public void init() {
-        wristState = WristPosition.Down;
+        wristState = WristPosition.Up;
         wrist = robot.wristServo;
         wrist.setPosition(WRIST_UP);
     }
@@ -52,7 +52,7 @@ public class Wrist extends SubSystem {
         switch (wristState) {
             case Down:
                 if (DPAD_UP) {
-                    wrist.setPosition(WRIST_DOWN);
+                    wrist.setPosition(WRIST_UP);
                     wristState = WristPosition.Up;
                     break;
                 }
@@ -64,7 +64,7 @@ public class Wrist extends SubSystem {
                 }
             case Up:
                 if (DPAD_DOWN) {
-                    wrist.setPosition(WRIST_UP);
+                    wrist.setPosition(WRIST_DOWN);
                     wristState = WristPosition.Down;
                     break;
                 }
@@ -76,13 +76,13 @@ public class Wrist extends SubSystem {
                 }
             case Neutral:
                 if (DPAD_DOWN) {
-                    wrist.setPosition(WRIST_UP);
+                    wrist.setPosition(WRIST_DOWN);
                     wristState = WristPosition.Down;
                     break;
                 }
 
                 if (DPAD_UP) {
-                    wrist.setPosition(WRIST_DOWN);
+                    wrist.setPosition(WRIST_UP);
                     wristState = WristPosition.Up;
                     break;
                 }
