@@ -136,8 +136,8 @@ public class AutoRR extends LinearOpMode {
                 bucket.bucketUp(),
                 new SleepAction(.5),
                 bucket.bucketDown(),
-                lift.liftDown(),
-                moveFromBucketsToObservatory
+                lift.liftDown() 
+                //moveFromBucketsToObservatory
         ));
 
         telemetry.addData("Path", "Complete");
@@ -161,8 +161,8 @@ public class AutoRR extends LinearOpMode {
         moveToBuckets = drive.actionBuilder(initialPose)
                 .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45));
 
-        moveFromBucketsToObservatory = moveToBuckets.endTrajectory().fresh()
-                .strafeToLinearHeading(new Vector2d(50, -60), Math.toRadians(0))
-                .build();
+//        moveFromBucketsToObservatory = moveToBuckets.endTrajectory().fresh()
+//                .strafeToLinearHeading(new Vector2d(50, -60), Math.toRadians(0))
+//                .build();
     }
 }
