@@ -21,9 +21,9 @@ public class Wrist extends SubSystem {
     public boolean DPAD_UP = false;
     public boolean DPAD_DOWN = false;
     public boolean DPAD_RIGHT = false;
-    private final double WRIST_UP = 0.35;
-    private final double WRIST_NEUTRAL = 0.78;
-    private final double WRIST_DOWN = 0.85;
+    private final double WRIST_UP = 0.1;
+    private final double WRIST_NEUTRAL = 0.75;
+    private final double WRIST_DOWN = 0.8;
     private final ElapsedTime elapsedTime = new ElapsedTime();
     private double beginTime = -1.0;
     private double runTime = 0.0;

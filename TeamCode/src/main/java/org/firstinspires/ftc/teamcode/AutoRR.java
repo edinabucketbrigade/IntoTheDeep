@@ -111,12 +111,12 @@ public class AutoRR extends LinearOpMode {
 
         // Menu options determine start pose.
         if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Left) {
-            initialPose = new Pose2d(-24, -60, Math.tan(0));
+            initialPose = new Pose2d(50, -60, Math.tan(0));
         }
 
-        if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Right) {
-            initialPose = new Pose2d(12, -60, Math.tan(0));
-        }
+//        if (autonomousConfiguration.getStartPosition() == AutonomousOptions.StartPosition.Right) {
+//            initialPose = new Pose2d(12, -60, Math.tan(0));
+//        }
 
         drive = new MecanumDrive(hardwareMap, initialPose);
 
@@ -132,11 +132,11 @@ public class AutoRR extends LinearOpMode {
         Actions.runBlocking(new SequentialAction(
                 moveToBuckets.build(),
                 lift.lifHigh(),
-                new SleepAction(.5),
+                //'new SleepAction(.5),
                 bucket.bucketUp(),
-                new SleepAction(.5),
+                new SleepAction(1),
                 bucket.bucketDown(),
-                lift.liftDown() 
+                lift.liftDown()
                 //moveFromBucketsToObservatory
         ));
 
@@ -159,10 +159,16 @@ public class AutoRR extends LinearOpMode {
      */
     public void initializePath() {
         moveToBuckets = drive.actionBuilder(initialPose)
-                .strafeToLinearHeading(new Vector2d(-50, -50), Math.toRadians(45));
+//                .setTangent(0)
+//                .lineToY(-56)
+//                .setTangent(0)
+                .lineToX(55)
+                .strafeTo(new Vector2d(55, -55));
+                //.turn(Math.toRadians(45));
+
 
 //        moveFromBucketsToObservatory = moveToBuckets.endTrajectory().fresh()
-//                .strafeToLinearHeading(new Vector2d(50, -60), Math.toRadians(0))
+//                .strafeToLinearHeading(new Vector2d(55, -30), Math.toRadians(0))
 //                .build();
     }
 }
